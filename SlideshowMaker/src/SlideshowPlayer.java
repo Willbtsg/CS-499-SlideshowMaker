@@ -1,6 +1,13 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +34,7 @@ public class SlideshowPlayer extends JFrame  {
 
     private static SlideshowPlayer instance;
     private String m_pathPrefix;
+    private static String DBNAME = "images/test.json";
     private Image m_imageScale;
     private JLabel m_imageLabel;
     private ArrayList<Slide> m_SlideList;
@@ -60,7 +68,7 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(150, 50, 500, 313);
         add(m_imageLabel);
 
-        m_SlideList = getSlideList();
+        m_SlideList = readDB();
 
         if (m_currentSlideIndex < 0){ //loads first image in slideshow
             getSlide(++m_currentSlideIndex);
@@ -91,12 +99,22 @@ public class SlideshowPlayer extends JFrame  {
         setLocationRelativeTo(null);
         setVisible(true);//making the frame visible
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent arg0)
+            {
+                writeDB(m_SlideList);
+                System.exit(0);
+            }
+        });
 
     }
 
     /**
      * Reads data necessary for creation of Slide objects, then creates the Slides
+     * This function will be adapted for the editor when it is written
      * @return theList- returns list of Slide objects to be presented in the slideshow
      */
     private ArrayList<Slide> getSlideList()
@@ -109,6 +127,68 @@ public class SlideshowPlayer extends JFrame  {
             theList.add(new Slide(m_pathPrefix + "/" + imageName)); //create Slide with full filepath in name
         }
 
+        return theList;
+    }
+
+    /**
+     * Writes the list of slides out to the master database.
+     * This function will be moved to the editor once it has been written
+     * @param sl list of slides to be written to the database.
+     */
+    public static void writeDB(ArrayList<Slide> sl)
+    {
+        JSONArray list = new JSONArray();
+        JSONObject obj = new JSONObject();
+
+        for (Slide s:sl)
+        {
+            list.add(s.toJSON());
+        }
+
+        obj.put("SlideList", list);
+
+        try(FileWriter file =  new FileWriter(DBNAME))
+        {
+            file.write(obj.toString());
+            file.flush();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Reads the Master list of movies from the database
+     * @return An ArrayList of Movie objects
+     *
+     */
+    public static ArrayList<Slide> readDB()
+    {
+        JSONParser parser = new JSONParser();
+
+        ArrayList<Slide> theList = new ArrayList<Slide>();
+
+        try {
+            Object obj = parser.parse(new FileReader(DBNAME));
+            //
+            //Read JSON file
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray movieList = (JSONArray) jsonObject.get("SlideList");
+
+            for (Object j : movieList) {
+                theList.add(new Slide((JSONObject) j));
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return theList;
     }
 

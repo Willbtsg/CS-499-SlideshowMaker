@@ -1,3 +1,4 @@
+import org.json.simple.JSONObject;
 
 /**
  * Class name: Slide
@@ -25,6 +26,34 @@ public class Slide {
         m_name = name;
 
         return;
+    }
+
+    public Slide(JSONObject j)
+    {
+        m_name = (String) j.get("name");
+        //m_forward = (Transition)j.get("forward")
+
+    }
+
+    //https://stackoverflow.com/a/53226346/5763413
+    @SuppressWarnings("unchecked")
+    /**
+     * Creates a JSONObject of the movie
+     * @return a JSONObject
+     *
+     */
+    public  JSONObject toJSON()
+    {
+        JSONObject obj = new JSONObject();
+        try
+        {
+            obj.put("name",m_name) ;
+
+        }
+
+        catch (Exception e) {e.printStackTrace();}
+
+        return obj;
     }
 
     /**
