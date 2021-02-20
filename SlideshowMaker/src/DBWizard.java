@@ -45,25 +45,25 @@ public class DBWizard {
     }
 
     /**
-     * Reads the Master list of movies from the database
-     * @return An ArrayList of Movie objects
+     * Reads the Master list of slides from the database
+     * @return An ArrayList of Slide objects
      *
      */
     public static ArrayList<Slide> readDB()
     {
         JSONParser parser = new JSONParser();
-
         ArrayList<Slide> theList = new ArrayList<Slide>();
+        SlideFactory slideFactory = SlideFactory.getInstance();
 
         try {
             Object obj = parser.parse(new FileReader(DBNAME));
             //
             //Read JSON file
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray movieList = (JSONArray) jsonObject.get("SlideList");
+            JSONArray slideList = (JSONArray) jsonObject.get("SlideList");
 
-            for (Object j : movieList) {
-                theList.add(new Slide((JSONObject) j));
+            for (Object j : slideList) {
+                theList.add(slideFactory.makeSlide((JSONObject) j));
             }
 
 

@@ -2,6 +2,7 @@ import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.Image;
+import java.util.ArrayList;
 
 /**
  * Class name: Slide
@@ -13,13 +14,15 @@ public class Slide {
 
     /**
      * String m_name- contains filepath for desired image
+     * private Image m_image- contains scaled image for this Slide
      * Transition m_forward- reference to specified Transition used when moving to next slide
-     * Transition m_backward- reference to Transition to be used when moving to previous slide
+     * Transition m_backwards- reference to Transition to be used when returning to this slide
+     * Transition m_hasTransition- flag to indicate whether or not this Slide has transitions
      */
     private String m_name;
     private Image m_image;
     private Transition m_forward;
-    private Transition m_return;
+    private Transition m_backwards;
     private Boolean m_hasTransitions;
 
     /**
@@ -36,9 +39,7 @@ public class Slide {
         tempImage = currentImage.getImage();
         m_image = tempImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
 
-        m_forward = new LRWipe();
-        m_return = new RLWipe();
-        m_hasTransitions = true;
+        m_hasTransitions = false;
 
         return;
     }
@@ -52,10 +53,8 @@ public class Slide {
         ImageIcon currentImage = new ImageIcon(getName());
         tempImage = currentImage.getImage();
         m_image = tempImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
-
-        //m_forward = (Transition)j.get("forward")
         m_forward = new LRWipe();
-        m_return = new RLWipe();
+        m_backwards = new RLWipe();
         m_hasTransitions = true;
 
     }
@@ -73,6 +72,12 @@ public class Slide {
         try
         {
             obj.put("name",m_name) ;
+            obj.put("hasTransitions",m_hasTransitions);
+
+            if (m_hasTransitions)
+            {
+                obj.put("forward",m_forward.getType());
+            }
 
         }
 
@@ -92,13 +97,25 @@ public class Slide {
 
     public Image getImage() { return m_image; }
 
+    public String getForward() { return m_forward.getType(); }
+
     public Boolean hasTransitions() { return m_hasTransitions; }
+
+    public void setForward(Transition forward)
+    {
+        m_forward = forward;
+        m_hasTransitions = true;
+
+        return;
+    }
+
+    public void setBackwards(Transition backwards) { m_backwards = backwards; }
 
     public void nextSlide(JLabel imgPanel, Image ImageB, double time) {
         m_forward.doTrans(imgPanel, m_image, ImageB, time);
     }
 
     public void returnToSlide(JLabel imgLabel, Image ImageB, double time) {
-        m_return.doTrans(imgLabel, ImageB, m_image, time);
+        m_backwards.doTrans(imgLabel, ImageB, m_image, time);
     }
 }
