@@ -18,7 +18,6 @@ public class SlideshowPlayer extends JFrame  {
     /**
      * static SlideshowPlayer instance- keeps track of SlideshowPlayer instance for Singleton implementation
      * String m_pathPrefix- keeps track of which folder to find the images in
-     * Image m_imageScale- used to scale slide images for display
      * JLabel m_imageLabel- label where slide images are displayed
      * ArrayList<Slide> m_SlideList- contains Slide objects with information necessary for slideshow
      * int m_currentSlideIndex- indicates with Slide in the list is being displayed
@@ -61,7 +60,7 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(150, 50, 500, 313);
         add(m_imageLabel);
 
-        m_SlideList = DBWizard.getInstance().readDB();
+        m_SlideList = DBWizard.getInstance().readDB(); //construct SlideList using the layout file
 
         if (m_currentSlideIndex < 0){ //loads first image in slideshow
             m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(0).getImage()));
@@ -93,16 +92,7 @@ public class SlideshowPlayer extends JFrame  {
         setLocationRelativeTo(null);
         setVisible(true);//making the frame visible
 
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter()
-        {
-            public void windowClosing(WindowEvent arg0)
-            {
-                DBWizard.getInstance().writeDB(m_SlideList);
-                System.exit(0);
-            }
-        });
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
 
