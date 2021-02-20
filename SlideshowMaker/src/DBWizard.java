@@ -9,6 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Class name: DBWizard
+ *
+ * This class is used to write to and read from the slideshow layout file. The files being used are .json.
+ * This class is implemented as a Singleton.
+ */
+
 public class DBWizard {
 
 
@@ -63,7 +70,7 @@ public class DBWizard {
             JSONArray slideList = (JSONArray) jsonObject.get("SlideList");
 
             for (Object j : slideList) {
-                theList.add(slideFactory.makeSlide((JSONObject) j));
+                theList.add(slideFactory.makeSlide((JSONObject) j)); //use the SlideFactory to make the specified Slide
             }
 
 

@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -125,35 +123,34 @@ public class SlideshowPlayer extends JFrame  {
     private void getSlide(int indexShift)
     {
 
-        int tempIndex = m_currentSlideIndex + indexShift;
+        int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
 
         try {
 
-            if (indexShift > 0) {
-                //m_imageLabel.setIcon(m_SlideList.get(tempIndex).getImage()); //set the scaled poster in the JLabel
+            if (indexShift > 0) { //if next Slide is desired...
 
-                if (m_SlideList.get(m_currentSlideIndex).hasTransitions()) {
-                    Image nextImage = m_SlideList.get(tempIndex).getImage();
-                    m_SlideList.get(m_currentSlideIndex).nextSlide(m_imageLabel, nextImage, 2);
+                if (m_SlideList.get(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
+                    Image nextImage = m_SlideList.get(tempIndex).getImage(); //...get the image for the next Slide...
+                    m_SlideList.get(m_currentSlideIndex).nextSlide(m_imageLabel, nextImage, 2); //...and perform the Transition
                 }
-                else {
-                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage())); //set the scaled poster in the JLabel
-                }
-            }
-            else {
-
-                if (m_SlideList.get(tempIndex).hasTransitions()) {
-                    Image currentImage = m_SlideList.get(m_currentSlideIndex).getImage();
-                    m_SlideList.get(tempIndex).returnToSlide(m_imageLabel, currentImage, 2);
-                }
-                else {
-                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage())); //set the scaled poster in the JLabel
+                else { //otherwise, set new image without use of a Transition
+                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));
                 }
             }
+            else { //if the previous slide is desired...
 
-            m_currentSlideIndex = tempIndex;
+                if (m_SlideList.get(tempIndex).hasTransitions()) { //...see if a Transition will be used
+                    Image currentImage = m_SlideList.get(m_currentSlideIndex).getImage(); //...store the image form the current Slide...
+                    m_SlideList.get(tempIndex).returnToSlide(m_imageLabel, currentImage, 2); //...and perform the Transition
+                }
+                else { //otherwise, set new image without use of a Transition
+                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));
+                }
+            }
 
-        } catch (IndexOutOfBoundsException e){
+            m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
+
+        } catch (IndexOutOfBoundsException e){ //if tempIndex is invalid, the Slide is not changed
             return;
         }
     }
