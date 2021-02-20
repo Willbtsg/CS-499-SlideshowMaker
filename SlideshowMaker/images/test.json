@@ -1,1 +1,1 @@
-{"SlideList":[{"name":"images\/download (1).png"},{"name":"images\/download.jfif"},{"name":"images\/download.png"},{"name":"images\/test.json"}]}
+{"SlideList":[{"forward":"LRWipe","name":"images\/download (1).png","hasTransitions":true},{"name":"images\/download.jfif","hasTransitions":false},{"name":"images\/download.png","hasTransitions":false},{"name":"images\/test.json","hasTransitions":false}]}
