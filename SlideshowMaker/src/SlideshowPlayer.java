@@ -118,7 +118,11 @@ public class SlideshowPlayer extends JFrame  {
         ArrayList<Slide> theList = new ArrayList<Slide>();
 
         for (String imageName : data.list()){
-            theList.add(new Slide(m_pathPrefix + "/" + imageName)); //create Slide with full filepath in name
+
+            if (imageName.endsWith(".jpg") || imageName.endsWith(".jpeg"))
+            {
+                theList.add(new Slide(m_pathPrefix + "/" + imageName)); //create Slide with full filepath in name
+            }
         }
 
         return theList;
