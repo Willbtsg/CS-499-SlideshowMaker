@@ -18,6 +18,10 @@ import java.util.ArrayList;
 
 public class DBWizard {
 
+    /**
+     * static DBWizard instance- contains instance of DBWizard for Singleton implementation
+     * String DBName- contains filepath of slideshow layout file
+     */
 
     private static DBWizard instance;
     private static String DBNAME = "images/test.json";
@@ -56,7 +60,7 @@ public class DBWizard {
      * @return An ArrayList of Slide objects
      *
      */
-    public static ArrayList<Slide> readDB()
+    public static ArrayList<Slide> getSlides()
     {
         JSONParser parser = new JSONParser();
         ArrayList<Slide> theList = new ArrayList<Slide>();
@@ -71,6 +75,35 @@ public class DBWizard {
 
             for (Object j : slideList) {
                 theList.add(slideFactory.makeSlide((JSONObject) j)); //use the SlideFactory to make the specified Slide
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return theList;
+    }
+
+    public static ArrayList<String> getSongs()
+    {
+        JSONParser parser = new JSONParser();
+        ArrayList<String> theList = new ArrayList<String>();
+
+        try {
+            Object obj = parser.parse(new FileReader(DBNAME));
+            //
+            //Read JSON file
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray soundList = (JSONArray) jsonObject.get("SoundList");
+
+            for (Object j : soundList) {
+
+                JSONObject tempJ = (JSONObject) j;
+                theList.add((String) tempJ.get("name")); //use the ClipFactory to make the specified Clip
             }
 
 

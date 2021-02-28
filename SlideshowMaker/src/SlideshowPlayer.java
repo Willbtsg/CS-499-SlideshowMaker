@@ -1,5 +1,8 @@
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -22,6 +25,7 @@ public class SlideshowPlayer extends JFrame  {
      * JPanel m_controlPanel- contains user controls for playback
      * JButton m_nextSlide- loads next slide in list
      * JButton m_previousSlide- loads previous slide in list
+     * Jukebox m_Jukebox- object used to handle audio playback during the slideshow
      */
 
     private static SlideshowPlayer instance;
@@ -32,6 +36,7 @@ public class SlideshowPlayer extends JFrame  {
     private JPanel m_controlPanel;
     private JButton m_nextSlide;
     private JButton m_previousSlide;
+    private Jukebox m_Jukebox;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -46,8 +51,7 @@ public class SlideshowPlayer extends JFrame  {
      * Constructor function used to initialize the SlideshowPlayer JFrame
      * Creates all necessary GUI components and calls functions used to create Slides
      */
-    private SlideshowPlayer()
-    {
+    private SlideshowPlayer() {
         setTitle("SlideshowPlayer");
         setLayout(null);
 
@@ -58,9 +62,9 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(150, 50, 500, 313);
         add(m_imageLabel);
 
-        m_SlideList = DBWizard.getInstance().readDB(); //construct SlideList using the layout file
+        m_SlideList = DBWizard.getInstance().getSlides(); //construct SlideList using the layout file
 
-        if (m_currentSlideIndex < 0){ //loads first image in slideshow
+        if (m_currentSlideIndex < 0) { //loads first image in slideshow
             m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(0).getImage()));
             m_currentSlideIndex = 0;
         }
@@ -86,11 +90,15 @@ public class SlideshowPlayer extends JFrame  {
         add(m_controlPanel);
 
         //Change appearance of JFrame
-        setSize(800,500);//800 width and 500 height
+        setSize(800, 500);//800 width and 500 height
         setLocationRelativeTo(null);
         setVisible(true);//making the frame visible
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        m_Jukebox = Jukebox.getInstance();
+        m_Jukebox.setSoundList((DBWizard.getInstance().getSongs()));
+        m_Jukebox.playAll(); //after loading Jukebox with song data, tell it to play until it runs out
 
     }
 
@@ -153,6 +161,7 @@ public class SlideshowPlayer extends JFrame  {
         } catch (IndexOutOfBoundsException e){ //if tempIndex is invalid, the Slide is not changed
             return;
         }
+
     }
 
     /**
