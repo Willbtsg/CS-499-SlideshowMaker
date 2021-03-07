@@ -1,7 +1,11 @@
 import org.json.simple.JSONObject;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.Image;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Class name: Slide
@@ -13,13 +17,13 @@ public class Slide {
 
     /**
      * String m_name- contains filepath for desired image
-     * private Image m_image- contains scaled image for this Slide
+     * private BufferedImage m_image- contains scaled image for this Slide
      * Transition m_forward- reference to specified Transition used when moving to next slide
      * Transition m_backwards- reference to Transition to be used when returning to this slide
      * Transition m_hasTransition- flag to indicate whether or not this Slide has transitions
      */
     private String m_name;
-    private Image m_image;
+    private BufferedImage m_image;
     private Transition m_forward;
     private Transition m_backwards;
     private Boolean m_hasTransitions;
@@ -32,11 +36,18 @@ public class Slide {
     {
         m_name = name;
 
-        Image tempImage;
+        try {
+            BufferedImage orgImage = ImageIO.read(new File(name));
+            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
+            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
 
-        ImageIcon currentImage = new ImageIcon(name);
-        tempImage = currentImage.getImage();
-        m_image = tempImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
+            Graphics2D g2d = m_image.createGraphics();
+            g2d.drawImage(tempImage, 0, 0, null);
+            g2d.dispose();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         m_hasTransitions = false;
 
@@ -51,11 +62,19 @@ public class Slide {
     {
         m_name = (String) j.get("name");
 
-        Image tempImage;
+        try {
+            BufferedImage orgImage = ImageIO.read(new File(m_name));
+            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
+            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
 
-        ImageIcon currentImage = new ImageIcon(getName());
-        tempImage = currentImage.getImage();
-        m_image = tempImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
+            Graphics2D g2d = m_image.createGraphics();
+            g2d.drawImage(tempImage, 0, 0, null);
+            g2d.dispose();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         m_forward = new LRWipe();
         m_backwards = new RLWipe();
         m_hasTransitions = true;
