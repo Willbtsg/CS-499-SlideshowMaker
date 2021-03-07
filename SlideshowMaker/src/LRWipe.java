@@ -45,9 +45,6 @@ public class LRWipe extends Transition{
         // Initialize the dimensions for section of ImageB to draw into ImageA
         bX = incX;
 
-        // Draw the scaled current image if necessary
-        //gPan.drawImage(ImageA, 0, 0, imgPanel);
-
         // Draw image A
         for(int i=0; i<numIterations; i++)
         {
