@@ -25,9 +25,8 @@ public class RLWipe extends Transition{
      * @param imgLabel- JLabel where Images are displayed
      * @param ImageA- Image currently being displayed
      * @param ImageB- new Image to be displayed
-     * @param time- length of the Transition in seconds
      */
-    void doTrans(JLabel imgLabel, Image ImageA, Image ImageB, double time)
+    void doTrans(JLabel imgLabel, Image ImageA, Image ImageB)
     {
         Graphics gPan = imgLabel.getGraphics();
 
@@ -37,7 +36,7 @@ public class RLWipe extends Transition{
         int incX;					// X increment each time
         int numIterations = 50;		// Number of iterations in the sweep
         int timeInc;				// Milliseconds to pause each time
-        timeInc = (int)(time * 1000) / numIterations;
+        timeInc = (int) m_time / numIterations;
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();

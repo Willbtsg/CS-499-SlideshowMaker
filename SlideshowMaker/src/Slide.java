@@ -74,12 +74,13 @@ public class Slide {
         JSONObject obj = new JSONObject();
         try
         {
-            obj.put("name",m_name) ;
-            obj.put("hasTransitions",m_hasTransitions);
+            obj.put("name", m_name) ;
+            obj.put("hasTransitions", m_hasTransitions);
 
             if (m_hasTransitions) //only try to write Transition information if the Slide has Transitions
             {
-                obj.put("forward",m_forward.getType()); //since m_backwards is dependent on the type of m_forward, only one has to be stored
+                obj.put("forward", m_forward.getType()); //since m_backwards is dependent on the type of m_forward, only one has to be stored
+                obj.put("transTime", m_forward.getTime());
             }
 
         }
@@ -145,19 +146,17 @@ public class Slide {
      * Passes image and timing information necessary for forward Transition execution
      * @param imgLabel- JLabel used to display Image
      * @param ImageB- Destination Image (the one not being currently displayed)
-     * @param time- Desired duration of the Transition (in seconds)
      */
-    public void nextSlide(JLabel imgLabel, Image ImageB, double time) {
-        m_forward.doTrans(imgLabel, m_image, ImageB, time);
+    public void nextSlide(JLabel imgLabel, Image ImageB) {
+        m_forward.doTrans(imgLabel, m_image, ImageB);
     }
 
     /**
      * Passes image and timing information necessary for backwards Transition execution
      * @param imgLabel- JLabel used to display Image
      * @param ImageB- Destination Image (the one not being currently displayed)
-     * @param time- Desired duration of the Transition (in seconds)
      */
-    public void returnToSlide(JLabel imgLabel, Image ImageB, double time) {
-        m_backwards.doTrans(imgLabel, ImageB, m_image, time);
+    public void returnToSlide(JLabel imgLabel, Image ImageB) {
+        m_backwards.doTrans(imgLabel, ImageB, m_image);
     }
 }

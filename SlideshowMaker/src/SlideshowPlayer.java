@@ -139,7 +139,7 @@ public class SlideshowPlayer extends JFrame  {
 
                 if (m_SlideList.get(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
                     Image nextImage = m_SlideList.get(tempIndex).getImage(); //...get the image for the next Slide...
-                    m_SlideList.get(m_currentSlideIndex).nextSlide(m_imageLabel, nextImage, 2); //...and perform the Transition
+                    m_SlideList.get(m_currentSlideIndex).nextSlide(m_imageLabel, nextImage); //...and perform the Transition
                 }
                 else { //otherwise, set new image without use of a Transition
                     m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));
@@ -149,7 +149,7 @@ public class SlideshowPlayer extends JFrame  {
 
                 if (m_SlideList.get(tempIndex).hasTransitions()) { //...see if a Transition will be used
                     Image currentImage = m_SlideList.get(m_currentSlideIndex).getImage(); //...store the image form the current Slide...
-                    m_SlideList.get(tempIndex).returnToSlide(m_imageLabel, currentImage, 2); //...and perform the Transition
+                    m_SlideList.get(tempIndex).returnToSlide(m_imageLabel, currentImage); //...and perform the Transition
                 }
                 else { //otherwise, set new image without use of a Transition
                     m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));

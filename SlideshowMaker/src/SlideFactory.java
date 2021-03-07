@@ -54,6 +54,12 @@ public class SlideFactory {
         {
             tempTransitions = transitionLibrary.retrieveTransitions((String) j.get("forward"));
 
+            for (Transition transition : tempTransitions)
+            {
+
+                transition.setTime((long) j.get("transTime"));
+            }
+
             newSlide.setForward(tempTransitions.get(0));
             newSlide.setBackwards(tempTransitions.get(1));
         }
