@@ -1,8 +1,5 @@
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -107,8 +104,7 @@ public class SlideshowPlayer extends JFrame  {
      * This function will be adapted for the editor when it is written
      * @return theList- returns list of Slide objects to be presented in the slideshow
      */
-    private ArrayList<Slide> getSlideList()
-    {
+    private ArrayList<Slide> getSlideList() {
         File data = new File(m_pathPrefix);
 
         ArrayList<Slide> theList = new ArrayList<Slide>();
