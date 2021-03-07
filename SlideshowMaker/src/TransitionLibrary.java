@@ -46,6 +46,21 @@ public class TransitionLibrary {
                 desiredTransitions.add(new RLWipe());
                 desiredTransitions.add(new LRWipe());
                 break;
+
+            case "UpWipe" :
+                desiredTransitions.add(new UpWipe());
+                desiredTransitions.add(new DownWipe());
+                break;
+
+            case "DownWipe" :
+                desiredTransitions.add(new DownWipe());
+                desiredTransitions.add(new UpWipe());
+                break;
+
+            case "CrossFade" :
+                desiredTransitions.add(new CrossFade());
+                desiredTransitions.add(new CrossFade());
+                break;
         }
 
         return desiredTransitions;
