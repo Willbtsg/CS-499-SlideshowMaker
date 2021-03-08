@@ -85,8 +85,7 @@ public class SlideshowPlayer extends JFrame  {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         if (m_currentSlideIndex < 0) { //loads first image in slideshow
-            m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(0).getImage()));
-            m_currentSlideIndex = 0;
+            getSlide(1);
         }
 
         m_Jukebox = Jukebox.getInstance();
@@ -131,8 +130,7 @@ public class SlideshowPlayer extends JFrame  {
             if (indexShift > 0) { //if next Slide is desired...
 
                 if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
-                    Image currentImage = m_Slideshow.getSlide(m_currentSlideIndex).getImage(); //...store the image from the current Slide...
-                    m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel, currentImage); //...perform the Transition...
+                    m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel); //...perform the Transition...
 
                     usedTransition = true; //...and mark that a Transition was used
                 }

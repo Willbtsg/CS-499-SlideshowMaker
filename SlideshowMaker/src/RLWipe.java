@@ -18,20 +18,19 @@ public class RLWipe extends Transition{
     }
 
     /**
-     * Replaces ImageA in imgLabel with ImageB over the course of "time" seconds
+     * Draws newImage in imgLabel using RLWipe effect
      *
      * NOTE: Function adapted from code written by Dr. Rick Coleman and provided by Dr. Harry Delugach
      *
      * @param imgLabel- JLabel where Images are displayed
-     * @param ImageA- Image currently being displayed
-     * @param ImageB- new Image to be displayed
+     * @param newImage- new Image to be displayed
      */
-    void doTrans(JLabel imgLabel, Image ImageA, Image ImageB)
+    void doTrans(JLabel imgLabel, Image newImage)
     {
         Graphics gPan = imgLabel.getGraphics();
 
         // Dimension holders
-        int bX;		// Dimensions for imageB
+        int bX;		// Dimensions for newImage
         int imgWidth, imgHeight;
         int incX;					// X increment each time
         int numIterations = 50;		// Number of iterations in the sweep
@@ -42,17 +41,13 @@ public class RLWipe extends Transition{
         imgHeight = imgLabel.getHeight();
         incX = imgWidth / numIterations;		// Do 1/numIterations each time
 
-        // Initialize the dimensions for section of ImageB to draw into ImageA
+        // Initialize the dimensions for section of newImage
         bX = imgWidth - incX;
 
-        // Draw the scaled current image if necessary
-        gPan.drawImage(ImageA, 0, 0, imgLabel);
-
-        // Draw image A
         for(int i=0; i<numIterations; i++)
         {
-            // Draw part of B over A on the screen
-            gPan.drawImage(ImageB, bX, 0, imgWidth, imgHeight, bX, 0, imgWidth, imgHeight, null); // Draw portion of ImageB into ImageA
+            // Draw part of newImage within imgLabel
+            gPan.drawImage(newImage, bX, 0, imgWidth, imgHeight, bX, 0, imgWidth, imgHeight, null); // Draw portion of newImage
             bX -= incX;  // Move another section to the left of the previous section
             // Pause a bit so we can actually see the transition
             try
@@ -65,7 +60,7 @@ public class RLWipe extends Transition{
             }
         }
 
-        gPan.drawImage(ImageB, 0,0, imgLabel);
+        gPan.drawImage(newImage, 0,0, imgLabel);
     }
 
 }

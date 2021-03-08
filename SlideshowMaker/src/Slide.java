@@ -164,10 +164,9 @@ public class Slide {
     /**
      * Passes image and timing information necessary for forward Transition execution
      * @param imgLabel- JLabel used to display Image
-     * @param currentImage- Destination Image (the one not being currently displayed)
      */
-    public void nextSlide(JLabel imgLabel, Image currentImage) {
-        m_forward.doTrans(imgLabel, currentImage, m_image);
+    public void nextSlide(JLabel imgLabel) {
+        m_forward.doTrans(imgLabel, m_image);
     }
 
     /**
@@ -176,6 +175,6 @@ public class Slide {
      * @param desiredImage- Destination Image (the one not being currently displayed)
      */
     public void returnToSlide(JLabel imgLabel, Image desiredImage) {
-        m_backwards.doTrans(imgLabel, m_image, desiredImage);
+        m_backwards.doTrans(imgLabel, desiredImage);
     }
 }

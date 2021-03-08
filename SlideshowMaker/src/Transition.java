@@ -15,6 +15,6 @@ abstract class Transition {
     public String getType() { return m_type; }
     public void setTime(long time) { m_time = time; }
     public double getTime() { return m_time; }
-    abstract void doTrans(JLabel imgLabel, Image ImageA, Image ImageB); //replace ImageA with ImageB  within imgLabel
+    abstract void doTrans(JLabel imgLabel, Image newImage); //replace Image currently in imgLabel with newImage
 
 }

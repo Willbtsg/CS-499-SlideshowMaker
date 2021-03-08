@@ -18,20 +18,19 @@ public class LRWipe extends Transition{
     }
 
     /**
-     * Replaces ImageA in imgLabel with ImageB over the course of "time" seconds
+     * Draws newImage in imgLabel using LRWipe effect
      *
      * NOTE: Function adapted from code written by Dr. Rick Coleman and provided by Dr. Harry Delugach
      *
      * @param imgLabel- JLabel where Images are displayed
-     * @param ImageA- Image currently being displayed
-     * @param ImageB- new Image to be displayed
+     * @param newImage- new Image to be displayed
      */
-    void doTrans(JLabel imgLabel, Image ImageA, Image ImageB)
+    void doTrans(JLabel imgLabel, Image newImage)
     {
         Graphics gPan = imgLabel.getGraphics();
 
         // Dimension holders
-        int bX;		// Dimensions for imageB
+        int bX;		// Dimensions for newImage
         int imgWidth, imgHeight;
         int incX;					// X increment each time
         int numIterations = 50;		// Number of iterations in the sweep
@@ -42,14 +41,14 @@ public class LRWipe extends Transition{
         imgHeight = imgLabel.getHeight();
         incX = imgWidth / numIterations;		// Do 1/20 each time to start
 
-        // Initialize the dimensions for section of ImageB to draw into ImageA
+        // Initialize the dimensions for section of newImage
         bX = incX;
 
         // Draw image A
         for(int i=0; i<numIterations; i++)
         {
             // Draw part of B into A
-            gPan.drawImage(ImageB, 0, 0, bX, imgHeight, 0, 0, bX, imgHeight,null); // Draw portion of ImageB into ImageA
+            gPan.drawImage(newImage, 0, 0, bX, imgHeight, 0, 0, bX, imgHeight,null); // Draw portion of newImage in imgLabel
             bX += incX;  // Take a bigger section next time
             // Pause a bit
             try
@@ -62,6 +61,6 @@ public class LRWipe extends Transition{
             }
         }
 
-        gPan.drawImage(ImageB, 0,0, imgLabel);
+        gPan.drawImage(newImage, 0,0, imgLabel);
     }
 }
