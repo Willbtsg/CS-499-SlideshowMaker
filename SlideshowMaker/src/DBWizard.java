@@ -29,19 +29,10 @@ public class DBWizard {
     /**
      * Writes the list of slides out to the master database.
      * This function will be moved to the editor once it has been written
-     * @param sl list of slides to be written to the database.
+     * @param obj- JSONObject containing data to be written to the database.
      */
-    public static void writeDB(ArrayList<Slide> sl)
+    public static void writeDB(JSONObject obj)
     {
-        JSONArray list = new JSONArray();
-        JSONObject obj = new JSONObject();
-
-        for (Slide s:sl)
-        {
-            list.add(s.toJSON());
-        }
-
-        obj.put("SlideList", list);
 
         try(FileWriter file =  new FileWriter(DBNAME))
         {
@@ -57,14 +48,15 @@ public class DBWizard {
 
     /**
      * Reads the Master list of slides from the database
-     * @return An ArrayList of Slide objects
+     * @return A Slideshow object containing all Slide information
      *
      */
-    public static ArrayList<Slide> getSlides()
+    public static Slideshow getSlideshow()
     {
         JSONParser parser = new JSONParser();
         ArrayList<Slide> theList = new ArrayList<Slide>();
         SlideFactory slideFactory = SlideFactory.getInstance();
+        Slideshow slideshow = new Slideshow();
 
         try {
             Object obj = parser.parse(new FileReader(DBNAME));
@@ -77,6 +69,9 @@ public class DBWizard {
                 theList.add(slideFactory.makeSlide((JSONObject) j)); //use the SlideFactory to make the specified Slide
             }
 
+            slideshow.setSlideList(theList);
+            slideshow.setAutomated((Boolean) jsonObject.get("Automated"));
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -85,7 +80,7 @@ public class DBWizard {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return theList;
+        return slideshow;
     }
 
     public static ArrayList<String> getSongs()

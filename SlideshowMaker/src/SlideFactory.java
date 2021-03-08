@@ -1,4 +1,6 @@
 import org.json.simple.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -31,8 +33,7 @@ public class SlideFactory {
      * @param name- filename of Image to be attached to the Slide
      * @return newSlide- returns new Slide object
      */
-    public Slide makeSlide(String name)
-    {
+    public Slide makeSlide(String name) {
         Slide newSlide = new Slide(name);
 
         return newSlide;
@@ -43,10 +44,9 @@ public class SlideFactory {
      * @param j- JSONObject that contains necessary information about the new Slide
      * @return newSlide- returns new Slide object
      */
-    public Slide makeSlide(JSONObject j)
-    {
+    public Slide makeSlide(JSONObject j) {
         TransitionLibrary transitionLibrary = TransitionLibrary.getInstance(); //retrieve TransitionLibrary Singleton
-        ArrayList<Transition> tempTransitions = new ArrayList();
+        ArrayList<Transition> tempTransitions;
 
         Slide newSlide = new Slide((String) j.get("name"));
 
@@ -56,7 +56,6 @@ public class SlideFactory {
 
             for (Transition transition : tempTransitions)
             {
-
                 transition.setTime((long) j.get("transTime"));
             }
 

@@ -28,7 +28,7 @@ public class SlideshowPlayer extends JFrame  {
     private static SlideshowPlayer instance;
     private String m_pathPrefix;
     private JLabel m_imageLabel;
-    private ArrayList<Slide> m_SlideList;
+    private Slideshow m_Slideshow;
     private int m_currentSlideIndex;
     private JPanel m_controlPanel;
     private JButton m_nextSlide;
@@ -59,12 +59,7 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(150, 50, 500, 313);
         add(m_imageLabel);
 
-        m_SlideList = DBWizard.getInstance().getSlides(); //construct SlideList using the layout file
-
-        if (m_currentSlideIndex < 0) { //loads first image in slideshow
-            m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(0).getImage()));
-            m_currentSlideIndex = 0;
-        }
+        m_Slideshow = DBWizard.getInstance().getSlideshow(); //construct Slideshow using the layout file
 
         m_controlPanel = new JPanel();
         m_controlPanel.setLayout(null);
@@ -72,17 +67,13 @@ public class SlideshowPlayer extends JFrame  {
         m_controlPanel.setBounds(0, 400, 784, 70);
         m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
-        m_nextSlide = new JButton("Next Slide");
-        m_nextSlide.setBounds(500, 20, 100, 20);
-        m_controlPanel.add(m_nextSlide);
-
-        m_nextSlide.addActionListener(event -> getSlide(1));
-
-        m_previousSlide = new JButton("Previous Slide");
-        m_previousSlide.setBounds(200, 20, 120, 20);
-        m_controlPanel.add(m_previousSlide);
-
-        m_previousSlide.addActionListener(event -> getSlide(-1));
+        if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback
+        {
+            //if it is, configure the controls for automated playback
+        }
+        else {
+            setManualControls(); //if it isn't, configure the controls for manual playback
+        }
 
         add(m_controlPanel);
 
@@ -92,6 +83,11 @@ public class SlideshowPlayer extends JFrame  {
         setVisible(true);//making the frame visible
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        if (m_currentSlideIndex < 0) { //loads first image in slideshow
+            m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(0).getImage()));
+            m_currentSlideIndex = 0;
+        }
 
         m_Jukebox = Jukebox.getInstance();
         m_Jukebox.setSoundList((DBWizard.getInstance().getSongs()));
@@ -128,28 +124,32 @@ public class SlideshowPlayer extends JFrame  {
     {
 
         int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
+        boolean usedTransition = false; //flag to signal if a Transition was used
 
         try {
 
             if (indexShift > 0) { //if next Slide is desired...
 
-                if (m_SlideList.get(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
-                    Image nextImage = m_SlideList.get(tempIndex).getImage(); //...get the image for the next Slide...
-                    m_SlideList.get(m_currentSlideIndex).nextSlide(m_imageLabel, nextImage); //...and perform the Transition
-                }
-                else { //otherwise, set new image without use of a Transition
-                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));
+                if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
+                    Image currentImage = m_Slideshow.getSlide(m_currentSlideIndex).getImage(); //...store the image from the current Slide...
+                    m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel, currentImage); //...perform the Transition...
+
+                    usedTransition = true; //...and mark that a Transition was used
                 }
             }
             else { //if the previous slide is desired...
 
-                if (m_SlideList.get(tempIndex).hasTransitions()) { //...see if a Transition will be used
-                    Image currentImage = m_SlideList.get(m_currentSlideIndex).getImage(); //...store the image form the current Slide...
-                    m_SlideList.get(tempIndex).returnToSlide(m_imageLabel, currentImage); //...and perform the Transition
+                if (m_Slideshow.getSlide(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
+                    Image nextImage = m_Slideshow.getSlide(tempIndex).getImage(); //...get the image from the previous Slide Slide...
+                    m_Slideshow.getSlide(m_currentSlideIndex).returnToSlide(m_imageLabel, nextImage); //...perform the Transition...
+
+                    usedTransition = true; //...and mark that a Transition was used
                 }
-                else { //otherwise, set new image without use of a Transition
-                    m_imageLabel.setIcon(new ImageIcon(m_SlideList.get(tempIndex).getImage()));
-                }
+            }
+
+            if (!usedTransition) //if no Transition is needed, just load the desired image
+            {
+                m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(tempIndex).getImage()));
             }
 
             m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
@@ -158,6 +158,24 @@ public class SlideshowPlayer extends JFrame  {
             return;
         }
 
+    }
+
+    /**
+     * This function specifies JButton behavior to be used when a Slideshow is set for manual playback
+     */
+    private void setManualControls()
+    {
+        m_nextSlide = new JButton("Next Slide");
+        m_nextSlide.setBounds(500, 20, 100, 20);
+        m_controlPanel.add(m_nextSlide);
+
+        m_nextSlide.addActionListener(event -> getSlide(1));
+
+        m_previousSlide = new JButton("Previous Slide");
+        m_previousSlide.setBounds(200, 20, 120, 20);
+        m_controlPanel.add(m_previousSlide);
+
+        m_previousSlide.addActionListener(event -> getSlide(-1));
     }
 
     /**
