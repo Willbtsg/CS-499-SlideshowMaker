@@ -18,8 +18,8 @@ public class Slide {
     /**
      * String m_name- contains filepath for desired image
      * private BufferedImage m_image- contains scaled image for this Slide
-     * Transition m_forward- reference to specified Transition used when moving to next slide
-     * Transition m_backwards- reference to Transition to be used when returning to this slide
+     * Transition m_forward- reference to specified Transition used when moving forward to this Slide
+     * Transition m_backwards- reference to Transition to be used when moving backwards from this Slide
      * Transition m_hasTransition- flag to indicate whether or not this Slide has transitions
      */
     private String m_name;
@@ -88,7 +88,7 @@ public class Slide {
      * @return a JSONObject
      *
      */
-    public  JSONObject toJSON()
+    public JSONObject toJSON()
     {
         JSONObject obj = new JSONObject();
         try
@@ -164,18 +164,18 @@ public class Slide {
     /**
      * Passes image and timing information necessary for forward Transition execution
      * @param imgLabel- JLabel used to display Image
-     * @param ImageB- Destination Image (the one not being currently displayed)
+     * @param currentImage- Destination Image (the one not being currently displayed)
      */
-    public void nextSlide(JLabel imgLabel, Image ImageB) {
-        m_forward.doTrans(imgLabel, m_image, ImageB);
+    public void nextSlide(JLabel imgLabel, Image currentImage) {
+        m_forward.doTrans(imgLabel, currentImage, m_image);
     }
 
     /**
      * Passes image and timing information necessary for backwards Transition execution
      * @param imgLabel- JLabel used to display Image
-     * @param ImageB- Destination Image (the one not being currently displayed)
+     * @param desiredImage- Destination Image (the one not being currently displayed)
      */
-    public void returnToSlide(JLabel imgLabel, Image ImageB) {
-        m_backwards.doTrans(imgLabel, ImageB, m_image);
+    public void returnToSlide(JLabel imgLabel, Image desiredImage) {
+        m_backwards.doTrans(imgLabel, m_image, desiredImage);
     }
 }
