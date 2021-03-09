@@ -21,12 +21,14 @@ public class Slide {
      * Transition m_forward- reference to specified Transition used when moving forward to this Slide
      * Transition m_backwards- reference to Transition to be used when moving backwards from this Slide
      * Transition m_hasTransition- flag to indicate whether or not this Slide has transitions
+     * int m_time- amount of time to display Slide image during automated Slideshow
      */
     private String m_name;
     private BufferedImage m_image;
     private Transition m_forward;
     private Transition m_backwards;
     private Boolean m_hasTransitions;
+    private long m_time;
 
     /**
      * Constructor for Slide object. Sets filename before assigning Transitions
@@ -54,32 +56,6 @@ public class Slide {
         return;
     }
 
-    /**
-     * Function will likely be deleted later since JSONObjects are now handled by the SlideFactory
-     * @param j
-     */
-    public Slide(JSONObject j)
-    {
-        m_name = (String) j.get("name");
-
-        try {
-            BufferedImage orgImage = ImageIO.read(new File(m_name));
-            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
-            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D g2d = m_image.createGraphics();
-            g2d.drawImage(tempImage, 0, 0, null);
-            g2d.dispose();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        m_forward = new LRWipe();
-        m_backwards = new RLWipe();
-        m_hasTransitions = true;
-
-    }
 
     //https://stackoverflow.com/a/53226346/5763413
     @SuppressWarnings("unchecked")
@@ -123,6 +99,10 @@ public class Slide {
      * @return m_image- Image to be shown in JLabel
      */
     public Image getImage() { return m_image; }
+
+    public void setTime(long time) { m_time = time; }
+
+    public long getTime() { return m_time; }
 
     /**
      * Returns type/class name of Transition being used to move to next Slide

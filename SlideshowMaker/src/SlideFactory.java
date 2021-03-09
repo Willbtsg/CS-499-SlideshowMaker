@@ -50,6 +50,8 @@ public class SlideFactory {
 
         Slide newSlide = new Slide((String) j.get("name"));
 
+        newSlide.setTime((long) j.get("imgTime"));
+
         if ((Boolean) j.get("hasTransitions")) //only try to assign Transitions if the Slide is supposed to have them
         {
             tempTransitions = transitionLibrary.retrieveTransitions((String) j.get("forward"));

@@ -1,7 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 /**
  * Class name: SlideshowPlayer
@@ -70,8 +73,7 @@ public class SlideshowPlayer extends JFrame  {
         if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback
         {
             //if it is, configure the controls for automated playback
-        }
-        else {
+        } else {
             setManualControls(); //if it isn't, configure the controls for manual playback
         }
 
@@ -85,12 +87,27 @@ public class SlideshowPlayer extends JFrame  {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         if (m_currentSlideIndex < 0) { //loads first image in slideshow
-            getSlide(1);
+            showSlide(1, false);
+        }
+
+        if (m_Slideshow.getAutomated())
+        {
+            ActionListener taskPerformer = new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    ((Timer)evt.getSource()).stop();
+                    showSlide(1, false);
+                    ((Timer)evt.getSource()).setInitialDelay((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime());
+                    ((Timer)evt.getSource()).start();
+                }
+            };
+            new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer).start();
         }
 
         m_Jukebox = Jukebox.getInstance();
         m_Jukebox.setSoundList((DBWizard.getInstance().getSongs()));
         m_Jukebox.playAll(); //after loading Jukebox with song data, tell it to play until it runs out
+
+
 
     }
 
@@ -119,7 +136,7 @@ public class SlideshowPlayer extends JFrame  {
      * Retrieves the desired Slide (next or previous) from m_SlideList
      * @param indexShift- indicates whether to get next or previous slide
      */
-    private void getSlide(int indexShift)
+    private void showSlide(int indexShift, boolean skip)
     {
 
         int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
@@ -145,7 +162,7 @@ public class SlideshowPlayer extends JFrame  {
                 }
             }
 
-            if (!usedTransition) //if no Transition is needed, just load the desired image
+            if (!usedTransition || skip) //if no Transition is needed, just load the desired image
             {
                 m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(tempIndex).getImage()));
             }
@@ -167,13 +184,13 @@ public class SlideshowPlayer extends JFrame  {
         m_nextSlide.setBounds(500, 20, 100, 20);
         m_controlPanel.add(m_nextSlide);
 
-        m_nextSlide.addActionListener(event -> getSlide(1));
+        m_nextSlide.addActionListener(event -> showSlide(1, false));
 
         m_previousSlide = new JButton("Previous Slide");
         m_previousSlide.setBounds(200, 20, 120, 20);
         m_controlPanel.add(m_previousSlide);
 
-        m_previousSlide.addActionListener(event -> getSlide(-1));
+        m_previousSlide.addActionListener(event -> showSlide(-1, false));
     }
 
     /**
