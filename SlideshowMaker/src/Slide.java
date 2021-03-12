@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Class name: Slide
@@ -38,24 +39,46 @@ public class Slide {
     {
         m_name = name;
 
-        try {
-            BufferedImage orgImage = ImageIO.read(new File(name));
-            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
-            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D g2d = m_image.createGraphics();
-            g2d.drawImage(tempImage, 0, 0, null);
-            g2d.dispose();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setImage(name);
 
         m_hasTransitions = false;
 
         return;
     }
 
+    /**
+     * Constructor for Slide object. Pulls all data form JSONObject
+     * @param j- JSONObject containing Slide information
+     */
+    public Slide (JSONObject j)
+    {
+        m_name = (String) j.get("name");
+
+        setImage(m_name);
+
+        m_time = (long) j.get("imgTime");
+
+        if ((Boolean) j.get("hasTransitions")) //only try to assign Transitions if the Slide is supposed to have them
+        {
+
+            TransitionLibrary transitionLibrary = TransitionLibrary.getInstance(); //retrieve TransitionLibrary Singleton
+            ArrayList<Transition> tempTransitions;
+
+            tempTransitions = transitionLibrary.retrieveTransitions((String) j.get("forward"));
+
+            for (Transition transition : tempTransitions)
+            {
+                transition.setTime((long) j.get("transTime"));
+            }
+
+            m_forward = tempTransitions.get(0);
+            m_backwards = tempTransitions.get(1);
+            m_hasTransitions = true;
+        }
+        else {
+            m_hasTransitions = false;
+        }
+    }
 
     //https://stackoverflow.com/a/53226346/5763413
     @SuppressWarnings("unchecked")
@@ -95,13 +118,41 @@ public class Slide {
     }
 
     /**
+     * used to convert an image filename into a scaled BufferedImage to be used in the Slideshow
+     * @param name- name of image file to be read and scaled
+     */
+    public void setImage(String name)
+    {
+        try {
+            BufferedImage orgImage = ImageIO.read(new File(name));
+            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
+            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2d = m_image.createGraphics();
+            g2d.drawImage(tempImage, 0, 0, null);
+            g2d.dispose();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Returns the image assigned to this Slide
      * @return m_image- Image to be shown in JLabel
      */
     public Image getImage() { return m_image; }
 
+    /**
+     * Sets amount of time for Slide to be displayed during an automated Slideshow
+     * @param time- display time
+     */
     public void setTime(long time) { m_time = time; }
 
+    /**
+     * Returns time that a Slide is displayed during an automated Slideshow
+     * @return
+     */
     public long getTime() { return m_time; }
 
     /**
@@ -115,6 +166,12 @@ public class Slide {
      * @return m_hasTransitions- indicates whether or not this Slide uses Transitions
      */
     public Boolean hasTransitions() { return m_hasTransitions; }
+
+    /**
+     * Returns how long the Transition is supposed to last (used when calculating Slideshow runtime)
+     * @return
+     */
+    public double getTransTime() { return m_forward.getTime(); }
 
     /**
      * Assigns forward Transition to the Slide and sets m_hasTransitions to true
