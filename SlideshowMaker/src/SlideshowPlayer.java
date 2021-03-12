@@ -25,6 +25,9 @@ public class SlideshowPlayer extends JFrame  {
      * JButton m_nextSlide- loads next slide in list
      * JButton m_previousSlide- loads previous slide in list
      * Jukebox m_Jukebox- object used to handle audio playback during the slideshow
+     * Timer m_automationTimer- Timer used to countdown to automated Slide transition
+     * JButton m_Pause- JButton present only during automated Slideshow. Used to pause m_automationTimer and m_Jukebox
+     * Boolean m_paused- Used to track whether or not an automated Slideshow has been paused
      */
     private static SlideshowPlayer instance;
     private String m_pathPrefix;
@@ -34,7 +37,12 @@ public class SlideshowPlayer extends JFrame  {
     private JPanel m_controlPanel;
     private JButton m_nextSlide;
     private JButton m_previousSlide;
-    private Jukebox m_Jukebox;
+    private final Jukebox m_Jukebox;
+    private Timer m_automationTimer;
+    private JButton m_Pause;
+    private Boolean m_paused;
+    private long m_slideStart;
+    private long timeElapsed;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -68,11 +76,11 @@ public class SlideshowPlayer extends JFrame  {
         m_controlPanel.setBounds(0, 400, 784, 70);
         m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
-        if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback
+        if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
         {
-            //if it is, configure the controls for automated playback
+            setAutomatedControls(); //...if it is, configure the controls for automated playback
         } else {
-            setManualControls(); //if it isn't, configure the controls for manual playback
+            setManualControls(); //...if it isn't, configure the controls for manual playback
         }
 
         add(m_controlPanel);
@@ -88,17 +96,20 @@ public class SlideshowPlayer extends JFrame  {
             showSlide(1, false);
         }
 
-        if (m_Slideshow.getAutomated())
+        if (m_Slideshow.getAutomated()) //creates Timer to keep automated Slideshow going
         {
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    ((Timer)evt.getSource()).stop();
-                    showSlide(1, false);
-                    ((Timer)evt.getSource()).setInitialDelay((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime());
-                    ((Timer)evt.getSource()).start();
+
+                    timedShowSlide(1, false); //when Timer goes off, load new Slide and start Timer again
+
                 }
             };
-            new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer).start();
+
+            m_automationTimer = new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer);
+            m_automationTimer.start(); //start a Timer that lasts the amount of time Slide should display
+            m_slideStart = System.currentTimeMillis();
+            m_paused = false;
         }
 
         m_Jukebox = Jukebox.getInstance();
@@ -131,8 +142,10 @@ public class SlideshowPlayer extends JFrame  {
     /**
      * Retrieves the desired Slide (next or previous) from m_SlideList
      * @param indexShift- indicates whether to get next or previous slide
+     * @param skip- indicates whether or not checking for a Transition is required
+     * @return Boolean- returns whether a new Slide was loaded (true) or if the requested index was invalid
      */
-    private void showSlide(int indexShift, boolean skip)
+    private Boolean showSlide(int indexShift, boolean skip)
     {
 
         int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
@@ -140,25 +153,27 @@ public class SlideshowPlayer extends JFrame  {
 
         try {
 
-            if (indexShift > 0) { //if next Slide is desired...
+            if (!skip)
+            {
+                if (indexShift > 0) { //if next Slide is desired...
 
-                if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
-                    m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel); //...perform the Transition...
+                    if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
+                        m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel); //...perform the Transition...
 
-                    usedTransition = true; //...and mark that a Transition was used
+                        usedTransition = true; //...and mark that a Transition was used
+                    }
+                } else { //if the previous slide is desired...
+
+                    if (m_Slideshow.getSlide(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
+                        Image nextImage = m_Slideshow.getSlide(tempIndex).getImage(); //...get the image from the previous Slide Slide...
+                        m_Slideshow.getSlide(m_currentSlideIndex).returnToSlide(m_imageLabel, nextImage); //...perform the Transition...
+
+                        usedTransition = true; //...and mark that a Transition was used
+                    }
                 }
             }
-            else { //if the previous slide is desired...
 
-                if (m_Slideshow.getSlide(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
-                    Image nextImage = m_Slideshow.getSlide(tempIndex).getImage(); //...get the image from the previous Slide Slide...
-                    m_Slideshow.getSlide(m_currentSlideIndex).returnToSlide(m_imageLabel, nextImage); //...perform the Transition...
-
-                    usedTransition = true; //...and mark that a Transition was used
-                }
-            }
-
-            if (!usedTransition || skip) //if no Transition is needed, just load the desired image
+            if (!usedTransition) //if no Transition is needed, just load the desired image
             {
                 m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(tempIndex).getImage()));
             }
@@ -166,9 +181,75 @@ public class SlideshowPlayer extends JFrame  {
             m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
 
         } catch (IndexOutOfBoundsException e){ //if tempIndex is invalid, the Slide is not changed
-            return;
+            return false;
         }
 
+        return true;
+
+    }
+
+    /**
+     * Used only with automated Slideshow. Guarantees that m_automationTimer is reset for the new Slide
+     *
+     * @param indexShift- indicates whether to get next or previous Slide
+     * @param skip- indicates whether or not a Transition should be used/checked for
+     */
+    private void timedShowSlide(int indexShift, Boolean skip)
+    {
+        m_automationTimer.stop(); //stop current Timer
+
+        if (showSlide(indexShift, skip)) //if this new Slide is not the last one...
+        {
+            m_automationTimer.setInitialDelay((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime());
+            m_automationTimer.start(); //...start the Timer with the new Slide's delay
+            m_slideStart = System.currentTimeMillis();
+            timeElapsed = 0;
+        }
+
+    }
+
+    /**
+     * This functions specifies JButton behavior to be used when a Slideshow is set for manual playback
+     */
+    private void setAutomatedControls()
+    {
+        m_nextSlide = new JButton("Next Slide");
+        m_nextSlide.setBounds(530, 20, 120, 20);
+        m_controlPanel.add(m_nextSlide);
+
+        m_nextSlide.addActionListener(event -> timedShowSlide(1, true));
+
+        m_previousSlide = new JButton("Previous Slide");
+        m_previousSlide.setBounds(150, 20, 120, 20);
+        m_controlPanel.add(m_previousSlide);
+
+        m_previousSlide.addActionListener(event -> timedShowSlide(-1, true));
+
+        m_Pause = new JButton("Pause");
+        m_Pause.setBounds(350, 20, 100, 20);
+        m_controlPanel.add(m_Pause);
+
+        m_Pause.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                if (m_paused) //if the Slideshow is already paused, resume it and the Jukebox
+                {
+                    m_automationTimer.start();
+                    m_Jukebox.resumePlayback();
+                    m_Pause.setText("Pause");
+                    m_paused = false;
+                }
+                else { //otherwise, pause the Slideshow and the Jukebox
+
+                    m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
+                    timeElapsed += System.currentTimeMillis() - m_slideStart; //calculate elapsed time since last pause/Slide start
+                    m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - timeElapsed));
+
+                    m_Jukebox.pausePlayback();
+                    m_Pause.setText("Resume");
+                    m_paused = true;
+                }
+            }
+        });
     }
 
     /**
