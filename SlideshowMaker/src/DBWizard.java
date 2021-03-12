@@ -47,42 +47,56 @@ public class DBWizard {
     }
 
     /**
-     * Reads the Master list of slides from the database
+     * Creates a Slideshow object using Slide and sound info from a json file
      * @return A Slideshow object containing all Slide information
      *
      */
     public static Slideshow getSlideshow()
     {
         JSONParser parser = new JSONParser();
-        ArrayList<Slide> theList = new ArrayList<Slide>();
-        SlideFactory slideFactory = SlideFactory.getInstance();
+        ArrayList<Slide> slideList = new ArrayList<Slide>();
+        ArrayList<String> soundList = new ArrayList();
         Slideshow slideshow = new Slideshow();
+
 
         try {
             Object obj = parser.parse(new FileReader(DBNAME));
             //
             //Read JSON file
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray slideList = (JSONArray) jsonObject.get("SlideList");
+            JSONArray tempSlides = (JSONArray) jsonObject.get("SlideList");
+            JSONArray tempSounds = (JSONArray) jsonObject.get("SoundList");
 
-            for (Object j : slideList) {
-                theList.add(slideFactory.makeSlide((JSONObject) j)); //use the SlideFactory to make the specified Slide
+            for (Object j : tempSlides) {
+                slideList.add(new Slide((JSONObject) j)); //convert JSON data into Slide objects
             }
 
-            slideshow.setSlideList(theList);
+            slideshow.setSlideList(slideList); //set Slideshow's m_SlideList
+
+            for (Object j : tempSounds) {
+                JSONObject tempJ = (JSONObject) j;
+                soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
+            }
+
+            slideshow.setSoundList(soundList); //set Slideshow's m_SoundList
+
             slideshow.setAutomated((Boolean) jsonObject.get("Automated"));
 
+            if (slideshow.getAutomated()) //if the Slideshow is automated (i.e. has a set runtime)...
+            {
+                slideshow.calculateLength(); //...calculate the total runtime
+            }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
         return slideshow;
     }
 
+    /**
+     * Gets songList from json file. Not used currently, will probably delete
+     * @return
+     */
     public static ArrayList<String> getSongs()
     {
         JSONParser parser = new JSONParser();
