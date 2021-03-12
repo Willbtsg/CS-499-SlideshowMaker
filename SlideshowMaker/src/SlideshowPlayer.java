@@ -28,6 +28,8 @@ public class SlideshowPlayer extends JFrame  {
      * Timer m_automationTimer- Timer used to countdown to automated Slide transition
      * JButton m_Pause- JButton present only during automated Slideshow. Used to pause m_automationTimer and m_Jukebox
      * Boolean m_paused- Used to track whether or not an automated Slideshow has been paused
+     * private long m_slideStart- stores time that Slide was most recently started/resumed during automated playback
+     * long m_timeElapsed- stores amount of time the Slide has run during automated playback. Used to maintain proper timing after resuming
      */
     private static SlideshowPlayer instance;
     private String m_pathPrefix;
@@ -42,7 +44,7 @@ public class SlideshowPlayer extends JFrame  {
     private JButton m_Pause;
     private Boolean m_paused;
     private long m_slideStart;
-    private long timeElapsed;
+    private long m_timeElapsed;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -203,7 +205,7 @@ public class SlideshowPlayer extends JFrame  {
             m_automationTimer.setInitialDelay((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime());
             m_automationTimer.start(); //...start the Timer with the new Slide's delay
             m_slideStart = System.currentTimeMillis();
-            timeElapsed = 0;
+            m_timeElapsed = 0;
         }
 
     }
@@ -241,8 +243,8 @@ public class SlideshowPlayer extends JFrame  {
                 else { //otherwise, pause the Slideshow and the Jukebox
 
                     m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
-                    timeElapsed += System.currentTimeMillis() - m_slideStart; //calculate elapsed time since last pause/Slide start
-                    m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - timeElapsed));
+                    m_timeElapsed += System.currentTimeMillis() - m_slideStart; //calculate elapsed time since last pause/Slide start
+                    m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
 
                     m_Jukebox.pausePlayback();
                     m_Pause.setText("Resume");
