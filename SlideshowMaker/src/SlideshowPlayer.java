@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 /**
  * Class name: SlideshowPlayer
@@ -27,7 +26,6 @@ public class SlideshowPlayer extends JFrame  {
      * JButton m_previousSlide- loads previous slide in list
      * Jukebox m_Jukebox- object used to handle audio playback during the slideshow
      */
-
     private static SlideshowPlayer instance;
     private String m_pathPrefix;
     private JLabel m_imageLabel;
@@ -104,10 +102,8 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         m_Jukebox = Jukebox.getInstance();
-        m_Jukebox.setSoundList((DBWizard.getInstance().getSongs()));
+        m_Jukebox.setSoundList(m_Slideshow.getSoundList());
         m_Jukebox.playAll(); //after loading Jukebox with song data, tell it to play until it runs out
-
-
 
     }
 
