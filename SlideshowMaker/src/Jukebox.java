@@ -18,18 +18,24 @@ public class Jukebox {
      * Clip currentClip- contains the loaded prepared sound file being played
      * AudioListener listener- LineListener used to signal when the current sound has finished
      * AudioInputStream audioStream- used to read in sound file and prepare it for playback
+     * Boolean paused- indicates whether or not the Jukebox is currently paused
+     * long soundPosition- saves microsecond position of paused sound to ensure playback resumes at proper spot
      */
-
     private static Jukebox instance;
     private ArrayList<String> m_soundList;
     private Clip currentClip;
     private AudioListener listener;
     private AudioInputStream audioStream;
+    private Boolean paused;
+    private long soundPosition;
 
     /**
      * Constructor for Jukebox object. Initializes m_soundList
      */
-    private Jukebox() { m_soundList = new ArrayList<>(); }
+    private Jukebox()
+    {
+        m_soundList = new ArrayList<>();
+    }
 
     /**
      * Used to add a new sound to m_SoundList
@@ -95,7 +101,7 @@ public class Jukebox {
         @Override
         public synchronized void update(final LineEvent event) {
             final LineEvent.Type eventType = event.getType();
-            if (eventType == LineEvent.Type.STOP) {
+            if (eventType == LineEvent.Type.STOP && !paused) { //checks paused to prevent ending songs prematurely
                 notifyAll();
             }
         }
@@ -125,6 +131,7 @@ public class Jukebox {
             currentClip.open(audioStream); //open the prepared clip
 
             try {
+                paused = false;
                 currentClip.start(); //begin audio playback
                 listener.waitUntilDone(); //set AudioListener to monitor when playback is complete
             } finally {
@@ -164,6 +171,40 @@ public class Jukebox {
 
     }
 
+    /**
+     * Pauses Jukebox playback. Only used during automated Slideshow
+     */
+    public void pausePlayback()
+    {
+
+        paused = true;
+
+        if (currentClip != null && currentClip.isRunning()) //if there is a sound playing...
+        {
+            soundPosition = currentClip.getMicrosecondPosition(); //...save its current timestamp...
+            currentClip.stop(); //...and pause it
+        }
+
+    }
+
+    /**
+     * Resumes Jukebox Playback. Only used during automated Slideshow
+     */
+    public void resumePlayback()
+    {
+        paused = false;
+
+        if (currentClip != null) { //if a sound was playing before the Jukebox was paused...
+            currentClip.setMicrosecondPosition(soundPosition); //...set the sound to its previous timestamp...
+            currentClip.start(); //...and resume playback
+        }
+    }
+
+    /**
+     * This function returns the instance of Jukebox. If no instance exists, then one is created.
+     *
+     * @return instance- pointer to instance of Jukebox to be used
+     */
     public static Jukebox getInstance()
     {
         if (instance == null)
