@@ -22,9 +22,19 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Documents\UAH\2020-2021\Spring 2021\CS 499\SlideshowMaker\src" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Documents\UAH\2020-2021\Spring 2021\CS 499\SlideshowMaker\lib" />
+      <recent name="C:\Users\Dell\Documents\UAH\2020-2021\Spring 2021\CS 499\SlideshowMaker\src" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="SlideshowPlayer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -70,26 +80,26 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="392" y="88" key="#Project_Structure/0.0.1600.860@0.0.1600.860" timestamp="1611243363517" />
-    <state x="580" y="184" key="FileChooserDialogImpl" timestamp="1612647356982">
+    <state x="580" y="184" key="FileChooserDialogImpl" timestamp="1613339256775">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state x="580" y="184" key="FileChooserDialogImpl/0.0.1600.860@0.0.1600.860" timestamp="1612647356982" />
-    <state width="1557" height="276" key="GridCell.Tab.0.bottom" timestamp="1612720677695">
+    <state x="580" y="184" key="FileChooserDialogImpl/0.0.1600.860@0.0.1600.860" timestamp="1613339256775" />
+    <state width="1557" height="222" key="GridCell.Tab.0.bottom" timestamp="1613341253971">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="1557" height="276" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1612720677695" />
-    <state width="1557" height="276" key="GridCell.Tab.0.center" timestamp="1612720677694">
+    <state width="1557" height="222" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1613341253971" />
+    <state width="1557" height="222" key="GridCell.Tab.0.center" timestamp="1613341253970">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="1557" height="276" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1612720677694" />
-    <state width="1557" height="276" key="GridCell.Tab.0.left" timestamp="1612720677694">
+    <state width="1557" height="222" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
+    <state width="1557" height="222" key="GridCell.Tab.0.left" timestamp="1613341253970">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="1557" height="276" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1612720677694" />
-    <state width="1557" height="276" key="GridCell.Tab.0.right" timestamp="1612720677695">
+    <state width="1557" height="222" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
+    <state width="1557" height="222" key="GridCell.Tab.0.right" timestamp="1613341253970">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="1557" height="276" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1612720677695" />
+    <state width="1557" height="222" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
     <state width="1557" height="276" key="GridCell.Tab.1.bottom" timestamp="1612720677696">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
@@ -106,6 +116,10 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state width="1557" height="276" key="GridCell.Tab.1.right/0.0.1600.860@0.0.1600.860" timestamp="1612720677696" />
+    <state x="280" y="4" key="SettingsEditor" timestamp="1613341224465">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state x="280" y="4" key="SettingsEditor/0.0.1600.860@0.0.1600.860" timestamp="1613341224465" />
     <state x="542" y="48" key="refactoring.ChangeSignatureDialog" timestamp="1612648210125">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
