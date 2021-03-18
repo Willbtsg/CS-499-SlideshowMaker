@@ -1,3 +1,6 @@
+package slideshow;
+import transitions.Transition;
+import transitions.TransitionLibrary;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -62,7 +65,7 @@ public class Slide {
         {
 
             TransitionLibrary transitionLibrary = TransitionLibrary.getInstance(); //retrieve TransitionLibrary Singleton
-            ArrayList<Transition> tempTransitions;
+            ArrayList<transitions.Transition> tempTransitions;
 
             tempTransitions = transitionLibrary.retrieveTransitions((String) j.get("forward"));
 

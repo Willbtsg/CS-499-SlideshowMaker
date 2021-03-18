@@ -1,3 +1,4 @@
+package transitions;
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,7 +19,7 @@ public class UpWipe extends Transition {
      * @param imgLabel- JLabel where Images are displayed
      * @param newImage- new Image to be displayed
      */
-    void doTrans(JLabel imgLabel, Image newImage)
+    public void doTrans(JLabel imgLabel, Image newImage)
     {
         Graphics gPan = imgLabel.getGraphics();
 

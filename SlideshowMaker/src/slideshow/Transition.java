@@ -1,3 +1,4 @@
+package slideshow;
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,3 +1,4 @@
+package transitions;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,7 @@ public class CrossFade extends Transition {
      * @param imgLabel- JLabel where Images are displayed
      * @param newImage- new Image to be displayed
      */
-    void doTrans(JLabel imgLabel, Image newImage)
+    public void doTrans(JLabel imgLabel, Image newImage)
     {
         Graphics2D gPan = (Graphics2D) imgLabel.getGraphics();
 
