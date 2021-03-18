@@ -53,7 +53,8 @@ public class SlideshowPlayer extends JFrame  {
     public static void main(String[] args)
     {
         SlideshowPlayer.getInstance();
-        //System.out.println("BUILD SUCCESS!");
+        // IF YOU'RE SEEING THIS,
+        // EVAN'S PUSH TO MASTER WORKED
     }
 
     /**
@@ -89,9 +90,10 @@ public class SlideshowPlayer extends JFrame  {
         add(m_controlPanel);
 
         //Change appearance of JFrame
-        setSize(800, 500);//800 width and 500 height
+        setSize(800, 500); //800 width and 500 height
         setLocationRelativeTo(null);
-        setVisible(true);//making the frame visible
+        setVisible(true); //making the frame visible
+        setResizable(false); //disable maximize button
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
