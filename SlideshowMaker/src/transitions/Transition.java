@@ -12,7 +12,8 @@ public abstract class Transition {
 
     protected String m_type; //contains Transitions's type (same as class name)
     protected long m_time; //contains number of milliseconds for Transition to last
-
+    
+    public Transition() {m_type = null;};
     public String getType() { return m_type; }
     public void setTime(long time) { m_time = time; }
     public double getTime() { return m_time; }

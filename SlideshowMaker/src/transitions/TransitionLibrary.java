@@ -34,7 +34,7 @@ public class TransitionLibrary {
      */
     public ArrayList<Transition> retrieveTransitions(String forward)
     {
-        ArrayList<Transition> desiredTransitions = new ArrayList();
+        ArrayList<Transition> desiredTransitions = new ArrayList<Transition>();
 
         switch (forward)
         {
