@@ -26,7 +26,7 @@ public class SlideshowEditor extends JFrame {
      * JButton addTransitions- used to add Transitions to the selected Slide in Timeline
      */
     private static SlideshowEditor instance;
-    private static JPanel m_ImageLibrary;
+    private static ImageLibrary m_ImageLibrary;
     private static JPanel m_AudioLibrary;
     private TransitionLibrary m_TransitionLibrary;
     private JPanel m_controlPanel;
@@ -45,21 +45,17 @@ public class SlideshowEditor extends JFrame {
         setTitle("SlideshowPlayer");
         setLayout(null);
 
-        /**
-         *
-         * EVAN, PUT YOUR LIBRARIES HERE
-        m_ImageLibrary = m_ImageLibrary.getInstance();
-        m_AudioLibrary = m_AudioLibrary.getInstance();
-
+        m_ImageLibrary = ImageLibrary.getInstance();
         add(m_ImageLibrary);
-         */
+
+        // m_AudioLibrary = AudioLibrary.getInstance();
 
         m_TransitionLibrary = TransitionLibrary.getInstance();
 
         m_controlPanel = new JPanel();
         m_controlPanel.setLayout(null);
         m_controlPanel.setBackground(Color.LIGHT_GRAY);
-        m_controlPanel.setBounds(0, 0, 1384, 70);
+        m_controlPanel.setBounds(0, 0, 1385, 70);
         m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
         getImages = new JButton("Image Library");
@@ -83,12 +79,10 @@ public class SlideshowEditor extends JFrame {
 
         add(m_controlPanel);
 
-        //Change appearance of JFrame
-        setSize(1400,800); //1400 width and 800 height
-        setLocationRelativeTo(null);
-        setVisible(true); //making the frame visible
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1400,800);
+        setLocationRelativeTo(null);
+        setVisible(true);
 
     }
 
@@ -97,8 +91,8 @@ public class SlideshowEditor extends JFrame {
      */
     private void showImageLibrary()
     {
-        remove(m_AudioLibrary);
-        add(m_ImageLibrary);
+        //m_AudioLibrary.setVisible(false);
+        m_ImageLibrary.setVisible(true);
     }
 
     /**
@@ -106,8 +100,8 @@ public class SlideshowEditor extends JFrame {
      */
     private void showAudioLibrary()
     {
-        remove(m_ImageLibrary);
-        add(m_AudioLibrary);
+        m_ImageLibrary.setVisible(false);
+        //m_AudioLibrary.setVisible(true);
     }
 
     /**
