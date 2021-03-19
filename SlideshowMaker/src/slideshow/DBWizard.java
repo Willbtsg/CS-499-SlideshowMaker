@@ -74,9 +74,12 @@ public class DBWizard {
 
             slideshow.setSlideList(slideList); //set Slideshow's m_SlideList
 
-            for (Object j : tempSounds) {
-                JSONObject tempJ = (JSONObject) j;
-                soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
+            if (tempSounds != null)
+            {
+                for (Object j : tempSounds) {
+                    JSONObject tempJ = (JSONObject) j;
+                    soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
+                }
             }
 
             slideshow.setSoundList(soundList); //set Slideshow's m_SoundList

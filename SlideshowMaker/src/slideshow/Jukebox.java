@@ -29,6 +29,7 @@ public class Jukebox {
     private AudioInputStream audioStream;
     private Boolean paused;
     private long soundPosition;
+    Boolean lastSong;
 
     /**
      * Constructor for Jukebox object. Initializes m_soundList
@@ -114,6 +115,7 @@ public class Jukebox {
          *             as we work with thread, this exception can occur
          */
         public synchronized void waitUntilDone() throws InterruptedException {
+            paused = false;
             wait();
         }
     }
@@ -132,7 +134,6 @@ public class Jukebox {
             currentClip.open(audioStream); //open the prepared clip
 
             try {
-                paused = false;
                 currentClip.start(); //begin audio playback
                 listener.waitUntilDone(); //set AudioListener to monitor when playback is complete
             } finally {
@@ -154,7 +155,7 @@ public class Jukebox {
     {
         int songIndex = -1; //set starting index to iterate through songs
         int tempIndex; //temporary index to check for IndexOutOfBounds exception
-        Boolean lastSong = false; //flag to indicate when there are no more sound files to play
+        lastSong = false; //flag to indicate when there are no more sound files to play
 
 
         while (!lastSong) //as long as there is more music to played after the current sound...

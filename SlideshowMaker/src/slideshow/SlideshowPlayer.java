@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -60,7 +61,8 @@ public class SlideshowPlayer extends JFrame  {
      * Constructor function used to initialize the SlideshowPlayer JFrame
      * Creates all necessary GUI components and calls functions used to create Slides
      */
-    private SlideshowPlayer() {
+    private SlideshowPlayer()
+    {
         setTitle("SlideshowPlayer");
         setLayout(null);
 
@@ -89,11 +91,15 @@ public class SlideshowPlayer extends JFrame  {
         add(m_controlPanel);
 
         //Change appearance of JFrame
-        setSize(800, 500);//800 width and 500 height
+        setSize(800, 500); //800 width and 500 height
         setLocationRelativeTo(null);
-        setVisible(true);//making the frame visible
+        setVisible(true); //making the frame visible
+        setResizable(false); //disable maximize button
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        m_Jukebox = Jukebox.getInstance();
+        m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
 
         if (m_currentSlideIndex < 0) { //loads first image in slideshow
             showSlide(1, false);
@@ -115,9 +121,7 @@ public class SlideshowPlayer extends JFrame  {
             m_paused = false;
         }
 
-        m_Jukebox = Jukebox.getInstance();
-        m_Jukebox.setSoundList(m_Slideshow.getSoundList());
-        m_Jukebox.playAll(); //after loading Jukebox with song data, tell it to play until it runs out
+        m_Jukebox.playAll();
 
     }
 
@@ -126,7 +130,8 @@ public class SlideshowPlayer extends JFrame  {
      * This function will be adapted for the editor when it is written
      * @return theList- returns list of Slide objects to be presented in the slideshow
      */
-    private ArrayList<Slide> getSlideList() {
+    private ArrayList<Slide> getSlideList()
+    {
         File data = new File(m_pathPrefix);
 
         ArrayList<Slide> theList = new ArrayList<Slide>();
@@ -184,6 +189,7 @@ public class SlideshowPlayer extends JFrame  {
             m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
 
         } catch (IndexOutOfBoundsException e){ //if tempIndex is invalid, the Slide is not changed
+
             return false;
         }
 
@@ -200,13 +206,22 @@ public class SlideshowPlayer extends JFrame  {
     private void timedShowSlide(int indexShift, Boolean skip)
     {
         m_automationTimer.stop(); //stop current Timer
+        m_timeElapsed = 0;
 
         if (showSlide(indexShift, skip)) //if this new Slide is not the last one...
         {
             m_automationTimer.setInitialDelay((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime());
-            m_automationTimer.start(); //...start the Timer with the new Slide's delay
             m_slideStart = System.currentTimeMillis();
-            m_timeElapsed = 0;
+            m_automationTimer.start(); //...start the Timer with the new Slide's delay
+        }
+        else { //if the Slideshow is now over...
+
+            m_Jukebox.pausePlayback(); //...stop Jukebox from playing...
+
+            JOptionPane.showMessageDialog(null, "This Slideshow is now over.\nThank you for using our program.", "Have a Nice Day!", JOptionPane.PLAIN_MESSAGE);
+
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); //...and exit SlideshowPlayer
+
         }
 
     }
@@ -236,6 +251,7 @@ public class SlideshowPlayer extends JFrame  {
             public void actionPerformed(ActionEvent ae) {
                 if (m_paused) //if the Slideshow is already paused, resume it and the Jukebox
                 {
+                    m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
                     m_automationTimer.start();
                     m_Jukebox.resumePlayback();
                     m_Pause.setText("Pause");
@@ -244,7 +260,8 @@ public class SlideshowPlayer extends JFrame  {
                 else { //otherwise, pause the Slideshow and the Jukebox
 
                     m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
-                    m_timeElapsed += System.currentTimeMillis() - m_slideStart; //calculate elapsed time since last pause/Slide start
+                    m_timeElapsed = System.currentTimeMillis() - m_slideStart; //calculate amount of time Slide has been active
+
                     m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
 
                     m_Jukebox.pausePlayback();
