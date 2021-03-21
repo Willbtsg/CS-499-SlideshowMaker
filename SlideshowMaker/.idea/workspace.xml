@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="419e30d3-5cb1-4552-abe8-eccce13e4988" name="Default Changelist" comment="" />
+    <list default="true" id="419e30d3-5cb1-4552-abe8-eccce13e4988" name="Default Changelist" comment="Evan test push">
+      <change afterPath="$PROJECT_DIR$/images/audioicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/slideshow/AudioLibrary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SlideshowMaker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SlideshowMaker.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/CrossFade.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/CrossFade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/DownWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/DownWipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/LRWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/LRWipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/RLWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/RLWipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/Transition.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/Transition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/TransitionLibrary.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/TransitionLibrary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/UpWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/UpWipe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/slideshow/ImageLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/slideshow/ImageLibrary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/slideshow/SlideshowEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/slideshow/SlideshowEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/slideshow/SlideshowPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/slideshow/SlideshowPlayer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,18 +31,25 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1nNuUrSPn2LxFWnK2yXZBIhKiP6" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pathVariables" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -36,7 +60,33 @@
       <recent name="C:\Users\Dell\Documents\UAH\2020-2021\Spring 2021\CS 499\SlideshowMaker\src" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.SlideshowEditor">
+    <configuration name="SlideshowEditor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="slideshow.SlideshowEditor" />
+      <module name="SlideshowMaker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="slideshow.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SlideshowPlayer (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="slideshow.SlideshowPlayer" />
+      <module name="SlideshowMaker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="slideshow.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SlideshowPlayer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="SlideshowPlayer" />
       <module name="SlideshowMaker" />
@@ -46,6 +96,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SlideshowEditor" />
+        <item itemvalue="Application.SlideshowPlayer (1)" />
         <item itemvalue="Application.SlideshowPlayer" />
       </list>
     </recent_temporary>
@@ -62,6 +114,7 @@
       </list>
     </option>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -73,56 +126,31 @@
       <option name="presentableId" value="Default" />
       <updated>1611242887773</updated>
     </task>
+    <task id="LOCAL-00001" summary="Evan test push">
+      <created>1616029850218</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1616029850218</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added first draft of ImageLibrary">
+      <created>1616186074718</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1616186074718</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="392" y="88" key="#Project_Structure" timestamp="1611243363517">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state x="392" y="88" key="#Project_Structure/0.0.1600.860@0.0.1600.860" timestamp="1611243363517" />
-    <state x="580" y="184" key="FileChooserDialogImpl" timestamp="1613339256775">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state x="580" y="184" key="FileChooserDialogImpl/0.0.1600.860@0.0.1600.860" timestamp="1613339256775" />
-    <state width="1557" height="222" key="GridCell.Tab.0.bottom" timestamp="1613341253971">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="222" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1613341253971" />
-    <state width="1557" height="222" key="GridCell.Tab.0.center" timestamp="1613341253970">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="222" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
-    <state width="1557" height="222" key="GridCell.Tab.0.left" timestamp="1613341253970">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="222" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
-    <state width="1557" height="222" key="GridCell.Tab.0.right" timestamp="1613341253970">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="222" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1613341253970" />
-    <state width="1557" height="276" key="GridCell.Tab.1.bottom" timestamp="1612720677696">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="276" key="GridCell.Tab.1.bottom/0.0.1600.860@0.0.1600.860" timestamp="1612720677696" />
-    <state width="1557" height="276" key="GridCell.Tab.1.center" timestamp="1612720677695">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="276" key="GridCell.Tab.1.center/0.0.1600.860@0.0.1600.860" timestamp="1612720677695" />
-    <state width="1557" height="276" key="GridCell.Tab.1.left" timestamp="1612720677695">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="276" key="GridCell.Tab.1.left/0.0.1600.860@0.0.1600.860" timestamp="1612720677695" />
-    <state width="1557" height="276" key="GridCell.Tab.1.right" timestamp="1612720677696">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state width="1557" height="276" key="GridCell.Tab.1.right/0.0.1600.860@0.0.1600.860" timestamp="1612720677696" />
-    <state x="280" y="4" key="SettingsEditor" timestamp="1613341224465">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state x="280" y="4" key="SettingsEditor/0.0.1600.860@0.0.1600.860" timestamp="1613341224465" />
-    <state x="542" y="48" key="refactoring.ChangeSignatureDialog" timestamp="1612648210125">
-      <screen x="0" y="0" width="1600" height="860" />
-    </state>
-    <state x="542" y="48" key="refactoring.ChangeSignatureDialog/0.0.1600.860@0.0.1600.860" timestamp="1612648210125" />
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Evan test push" />
+    <MESSAGE value="Added first draft of ImageLibrary" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added first draft of ImageLibrary" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

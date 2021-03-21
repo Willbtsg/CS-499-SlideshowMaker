@@ -4,6 +4,7 @@ import transitions.Transition;
 import transitions.TransitionLibrary;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -41,49 +42,32 @@ public class SlideshowEditor extends JFrame {
 
     public SlideshowEditor()
     {
+        setTitle("Slideshow Editor");
+        setLayout(new BorderLayout());
 
-        setTitle("SlideshowPlayer");
-        setLayout(null);
-
+        JTabbedPane libraries = new JTabbedPane();
         m_ImageLibrary = ImageLibrary.getInstance();
-        add(m_ImageLibrary);
+        JScrollPane spImages = new JScrollPane(m_ImageLibrary);
+        spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        libraries.add("Images", spImages);
+        m_AudioLibrary = AudioLibrary.getInstance();
+        JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
+        spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        libraries.add("Audio", spAudio);
+        libraries.setPreferredSize(new Dimension(1000,800));
+        add(libraries, BorderLayout.WEST);
 
-        // m_AudioLibrary = AudioLibrary.getInstance();
+        // THE FOLLOWING LINES ARE A TEMP TIMELINE
+        JPanel timeline = new JPanel();
+        timeline.setPreferredSize(new Dimension(400,800));
+        Border timelineBorder = BorderFactory.createTitledBorder("Timeline");
+        timeline.setBorder(timelineBorder);
+        add(timeline, BorderLayout.EAST);
 
-        m_TransitionLibrary = TransitionLibrary.getInstance();
-
-        m_controlPanel = new JPanel();
-        m_controlPanel.setLayout(null);
-        m_controlPanel.setBackground(Color.LIGHT_GRAY);
-        m_controlPanel.setBounds(0, 0, 1385, 70);
-        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
-
-        getImages = new JButton("Image Library");
-        getImages.setBounds(50, 20, 120, 20);
-        m_controlPanel.add(getImages);
-
-        getImages.addActionListener(event -> showImageLibrary());
-
-        getAudio = new JButton("Audio Library");
-        getAudio.setBounds(300, 20, 120, 20);
-        m_controlPanel.add(getAudio);
-
-        getAudio.addActionListener(event -> showAudioLibrary());
-
-        addTransitions = new JButton("Add Transitions");
-        addTransitions.setBounds(1200, 20, 150, 20);
-        m_controlPanel.add(addTransitions);
-
-        //this function will eventually pull the selected Slide form timeline to use as an argument
-        //addTransitions.addActionListener(event -> addSlideTransitions(testSlide));
-
-        add(m_controlPanel);
-
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1400,800);
-        setLocationRelativeTo(null);
+        pack();
         setVisible(true);
-
     }
 
     /**

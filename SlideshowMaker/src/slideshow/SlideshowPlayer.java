@@ -63,7 +63,7 @@ public class SlideshowPlayer extends JFrame  {
      */
     private SlideshowPlayer()
     {
-        setTitle("SlideshowPlayer");
+        setTitle("Slideshow Player");
         setLayout(null);
 
         m_pathPrefix = "images"; //set directory name
