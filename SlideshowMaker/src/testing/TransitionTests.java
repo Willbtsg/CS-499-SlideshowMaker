@@ -25,7 +25,6 @@ public class TransitionTests {
 		assertEquals("LRWipe", transition.getType());
 	}
 	
-	// Test set and get time method
 	@Test
 	void testSetandGetTime() {
 		transition.setTime(2000);

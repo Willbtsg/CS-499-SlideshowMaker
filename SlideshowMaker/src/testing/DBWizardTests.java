@@ -45,6 +45,5 @@ public class DBWizardTests {
 		else {
 			assertEquals(0,1);
 		}
-		
 	}
 }

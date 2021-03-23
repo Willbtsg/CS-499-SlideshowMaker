@@ -1,5 +1,6 @@
 package slideshow;
 import transitions.Transition;
+
 import transitions.TransitionLibrary;
 import org.json.simple.JSONObject;
 
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.IIOException;
 import java.util.ArrayList;
 
 /**
@@ -135,7 +138,11 @@ public class Slide {
             g2d.drawImage(tempImage, 0, 0, null);
             g2d.dispose();
 
-        } catch (IOException e) {
+        } 
+        catch (IIOException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -163,6 +170,12 @@ public class Slide {
      * @return- retrieves String of type/class name from Transition and returns it
      */
     public String getForward() { return m_forward.getType(); }
+    
+    /**
+     * Returns type/class name of Transition being used to move to previous Slide
+     * @return- retrieves String of type/class name from Transition and returns it
+     */
+    public String getBackwards() { return m_backwards.getType(); }
 
     /**
      * Used to check whether or not this Slide has Transitions
