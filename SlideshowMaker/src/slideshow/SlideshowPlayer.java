@@ -67,7 +67,6 @@ public class SlideshowPlayer extends JFrame  {
         setLayout(null);
 
         m_pathPrefix = "images"; //set directory name
-        m_currentSlideIndex = -1; //initialize index
 
         m_imageLabel = new JLabel();
         m_imageLabel.setBounds(150, 50, 500, 313);
@@ -101,9 +100,9 @@ public class SlideshowPlayer extends JFrame  {
         m_Jukebox = Jukebox.getInstance();
         m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
 
-        if (m_currentSlideIndex < 0) { //loads first image in slideshow
-            showSlide(1, false);
-        }
+
+        m_currentSlideIndex = -1; //initialize index
+        showSlide(1, false);
 
         if (m_Slideshow.getAutomated()) //creates Timer to keep automated Slideshow going
         {
@@ -123,28 +122,6 @@ public class SlideshowPlayer extends JFrame  {
 
         m_Jukebox.playAll();
 
-    }
-
-    /**
-     * Reads data necessary for creation of Slide objects, then creates the Slides
-     * This function will be adapted for the editor when it is written
-     * @return theList- returns list of Slide objects to be presented in the slideshow
-     */
-    private ArrayList<Slide> getSlideList()
-    {
-        File data = new File(m_pathPrefix);
-
-        ArrayList<Slide> theList = new ArrayList<Slide>();
-
-        for (String imageName : data.list()){
-
-            if (imageName.endsWith(".jpg") || imageName.endsWith(".jpeg"))
-            {
-                theList.add(new Slide(m_pathPrefix + "/" + imageName)); //create Slide with full filepath in name
-            }
-        }
-
-        return theList;
     }
 
     /**

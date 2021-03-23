@@ -9,8 +9,6 @@ import transitions.LRWipe;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.scene.image.Image;
-
 /**
  * Class name: TransitionTests
  *
@@ -18,8 +16,10 @@ import javafx.scene.image.Image;
  */
 
 public class TransitionTests {
-	
+	// Instantiate an object to perform test methods on
 	private final Transition transition = new LRWipe();
+	
+	// Test get type method
 	@Test
 	void testGetType() {
 		assertEquals("LRWipe", transition.getType());
