@@ -49,10 +49,12 @@ public class SlideshowEditor extends JFrame {
         m_ImageLibrary = ImageLibrary.getInstance();
         JScrollPane spImages = new JScrollPane(m_ImageLibrary);
         spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        spImages.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Images", spImages);
         m_AudioLibrary = AudioLibrary.getInstance();
         JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
         spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
         libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
