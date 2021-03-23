@@ -43,24 +43,44 @@ public class ImageLibrary extends JPanel {
         }
     };
 
+    private Timeline associatedTimeline;
+    private SlideshowEditor associatedEditor;
+
     /////////////
     // METHODS //
     /////////////
 
-    public ImageLibrary()
+    public ImageLibrary(SlideshowEditor editor, Timeline timeline)
     {
+        associatedEditor = editor;
+        associatedTimeline = timeline;
         // Setting the GridLayout to (0,n) causes a new row
         // to be created after every n images
-        GridLayout grid = new GridLayout(0,3);
+        GridLayout grid = new GridLayout(0,4);
         setLayout(grid);
-        // TODO: Provide a way to interact with the images
-        //       (able to drag them to timeline or something like that)
-        // TODO: Change the position of the file names?
         if (dir.isDirectory())
         {
             for (File file : dir.listFiles(imageFilter))
             {
-                JLabel thumbnail = new JLabel(file.getName());
+                JPanel libraryItem = new JPanel();
+                libraryItem.setLayout(new BorderLayout());
+                JPanel buttonAndTitle = new JPanel();
+                buttonAndTitle.setLayout(new BorderLayout());
+
+                JLabel imgTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                buttonAndTitle.add(imgTitle, BorderLayout.NORTH);
+                JButton addButton = new JButton("Add");
+                addButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        associatedTimeline.addSlide(dir + "\\" + file.getName());
+                        associatedEditor.revalidate();
+                    }
+                });
+                buttonAndTitle.add(addButton, BorderLayout.SOUTH);
+                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
+
+                JLabel thumbnail = new JLabel("", SwingConstants.CENTER);
                 ImageIcon img = new ImageIcon(dir + "\\" + file.getName());
                 double proportion = 200.0/img.getIconWidth();
                 double db_newHeight = proportion*img.getIconHeight();
@@ -68,12 +88,33 @@ public class ImageLibrary extends JPanel {
                 Image imgIcon = img.getImage().getScaledInstance(200,newHeight,Image.SCALE_REPLICATE);
                 img = new ImageIcon(imgIcon);
                 thumbnail.setIcon(img);
-                add(thumbnail);
+                libraryItem.add(thumbnail, BorderLayout.CENTER);
+
+                libraryItem.setPreferredSize(new Dimension(200,300));
+                add(libraryItem);
             }
             // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF PICS TO THE LIBRARY
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 30; i++)
             {
-                JLabel thumbnail = new JLabel("download (1).png");
+                JPanel libraryItem = new JPanel();
+                libraryItem.setLayout(new BorderLayout());
+                JPanel buttonAndTitle = new JPanel();
+                buttonAndTitle.setLayout(new BorderLayout());
+
+                JLabel imgTitle = new JLabel("download (1).png", SwingConstants.CENTER);
+                buttonAndTitle.add(imgTitle, BorderLayout.NORTH);
+                JButton addButton = new JButton("Add");
+                addButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        associatedTimeline.addSlide("images\\download (1).png");
+                        associatedEditor.revalidate();
+                    }
+                });
+                buttonAndTitle.add(addButton, BorderLayout.SOUTH);
+                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
+
+                JLabel thumbnail = new JLabel("", SwingConstants.CENTER);
                 ImageIcon img = new ImageIcon("images\\download (1).png");
                 double proportion = 200.0/img.getIconWidth();
                 double db_newHeight = proportion*img.getIconHeight();
@@ -81,15 +122,18 @@ public class ImageLibrary extends JPanel {
                 Image imgIcon = img.getImage().getScaledInstance(200,newHeight,Image.SCALE_REPLICATE);
                 img = new ImageIcon(imgIcon);
                 thumbnail.setIcon(img);
-                add(thumbnail);
+                libraryItem.add(thumbnail, BorderLayout.CENTER);
+
+                libraryItem.setPreferredSize(new Dimension(200,200));
+                add(libraryItem);
             }
         }
     }
 
-    public static ImageLibrary getInstance()
+    public static ImageLibrary getInstance(SlideshowEditor GUI, Timeline timeline)
     {
         if (instance == null) {
-            instance = new ImageLibrary();
+            instance = new ImageLibrary(GUI, timeline);
         }
         return instance;
     }

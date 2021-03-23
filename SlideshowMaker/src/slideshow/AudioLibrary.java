@@ -2,6 +2,8 @@ package slideshow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FilenameFilter;
 
@@ -50,16 +52,36 @@ public class AudioLibrary extends JPanel {
     {
         // Setting the GridLayout to (0,n) causes a new row
         // to be created after every n images
-        GridLayout grid = new GridLayout(0,3);
+        GridLayout grid = new GridLayout(0,4);
         setLayout(grid);
         ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
         if (dir.isDirectory())
         {
             for (File file : dir.listFiles(audioFilter))
             {
-                JLabel thumbnail = new JLabel(file.getName());
-                thumbnail.setIcon(audioIcon);
-                add(thumbnail);
+                JPanel libraryItem = new JPanel();
+                libraryItem.setLayout(new BorderLayout());
+                JPanel buttonAndTitle = new JPanel();
+                buttonAndTitle.setLayout(new BorderLayout());
+
+                JLabel audioTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
+                JButton addButton = new JButton("Add");
+                addButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Add test success!");
+                    }
+                });
+                buttonAndTitle.add(addButton, BorderLayout.SOUTH);
+                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
+
+                JLabel icon = new JLabel("", SwingConstants.CENTER);
+                icon.setIcon(audioIcon);
+                libraryItem.add(icon, BorderLayout.CENTER);
+
+                libraryItem.setPreferredSize(new Dimension(200,200));
+                add(libraryItem);
             }
         }
     }

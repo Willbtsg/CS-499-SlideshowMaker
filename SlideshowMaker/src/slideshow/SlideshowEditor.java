@@ -28,7 +28,7 @@ public class SlideshowEditor extends JFrame {
      */
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
-    private static JPanel m_AudioLibrary;
+    private static AudioLibrary m_AudioLibrary;
     private TransitionLibrary m_TransitionLibrary;
     private JPanel m_controlPanel;
     private JButton getImages;
@@ -42,52 +42,48 @@ public class SlideshowEditor extends JFrame {
 
     public SlideshowEditor()
     {
+        // INITIALIZING THE WINDOW
+
         setTitle("Slideshow Editor");
         setLayout(new BorderLayout());
 
+        // CREATING THE TIMELINE
+
+        Timeline timeline = Timeline.getInstance(this);
+        JScrollPane spTimeline = new JScrollPane(timeline);
+        spTimeline.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        spTimeline.getVerticalScrollBar().setUnitIncrement(20);
+        spTimeline.setPreferredSize(new Dimension(300,800));
+        Border spTimelineBorder = BorderFactory.createTitledBorder("Timeline");
+        spTimeline.setBorder(spTimelineBorder);
+        add(spTimeline, BorderLayout.EAST);
+
+        // CREATING THE LIBRARY & SETTINGS TABS
+
         JTabbedPane libraries = new JTabbedPane();
-        m_ImageLibrary = ImageLibrary.getInstance();
+
+        m_ImageLibrary = ImageLibrary.getInstance(this, timeline);
         JScrollPane spImages = new JScrollPane(m_ImageLibrary);
         spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spImages.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Images", spImages);
+
+        // TODO: The below method call will need to be fed the timeline
         m_AudioLibrary = AudioLibrary.getInstance();
         JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
         spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
+
         libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
 
-        // THE FOLLOWING LINES ARE A TEMP TIMELINE
-        JPanel timeline = new JPanel();
-        timeline.setPreferredSize(new Dimension(400,800));
-        Border timelineBorder = BorderFactory.createTitledBorder("Timeline");
-        timeline.setBorder(timelineBorder);
-        add(timeline, BorderLayout.EAST);
+        // CONFIGURING THE WINDOW
 
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
-    }
-
-    /**
-     * This function is used to make m_ImageLibrary the active JPanel
-     */
-    private void showImageLibrary()
-    {
-        //m_AudioLibrary.setVisible(false);
-        m_ImageLibrary.setVisible(true);
-    }
-
-    /**
-     * This function is used to make m_AudioLibrary the active JPanel
-     */
-    private void showAudioLibrary()
-    {
-        m_ImageLibrary.setVisible(false);
-        //m_AudioLibrary.setVisible(true);
     }
 
     /**
