@@ -29,6 +29,7 @@ public class SlideshowEditor extends JFrame {
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
     private static AudioLibrary m_AudioLibrary;
+    private JPanel m_SettingsPanel;
     private TransitionLibrary m_TransitionLibrary;
     private JPanel m_controlPanel;
     private JButton getImages;
@@ -74,6 +75,10 @@ public class SlideshowEditor extends JFrame {
         spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
+        
+        m_SettingsPanel = new JPanel();
+        addSettingControls();
+        libraries.add("Settings", m_SettingsPanel);
 
         libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
@@ -101,6 +106,14 @@ public class SlideshowEditor extends JFrame {
             selectedSlide.setForward(desiredTransitions.get(0)); //...set the forwards and backwards Transitions
             selectedSlide.setBackwards(desiredTransitions.get(1));
         }
+    }
+    
+    /**
+     * This function is used to set setting controls for settings panel
+     */
+    private void addSettingControls()
+    {
+    	
     }
 
     /**
