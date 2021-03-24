@@ -30,5 +30,4 @@ public class TransitionTests {
 		transition.setTime(2000);
 		assertEquals(2000, transition.getTime());
 	}
-
 }
