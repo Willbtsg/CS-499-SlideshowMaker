@@ -50,14 +50,22 @@ public class SlideshowEditor extends JFrame {
 
         // CREATING THE TIMELINE
 
+        JPanel timelineAndExport = new JPanel();
+        timelineAndExport.setLayout(new BorderLayout());
+
         Timeline timeline = Timeline.getInstance(this);
         JScrollPane spTimeline = new JScrollPane(timeline);
         spTimeline.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spTimeline.getVerticalScrollBar().setUnitIncrement(20);
-        spTimeline.setPreferredSize(new Dimension(300,800));
+        spTimeline.setPreferredSize(new Dimension(320,800));
         Border spTimelineBorder = BorderFactory.createTitledBorder("Timeline");
         spTimeline.setBorder(spTimelineBorder);
-        add(spTimeline, BorderLayout.EAST);
+        timelineAndExport.add(spTimeline, BorderLayout.NORTH);
+
+        JButton export = new JButton("Save Slideshow into Directory");
+        timelineAndExport.add(export, BorderLayout.SOUTH);
+
+        add(timelineAndExport, BorderLayout.EAST);
 
         // CREATING THE LIBRARY & SETTINGS TABS
 
