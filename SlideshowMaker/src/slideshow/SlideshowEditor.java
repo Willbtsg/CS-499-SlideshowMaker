@@ -6,6 +6,8 @@ import transitions.TransitionLibrary;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -35,6 +37,8 @@ public class SlideshowEditor extends JFrame {
     private JButton getImages;
     private JButton getAudio;
     private JButton addTransitions;
+    private boolean automated;
+    private double slideInterval;
 
     public static void main(String[] args)
     {
@@ -84,7 +88,9 @@ public class SlideshowEditor extends JFrame {
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
         
-        m_SettingsPanel = new JPanel();
+        m_SettingsPanel = new JPanel(new GridLayout(10,0));
+        automated = false;
+        slideInterval = 5.0;
         addSettingControls();
         libraries.add("Settings", m_SettingsPanel);
 
@@ -121,7 +127,37 @@ public class SlideshowEditor extends JFrame {
      */
     private void addSettingControls()
     {
+    	// Declare components to be stored in settings panel
+    	JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
+    	JLabel slideIntervalLabel = new JLabel("Slide Interval (In seconds)");
+    	JTextField slideIntervalTF = new JTextField("5.0");
+    	JButton slideIntervalJB = new JButton("Submit Changes");
     	
+    	// Event listener for Checkbox to change between automatic and manual slideshow
+        automatedCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	automated = !automated;
+            }
+        });
+        
+        // Event listener for Jbutton to change slide interval
+        slideIntervalJB.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	try {
+            		String temp = slideIntervalTF.getText();
+            		slideInterval = Float.parseFloat(temp);
+            	}
+            	catch(Exception e) {
+            		System.out.println(slideIntervalTF.getText()+ " cannot be converted to float: " + e.getMessage());
+            	}
+            }
+        });
+    	
+        // Add all components to settings panel
+    	m_SettingsPanel.add(automatedCheckBox);
+    	m_SettingsPanel.add(slideIntervalLabel);
+    	m_SettingsPanel.add(slideIntervalTF);
+    	m_SettingsPanel.add(slideIntervalJB);
     }
 
     /**
