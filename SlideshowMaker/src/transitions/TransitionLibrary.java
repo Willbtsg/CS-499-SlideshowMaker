@@ -55,12 +55,13 @@ public class TransitionLibrary {
     }
 
     /**
-     * This function is used when the user adds Transitions to Slides in the SlideshowEditor
+     * This function is used when the user adds Transition data to Slides in the SlideshowEditor
      * @return
      */
-    public ArrayList<Transition> retrievalGUI()
+    public String retrievalGUI()
     {
-        ArrayList<Transition> desiredTransitions = new ArrayList<Transition>();
+
+        String transitionInfo = new String();
 
         String transitions[] = {"LRWipe", "RLWipe", "UpWipe", "DownWipe", "CrossFade"}; //set list of Transition options
 
@@ -69,10 +70,11 @@ public class TransitionLibrary {
 
         if (transChoice != null) //if user made a selection, proceed with Transition creation
         {
-            desiredTransitions = retrieveTransitions(transChoice); //get Transition from library
 
-            if (desiredTransitions.size() > 0) //if Transition checkout was successful, proceed
+            if (retrieveTransitions(transChoice).size() > 0) //if Transition selected was valid, proceed
             {
+                transitionInfo = transChoice + ": "; //save Transition selection to output message
+
                 Double times[] = {1.0, 2.0, 3.0, 4.0, 5.0}; //set options for Transition length
 
                 Double timeChoice;
@@ -80,21 +82,16 @@ public class TransitionLibrary {
 
                 if (timeChoice != null) //if user made a valid Transition length selection...
                 {
-
-                    long timeLong = timeChoice.longValue() * 1000; //...convert Double second time to long millisecond time...
-
-                    for (Transition transition : desiredTransitions) //...and set that as the Transition length
-                    {
-                        transition.setTime(timeLong);
-                    }
+                    transitionInfo += timeChoice.toString();
+                    transitionInfo += " seconds";
 
                 } else { //if a valid length was not selected...
-                    desiredTransitions.clear(); //clear the list of Transitions (i.e. don't add any to the Slide)
+                    return "None";
                 }
             }
         }
 
-        return desiredTransitions;
+        return transitionInfo;
 
     }
 
