@@ -5,6 +5,8 @@ import transitions.TransitionLibrary;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,21 +24,14 @@ public class SlideshowEditor extends JFrame {
      * SlideshowEditor instance- instance of SlideshowEditor used for Singleton implementation
      * JPanel m_ImageLibrary- contains the ImageLibrary GUI component
      * JPanel m_AudioLibrary- contains the AudioLibrary GUI component
-     * TransitionLibrary m_TransitionLibrary- contains reference to TransitionLibrary for adding Transition to Slides
-     * JPanel m_controlPanel- contains the buttons used to swap between active libraries
-     * JButton getImages- loads the ImageLibrary
-     * JButton getAudio- loads the AudioLibrary
-     * JButton addTransitions- used to add Transitions to the selected Slide in Timeline
+     * JPanel m_Setting Panel- allows user to set automation status and Slide interval
+     * boolean automated- indicates whether or not the Slideshow made will be automated
+     * double slideInterval- if the Slideshow is automated, this indicates how long each Slide is shown
      */
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
     private static AudioLibrary m_AudioLibrary;
     private JPanel m_SettingsPanel;
-    private TransitionLibrary m_TransitionLibrary;
-    private JPanel m_controlPanel;
-    private JButton getImages;
-    private JButton getAudio;
-    private JButton addTransitions;
     private boolean automated;
     private double slideInterval;
 
@@ -57,14 +52,8 @@ public class SlideshowEditor extends JFrame {
         JPanel timelineAndExport = new JPanel();
         timelineAndExport.setLayout(new BorderLayout());
 
-        Timeline timeline = Timeline.getInstance(this);
-        JScrollPane spTimeline = new JScrollPane(timeline);
-        spTimeline.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        spTimeline.getVerticalScrollBar().setUnitIncrement(20);
-        spTimeline.setPreferredSize(new Dimension(320,800));
-        Border spTimelineBorder = BorderFactory.createTitledBorder("Timeline");
-        spTimeline.setBorder(spTimelineBorder);
-        timelineAndExport.add(spTimeline, BorderLayout.NORTH);
+        Timeline timeline = Timeline.getInstance();
+        timelineAndExport.add(timeline, BorderLayout.NORTH);
 
         JButton export = new JButton("Save Slideshow into Directory");
         timelineAndExport.add(export, BorderLayout.SOUTH);
@@ -75,19 +64,18 @@ public class SlideshowEditor extends JFrame {
 
         JTabbedPane libraries = new JTabbedPane();
 
-        m_ImageLibrary = ImageLibrary.getInstance(this, timeline);
+        m_ImageLibrary = ImageLibrary.getInstance(timeline);
         JScrollPane spImages = new JScrollPane(m_ImageLibrary);
         spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spImages.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Images", spImages);
 
-        // TODO: The below method call will need to be fed the timeline
-        m_AudioLibrary = AudioLibrary.getInstance();
+        m_AudioLibrary = AudioLibrary.getInstance(timeline);
         JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
         spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
-        
+
         m_SettingsPanel = new JPanel(new GridLayout(10,0));
         automated = false;
         slideInterval = 5.0;
@@ -97,29 +85,30 @@ public class SlideshowEditor extends JFrame {
         libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
 
+        libraries.setBorder(BorderFactory.createTitledBorder("Components"));
+
+        libraries.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if (libraries.getSelectedComponent() != m_SettingsPanel)
+                {
+                    timeline.setSelectedIndex(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
+                }
+            }
+        });
+
+        timeline.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                libraries.setSelectedIndex(timeline.getSelectedIndex()); //makes selected library matches Timeline tab
+            }
+        });
+
         // CONFIGURING THE WINDOW
 
+        setSize(new Dimension(1400, 800));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
-    }
-
-    /**
-     * This button is used when adding Transitions to the Slide selected in Timeline
-     * @param selectedSlide- Slide from Timeline the user wishes to add Transitions to
-     */
-    private void addSlideTransitions(Slide selectedSlide)
-    {
-        ArrayList<Transition> desiredTransitions = new ArrayList<Transition>();
-
-        desiredTransitions = m_TransitionLibrary.retrievalGUI(); //use TransitionLibrary GUI-based retrieval function
-
-        if (desiredTransitions.size() > 0) //if user didn't decide to stop adding the Transition...
-        {
-            selectedSlide.setForward(desiredTransitions.get(0)); //...set the forwards and backwards Transitions
-            selectedSlide.setBackwards(desiredTransitions.get(1));
-        }
     }
     
     /**
@@ -140,7 +129,7 @@ public class SlideshowEditor extends JFrame {
             }
         });
         
-        // Event listener for Jbutton to change slide interval
+        // Event listener for JButton to change slide interval
         slideIntervalJB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
             	try {
