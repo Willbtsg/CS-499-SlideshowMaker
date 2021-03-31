@@ -10,6 +10,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 /**
@@ -31,9 +33,12 @@ public class SlideshowEditor extends JFrame {
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
     private static AudioLibrary m_AudioLibrary;
-    private JPanel m_SettingsPanel;
+
     private boolean automated;
-    private double slideInterval;
+    private double slideInterval = 4.0;
+
+    private JFrame popup;
+    private boolean popupPresent = false;
 
     public static void main(String[] args)
     {
@@ -49,16 +54,37 @@ public class SlideshowEditor extends JFrame {
 
         // CREATING THE TIMELINE
 
-        JPanel timelineAndExport = new JPanel();
-        timelineAndExport.setLayout(new BorderLayout());
+        JPanel timelineAndButtons = new JPanel();
+        timelineAndButtons.setLayout(new BorderLayout());
 
         Timeline timeline = Timeline.getInstance();
-        timelineAndExport.add(timeline, BorderLayout.NORTH);
+        timelineAndButtons.add(timeline, BorderLayout.NORTH);
+
+        JPanel settingsAndExport = new JPanel();
+        settingsAndExport.setLayout(new BorderLayout());
+
+        JButton settings = new JButton("Edit Slideshow Settings");
+        settings.setMargin(new Insets(7,7,7,7));
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!popupPresent)
+                {
+                    popupPresent = true;
+                    settingsPopup();
+                }
+                else
+                    popup.toFront();
+            }
+        });
+        settingsAndExport.add(settings,BorderLayout.NORTH);
 
         JButton export = new JButton("Save Slideshow into Directory");
-        timelineAndExport.add(export, BorderLayout.SOUTH);
+        export.setMargin(new Insets(7,7,7,7));
+        settingsAndExport.add(export, BorderLayout.SOUTH);
 
-        add(timelineAndExport, BorderLayout.EAST);
+        timelineAndButtons.add(settingsAndExport, BorderLayout.SOUTH);
+        add(timelineAndButtons, BorderLayout.EAST);
 
         // CREATING THE LIBRARY & SETTINGS TABS
 
@@ -76,23 +102,14 @@ public class SlideshowEditor extends JFrame {
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
 
-        m_SettingsPanel = new JPanel(new GridLayout(10,0));
-        automated = false;
-        slideInterval = 5.0;
-        addSettingControls();
-        libraries.add("Settings", m_SettingsPanel);
-
-        libraries.setPreferredSize(new Dimension(1000,800));
+        libraries.setPreferredSize(new Dimension(1000,895));
         add(libraries, BorderLayout.WEST);
 
         libraries.setBorder(BorderFactory.createTitledBorder("Media"));
 
         libraries.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                if (libraries.getSelectedComponent() != m_SettingsPanel)
-                {
-                    timeline.setSelectedIndex(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
-                }
+                timeline.setSelectedIndex(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
             }
         });
 
@@ -104,49 +121,88 @@ public class SlideshowEditor extends JFrame {
 
         // CONFIGURING THE WINDOW
 
-        setSize(new Dimension(1400, 800));
+        setSize(new Dimension(1400, 895));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
     
     /**
-     * This function is used to set setting controls for settings panel
+     * This function is used to pop-up the settings panel
      */
-    private void addSettingControls()
+    private void settingsPopup()
     {
-    	// Declare components to be stored in settings panel
-    	JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
-    	JLabel slideIntervalLabel = new JLabel("Slide Interval (In seconds)");
-    	JTextField slideIntervalTF = new JTextField("5.0");
-    	JButton slideIntervalJB = new JButton("Submit Changes");
-    	
-    	// Event listener for Checkbox to change between automatic and manual slideshow
+        popup = new JFrame("Slideshow Settings");
+        JPanel settingsPanel = new JPanel();
+
+        JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
+
+        JLabel slideIntervalLabel = new JLabel("Slide Interval (in seconds)");
+        JTextField slideIntervalTF = new JTextField(String.valueOf(slideInterval));
+        slideIntervalTF.setPreferredSize(new Dimension(50,25));
+
+        if (automated)
+            automatedCheckBox.setSelected(true);
+        else
+        {
+            automatedCheckBox.setSelected(false);
+            slideIntervalTF.setEnabled(false);
+        }
+
         automatedCheckBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-            	automated = !automated;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (automatedCheckBox.isSelected())
+                    slideIntervalTF.setEnabled(true);
+                else
+                    slideIntervalTF.setEnabled(false);
             }
         });
-        
-        // Event listener for JButton to change slide interval
-        slideIntervalJB.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-            	try {
-            		String temp = slideIntervalTF.getText();
-            		slideInterval = Float.parseFloat(temp);
-            	}
-            	catch(Exception e) {
-            		System.out.println(slideIntervalTF.getText()+ " cannot be converted to float: " + e.getMessage());
-            	}
+
+        JLabel error = new JLabel("Invalid slide interval!");
+        error.setVisible(false);
+
+        JButton submitChanges = new JButton("Submit Changes");
+        submitChanges.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                automated = automatedCheckBox.isSelected();
+                try {
+                    slideInterval = Double.parseDouble(slideIntervalTF.getText());
+                    popupPresent = false;
+                    popup.dispose();
+                } catch (Exception ex) {
+                    if (automated)
+                        error.setVisible(true);
+                    else {
+                        popupPresent = false;
+                        popup.dispose();
+                    }
+                }
             }
         });
-    	
-        // Add all components to settings panel
-    	m_SettingsPanel.add(automatedCheckBox);
-    	m_SettingsPanel.add(slideIntervalLabel);
-    	m_SettingsPanel.add(slideIntervalTF);
-    	m_SettingsPanel.add(slideIntervalJB);
+
+        settingsPanel.add(automatedCheckBox);
+        settingsPanel.add(slideIntervalLabel);
+        settingsPanel.add(slideIntervalTF);
+        settingsPanel.add(error);
+        settingsPanel.add(submitChanges);
+        popup.add(settingsPanel);
+
+        popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        popup.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                popupPresent = false;
+            }
+        });
+
+        popup.setSize(new Dimension(290,140));
+        popup.setResizable(false);
+        popup.setLocationRelativeTo(null);
+        popup.setVisible(true);
     }
 
     /**
