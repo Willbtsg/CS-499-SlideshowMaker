@@ -85,7 +85,7 @@ public class SlideshowEditor extends JFrame {
         libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
 
-        libraries.setBorder(BorderFactory.createTitledBorder("Components"));
+        libraries.setBorder(BorderFactory.createTitledBorder("Media"));
 
         libraries.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {

@@ -7,6 +7,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.File;
 import java.util.*;
 
@@ -31,6 +33,8 @@ public class Timeline extends JTabbedPane {
     private ArrayList<JPanel> timelineAudio;
     private JPanel slidePanel;
     private JPanel audioPanel;
+    private JScrollPane slideScroll;
+    private JScrollPane audioScroll;
     private TransitionLibrary m_TransitionLibrary;
 
     /////////////
@@ -49,13 +53,13 @@ public class Timeline extends JTabbedPane {
         slidePanel.setLayout(grid); //set tab layouts
         audioPanel.setLayout(grid);
 
-        JScrollPane slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
+        slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
         slideScroll.setPreferredSize(new Dimension(320, 740));
         add("Slides", slideScroll);
 
-        JScrollPane audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
+        audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
         audioScroll.setPreferredSize(new Dimension(320, 740));
@@ -118,6 +122,11 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 slidePanel.remove(thisSlide); //remove slide from display
                 timelineSlides.remove(thisSlide); //remove slide from Timeline database
+                for (int i = 0; i < timelineSlides.size(); i++)
+                {
+                    timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i+1)));
+                    slidePanel.add(timelineSlides.get(i)); //add all slides back int he new order
+                }
                 repaint(); //update display to reflect changes
                 revalidate();
             }
@@ -174,7 +183,7 @@ public class Timeline extends JTabbedPane {
         JLabel transitionLabel = new JLabel("None", SwingConstants.CENTER);
         transitionPanel.add(transitionLabel, BorderLayout.NORTH);
 
-        JButton setTransition = new JButton("Set Transition"); //create button to allow user to set Transiton information
+        JButton setTransition = new JButton("Set Transition"); //create button to allow user to set Transition information
 
         setTransition.addActionListener(new ActionListener() {
             @Override
@@ -192,6 +201,17 @@ public class Timeline extends JTabbedPane {
         thisSlide.setPreferredSize(new Dimension(200, 400));
         timelineSlides.add(thisSlide);
         slidePanel.add(thisSlide);
+
+        JScrollBar verticalBar = slideScroll.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
     }
 
     /**
@@ -245,6 +265,11 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 audioPanel.remove(thisSound); //remove sound from GUI
                 timelineAudio.remove(thisSound); //remove sound from backend
+                for (int i = 0; i < timelineAudio.size(); i++)
+                {
+                    timelineAudio.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i+1)));
+                    audioPanel.add(timelineAudio.get(i)); //put sounds into the soundPanel in the new order
+                }
                 repaint(); //update GUI with modified list of sounds
                 revalidate();
             }
@@ -294,9 +319,25 @@ public class Timeline extends JTabbedPane {
         thumbnail.setIcon(img);
         thisSound.add(thumbnail, BorderLayout.CENTER); //load and set icon for sound files
 
+        Border timelineItemBorder = BorderFactory.createTitledBorder(String.valueOf(timelineAudio.size()+1));
+        thisSound.setBorder(timelineItemBorder);
+
         thisSound.setPreferredSize(new Dimension(200, 400));
         timelineAudio.add(thisSound); //add new sound to backend list
         audioPanel.add(thisSound); //add new sound to GUI
+        JScrollBar vertical = audioScroll.getVerticalScrollBar();
+        vertical.setValue(vertical.getMaximum());
+
+        JScrollBar verticalBar = audioScroll.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
     }
 
     /**
