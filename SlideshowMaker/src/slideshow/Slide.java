@@ -35,6 +35,7 @@ public class Slide {
     private Transition m_forward;
     private Transition m_backwards;
     private Boolean m_hasTransitions;
+    private TransitionLibrary m_TransitionLibrary;
     private long m_time;
 
     /**
@@ -46,6 +47,7 @@ public class Slide {
         m_name = name;
         setImage(name);
         m_hasTransitions = false;
+        m_TransitionLibrary = TransitionLibrary.getInstance();
     }
 
     /**
@@ -101,11 +103,9 @@ public class Slide {
             if (m_hasTransitions) //only try to write Transition information if the Slide has Transitions
             {
                 obj.put("forward", m_forward.getType()); //since m_backwards is dependent on the type of m_forward, only one has to be stored
-                obj.put("transTime", m_forward.getTime());
+                obj.put("transTime", (long)m_forward.getTime());
             }
-
         }
-
         catch (Exception e) {e.printStackTrace();}
 
         return obj;
@@ -186,29 +186,30 @@ public class Slide {
      */
     public double getTransTime() { return m_forward.getTime(); }
 
-    /**
-     * Assigns forward Transition to the Slide and sets m_hasTransitions to true
-     * @param forward- reference to Transition being assigned to the Slide
-     */
-    public void setForward(Transition forward)
+    public void setTransitions(String transition)
     {
-        m_forward = forward;
-        m_hasTransitions = true;
-
-        return;
+        if (!transition.equals("None"))
+        {
+            ArrayList<Transition> transitions = m_TransitionLibrary.retrieveTransitions(transition);
+            m_forward = transitions.get(0);
+            m_backwards = transitions.get(1);
+            m_hasTransitions = true;
+        }
+        else
+        {
+            m_hasTransitions = false;
+        }
     }
 
-    /**
-     * Assigns backwards Transition to the Slide and sets m_hasTransitions to true
-     * @param backwards- reference to Transition being assigned to the Slide
-     */
-    public void setBackwards(Transition backwards)
+    public void setTransitionLength(long length)
     {
-        m_backwards = backwards;
-        m_hasTransitions = true;
-
-        return;
-
+        if (length != 0)
+        {
+            m_forward.setTime(length);
+            m_backwards.setTime(length);
+        }
+        else
+            m_hasTransitions = false;
     }
 
     /**

@@ -1,6 +1,7 @@
 package slideshow;
 
 import transitions.TransitionLibrary;
+import transitions.Transition;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,7 +37,6 @@ public class Timeline extends JTabbedPane {
     private JPanel audioPanel;
     private JScrollPane slideScroll;
     private JScrollPane audioScroll;
-    private TransitionLibrary m_TransitionLibrary;
 
     private ArrayList<Slide> slides;
     private ArrayList<String> sounds;
@@ -51,7 +51,6 @@ public class Timeline extends JTabbedPane {
         timelineAudio = new ArrayList<JPanel>(); //create list of object to display sound data
         slidePanel = new JPanel(); //create JPanel for Slide tab
         audioPanel = new JPanel(); //create JPanel for Audio tab
-        m_TransitionLibrary = TransitionLibrary.getInstance();
 
         slides = new ArrayList<>();
         sounds = new ArrayList<>();
@@ -215,26 +214,49 @@ public class Timeline extends JTabbedPane {
         transSelect.addItem("Wipe Down");
         transSelect.addItem("Crossfade");
         transitionComboBoxes.add(transSelect, BorderLayout.WEST);
-        JComboBox<Double> transLength = new JComboBox<>();
+        JComboBox<String> transLength = new JComboBox<>();
         transLength.setPreferredSize(new Dimension(145,20));
-        transLength.addItem(0.5);
-        transLength.addItem(1.0);
-        transLength.addItem(1.5);
-        transLength.addItem(2.0);
-        transLength.addItem(2.5);
-        transLength.addItem(3.0);
-        transLength.addItem(3.5);
-        transLength.addItem(4.0);
-        transLength.addItem(4.5);
-        transLength.addItem(5.0);
+        transLength.addItem("0.0");
+        transLength.addItem("0.5");
+        transLength.addItem("1.0");
+        transLength.addItem("1.5");
+        transLength.addItem("2.0");
+        transLength.addItem("2.5");
+        transLength.addItem("3.0");
+        transLength.addItem("3.5");
+        transLength.addItem("4.0");
+        transLength.addItem("4.5");
+        transLength.addItem("5.0");
         transLength.setEnabled(false);
         transSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String userTrans = String.valueOf(transSelect.getSelectedItem());
+                String transition = "None";
+                if (userTrans.equals("Wipe Right"))
+                    transition = "LRWipe";
+                if (userTrans.equals("Wipe Left"))
+                    transition = "RLWipe";
+                if (userTrans.equals("Wipe Up"))
+                    transition = "UpWipe";
+                if (userTrans.equals("Wipe Down"))
+                    transition = "DownWipe";
+                if (userTrans.equals("Crossfade"))
+                    transition = "CrossFade";
+                slide.setTransitions(transition);
                 if (transSelect.getSelectedItem() != "None")
                     transLength.setEnabled(true);
                 else
                     transLength.setEnabled(false);
+            }
+        });
+        transLength.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userLength = String.valueOf(transLength.getSelectedItem());
+                Double transitionLength = Double.parseDouble(userLength)*1000;
+                long transitionLengthMs = transitionLength.longValue();
+                slide.setTransitionLength(transitionLengthMs);
             }
         });
         transitionComboBoxes.add(transLength, BorderLayout.EAST);
