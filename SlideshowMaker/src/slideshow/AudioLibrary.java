@@ -71,7 +71,7 @@ public class AudioLibrary extends JPanel {
                 addButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        associatedTimeline.addSound(file.getName()); //add sound to the Timeline
+                        associatedTimeline.addSound(dir + "\\" + file.getName()); //add sound to the Timeline
                         associatedTimeline.revalidate(); //update the Timeline GUI
                     }
                 });

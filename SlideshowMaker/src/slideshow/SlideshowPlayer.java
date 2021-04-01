@@ -54,7 +54,6 @@ public class SlideshowPlayer extends JFrame  {
     public static void main(String[] args)
     {
         SlideshowPlayer.getInstance();
-        //System.out.println("BUILD SUCCESS!");
     }
 
     /**

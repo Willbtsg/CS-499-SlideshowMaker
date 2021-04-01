@@ -38,6 +38,9 @@ public class Timeline extends JTabbedPane {
     private JScrollPane audioScroll;
     private TransitionLibrary m_TransitionLibrary;
 
+    private ArrayList<Slide> slides;
+    private ArrayList<String> sounds;
+
     /////////////
     // METHODS //
     /////////////
@@ -49,6 +52,9 @@ public class Timeline extends JTabbedPane {
         slidePanel = new JPanel(); //create JPanel for Slide tab
         audioPanel = new JPanel(); //create JPanel for Audio tab
         m_TransitionLibrary = TransitionLibrary.getInstance();
+
+        slides = new ArrayList<>();
+        sounds = new ArrayList<>();
 
         GridLayout grid = new GridLayout(0,1); //layout to be used for Slide and audio tabs
         slidePanel.setLayout(grid); //set tab layouts
@@ -67,7 +73,6 @@ public class Timeline extends JTabbedPane {
         add("Audio", audioScroll);
 
         setBorder(BorderFactory.createTitledBorder("Timeline"));
-
     }
 
     /**
@@ -76,6 +81,9 @@ public class Timeline extends JTabbedPane {
      */
     public void addSlide(String filePath)
     {
+        Slide slide = new Slide(filePath);
+        slides.add(slide);
+
         File image = new File(filePath); //retrieve image
 
         JPanel thisSlide = new JPanel(); //create new panel to display slide information
@@ -104,7 +112,8 @@ public class Timeline extends JTabbedPane {
 
                     timelineSlides.remove(currentItemIndex);
                     timelineSlides.add(currentItemIndex - 1, thisSlide); //adjust the slide's position in the backend
-
+                    slides.remove(currentItemIndex);
+                    slides.add(currentItemIndex -1 , slide);
 
                     for (int i = 0; i < timelineSlides.size(); i++)
                     {
@@ -124,6 +133,7 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 slidePanel.remove(thisSlide); //remove slide from display
                 timelineSlides.remove(thisSlide); //remove slide from Timeline database
+                slides.remove(slide);
                 for (int i = 0; i < timelineSlides.size(); i++)
                 {
                     timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i+1)));
@@ -150,6 +160,8 @@ public class Timeline extends JTabbedPane {
 
                     timelineSlides.remove(currentItemIndex);
                     timelineSlides.add(currentItemIndex + 1, thisSlide); //reposition slide in backend
+                    slides.remove(currentItemIndex);
+                    slides.add(currentItemIndex + 1, slide);
 
                     for (int i = 0; i < timelineSlides.size(); i++)
                     {
@@ -187,7 +199,7 @@ public class Timeline extends JTabbedPane {
         JLabel transSelectLabel = new JLabel("Transition Type:");
         transSelectLabel.setBorder(new EmptyBorder(0,0,5,0));
         transitionDropdownLabels.add(transSelectLabel, BorderLayout.WEST);
-        JLabel transLengthLabel = new JLabel("Transition Length:", SwingConstants.CENTER);
+        JLabel transLengthLabel = new JLabel("Transition Length (sec):", SwingConstants.CENTER);
         transLengthLabel.setBorder(new EmptyBorder(0,0,5,0));
         transitionDropdownLabels.add(transLengthLabel, BorderLayout.EAST);
         transitionDropdowns.add(transitionDropdownLabels, BorderLayout.NORTH);
@@ -195,7 +207,7 @@ public class Timeline extends JTabbedPane {
         JPanel transitionComboBoxes = new JPanel();
         transitionComboBoxes.setLayout(new BorderLayout());
         JComboBox<String> transSelect = new JComboBox<>();
-        transSelect.setPreferredSize(new Dimension(180,20));
+        transSelect.setPreferredSize(new Dimension(145,20));
         transSelect.addItem("None");
         transSelect.addItem("Wipe Right");
         transSelect.addItem("Wipe Left");
@@ -204,7 +216,7 @@ public class Timeline extends JTabbedPane {
         transSelect.addItem("Crossfade");
         transitionComboBoxes.add(transSelect, BorderLayout.WEST);
         JComboBox<Double> transLength = new JComboBox<>();
-        transLength.setPreferredSize(new Dimension(110,20));
+        transLength.setPreferredSize(new Dimension(145,20));
         transLength.addItem(0.5);
         transLength.addItem(1.0);
         transLength.addItem(1.5);
@@ -255,13 +267,18 @@ public class Timeline extends JTabbedPane {
      */
     public void addSound(String soundName)
     {
+        String sound = new String(soundName);
+        sounds.add(sound);
+
+
         JPanel thisSound = new JPanel(); //new JPanel to display sound data in Timeline
         thisSound.setLayout(new BorderLayout());
 
         JPanel buttonsAndTitle = new JPanel();
         buttonsAndTitle.setLayout(new BorderLayout());
 
-        JLabel imgTitle = new JLabel(soundName, SwingConstants.CENTER);
+        File audioFile = new File(soundName);
+        JLabel imgTitle = new JLabel(audioFile.getName(), SwingConstants.CENTER);
         buttonsAndTitle.add(imgTitle, BorderLayout.NORTH);
 
         JPanel buttons = new JPanel();
@@ -280,7 +297,8 @@ public class Timeline extends JTabbedPane {
 
                     timelineAudio.remove(currentItemIndex);
                     timelineAudio.add(currentItemIndex - 1, thisSound); //rearrange the selected sound
-
+                    sounds.remove(currentItemIndex);
+                    sounds.add(currentItemIndex - 1, sound);
 
                     for (int i = 0; i < timelineAudio.size(); i++)
                     {
@@ -300,6 +318,7 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 audioPanel.remove(thisSound); //remove sound from GUI
                 timelineAudio.remove(thisSound); //remove sound from backend
+                sounds.remove(sound);
                 for (int i = 0; i < timelineAudio.size(); i++)
                 {
                     timelineAudio.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i+1)));
@@ -325,6 +344,8 @@ public class Timeline extends JTabbedPane {
 
                     timelineAudio.remove(currentItemIndex);
                     timelineAudio.add(currentItemIndex + 1, thisSound); //rearrange the sound in the backend
+                    sounds.remove(currentItemIndex);
+                    sounds.add(currentItemIndex + 1, sound);
 
                     for (int i = 0; i < timelineAudio.size(); i++)
                     {
@@ -375,17 +396,14 @@ public class Timeline extends JTabbedPane {
         verticalBar.addAdjustmentListener(downScroller);
     }
 
-    public void createSlideshow(boolean automated, double slideInterval)
+    public void createSlideshow(boolean automated, long slideInterval)
     {
         Slideshow slideshow = new Slideshow();
-
         slideshow.setAutomated(automated);
-
-        for (JPanel timelineSlide : timelineSlides)
-        {
-            //Slide slide = new Slide();
-        }
-
+        for (Slide slide : slides)
+            slide.setTime(slideInterval);
+        slideshow.setSlideList(slides);
+        slideshow.setSoundList(sounds);
         DBWizard.writeDB(slideshow.toJSON());
     }
 

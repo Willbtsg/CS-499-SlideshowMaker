@@ -44,12 +44,8 @@ public class Slide {
     public Slide (String name)
     {
         m_name = name;
-
         setImage(name);
-
         m_hasTransitions = false;
-
-        return;
     }
 
     /**
@@ -98,7 +94,8 @@ public class Slide {
         JSONObject obj = new JSONObject();
         try
         {
-            obj.put("name", m_name) ;
+            obj.put("imgTime", m_time);
+            obj.put("name", m_name);
             obj.put("hasTransitions", m_hasTransitions);
 
             if (m_hasTransitions) //only try to write Transition information if the Slide has Transitions
@@ -163,7 +160,7 @@ public class Slide {
      * Returns time that a Slide is displayed during an automated Slideshow
      * @return
      */
-    public long getTime() { return m_time; }
+    public double getTime() { return m_time; }
 
     /**
      * Returns type/class name of Transition being used to move to next Slide

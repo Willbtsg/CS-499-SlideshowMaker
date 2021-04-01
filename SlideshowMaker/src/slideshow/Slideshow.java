@@ -30,7 +30,6 @@ public class Slideshow {
      */
     public JSONObject toJSON()
     {
-
         JSONObject obj = new JSONObject();
         JSONArray slideList = new JSONArray();
         JSONArray soundList = new JSONArray();
@@ -46,16 +45,19 @@ public class Slideshow {
         if (m_automated)
         {
             obj.put("SlideshowLength", m_slideshowLength);
-
         }
 
-        soundList.addAll(m_SoundList);
+        for (String s : m_SoundList)
+        {
+            JSONObject soundtrack = new JSONObject();
+            soundtrack.put("name", s);
+            soundList.add(soundtrack);
+        }
 
         obj.put("SoundList", soundList);
         obj.put("AudioLength", m_AudioLength);
 
         return obj;
-
     }
 
     /**

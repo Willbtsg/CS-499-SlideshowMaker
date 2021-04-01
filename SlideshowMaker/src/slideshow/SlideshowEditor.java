@@ -85,7 +85,8 @@ public class SlideshowEditor extends JFrame {
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                timeline.createSlideshow(automated, slideInterval);
+                long slideIntervalLong = (long) (slideInterval * 1000);
+                timeline.createSlideshow(automated, slideIntervalLong);
             }
         });
         settingsAndExport.add(export, BorderLayout.SOUTH);
