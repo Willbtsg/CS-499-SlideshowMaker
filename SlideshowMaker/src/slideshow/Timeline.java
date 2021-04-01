@@ -4,6 +4,7 @@ import transitions.TransitionLibrary;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -84,6 +85,7 @@ public class Timeline extends JTabbedPane {
         buttonsAndTitle.setLayout(new BorderLayout());
 
         JLabel imgTitle = new JLabel(image.getName(), SwingConstants.CENTER);
+        imgTitle.setBorder(new EmptyBorder(5,0,5,0));
         buttonsAndTitle.add(imgTitle, BorderLayout.NORTH);
 
         JPanel buttons = new JPanel();
@@ -177,23 +179,56 @@ public class Timeline extends JTabbedPane {
         thumbnail.setIcon(img);
         thisSlide.add(thumbnail, BorderLayout.CENTER); //create image icon then add to display
 
-        JPanel transitionPanel = new JPanel();
-        transitionPanel.setLayout(new BorderLayout());
+        JPanel transitionDropdowns = new JPanel();
+        transitionDropdowns.setLayout(new BorderLayout());
 
-        JLabel transitionLabel = new JLabel("None", SwingConstants.CENTER);
-        transitionPanel.add(transitionLabel, BorderLayout.NORTH);
+        JPanel transitionDropdownLabels = new JPanel();
+        transitionDropdownLabels.setLayout(new BorderLayout());
+        JLabel transSelectLabel = new JLabel("Transition Type:");
+        transSelectLabel.setBorder(new EmptyBorder(0,0,5,0));
+        transitionDropdownLabels.add(transSelectLabel, BorderLayout.WEST);
+        JLabel transLengthLabel = new JLabel("Transition Length:", SwingConstants.CENTER);
+        transLengthLabel.setBorder(new EmptyBorder(0,0,5,0));
+        transitionDropdownLabels.add(transLengthLabel, BorderLayout.EAST);
+        transitionDropdowns.add(transitionDropdownLabels, BorderLayout.NORTH);
 
-        JButton setTransition = new JButton("Set Transition"); //create button to allow user to set Transition information
-
-        setTransition.addActionListener(new ActionListener() {
+        JPanel transitionComboBoxes = new JPanel();
+        transitionComboBoxes.setLayout(new BorderLayout());
+        JComboBox<String> transSelect = new JComboBox<>();
+        transSelect.setPreferredSize(new Dimension(180,20));
+        transSelect.addItem("None");
+        transSelect.addItem("Wipe Right");
+        transSelect.addItem("Wipe Left");
+        transSelect.addItem("Wipe Up");
+        transSelect.addItem("Wipe Down");
+        transSelect.addItem("Crossfade");
+        transitionComboBoxes.add(transSelect, BorderLayout.WEST);
+        JComboBox<Double> transLength = new JComboBox<>();
+        transLength.setPreferredSize(new Dimension(110,20));
+        transLength.addItem(0.5);
+        transLength.addItem(1.0);
+        transLength.addItem(1.5);
+        transLength.addItem(2.0);
+        transLength.addItem(2.5);
+        transLength.addItem(3.0);
+        transLength.addItem(3.5);
+        transLength.addItem(4.0);
+        transLength.addItem(4.5);
+        transLength.addItem(5.0);
+        transLength.setEnabled(false);
+        transSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                transitionLabel.setText(m_TransitionLibrary.retrievalGUI()); //call TransitionLibrary to get Transition options
+                if (transSelect.getSelectedItem() != "None")
+                    transLength.setEnabled(true);
+                else
+                    transLength.setEnabled(false);
             }
         });
+        transitionComboBoxes.add(transLength, BorderLayout.EAST);
+        transitionDropdowns.add(transitionComboBoxes, BorderLayout.SOUTH);
 
-        transitionPanel.add(setTransition, BorderLayout.CENTER);
-        thisSlide.add(transitionPanel, BorderLayout.NORTH);
+        thisSlide.add(transitionDropdowns, BorderLayout.NORTH);
 
         Border timelineItemBorder = BorderFactory.createTitledBorder(String.valueOf(timelineSlides.size()+1));
         thisSlide.setBorder(timelineItemBorder);
@@ -338,6 +373,20 @@ public class Timeline extends JTabbedPane {
             }
         };
         verticalBar.addAdjustmentListener(downScroller);
+    }
+
+    public void createSlideshow(boolean automated, double slideInterval)
+    {
+        Slideshow slideshow = new Slideshow();
+
+        slideshow.setAutomated(automated);
+
+        for (JPanel timelineSlide : timelineSlides)
+        {
+            //Slide slide = new Slide();
+        }
+
+        DBWizard.writeDB(slideshow.toJSON());
     }
 
     /**

@@ -5,6 +5,7 @@ import transitions.TransitionLibrary;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -81,6 +82,12 @@ public class SlideshowEditor extends JFrame {
 
         JButton export = new JButton("Save Slideshow into Directory");
         export.setMargin(new Insets(7,7,7,7));
+        export.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeline.createSlideshow(automated, slideInterval);
+            }
+        });
         settingsAndExport.add(export, BorderLayout.SOUTH);
 
         timelineAndButtons.add(settingsAndExport, BorderLayout.SOUTH);

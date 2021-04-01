@@ -1,6 +1,7 @@
 package slideshow;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,6 +68,7 @@ public class ImageLibrary extends JPanel {
                 buttonAndTitle.setLayout(new BorderLayout());
 
                 JLabel imgTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                imgTitle.setBorder(new EmptyBorder(10,0,10,0));
                 buttonAndTitle.add(imgTitle, BorderLayout.NORTH);
                 JButton addButton = new JButton("Add");
 

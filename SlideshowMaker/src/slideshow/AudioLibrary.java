@@ -1,6 +1,7 @@
 package slideshow;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,6 +64,7 @@ public class AudioLibrary extends JPanel {
                 buttonAndTitle.setLayout(new BorderLayout());
 
                 JLabel audioTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                audioTitle.setBorder(new EmptyBorder(10,0,10,0));
                 buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
                 JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
 
