@@ -278,8 +278,9 @@ public class Timeline extends JTabbedPane {
         buttonsAndTitle.setLayout(new BorderLayout());
 
         File audioFile = new File(soundName);
-        JLabel imgTitle = new JLabel(audioFile.getName(), SwingConstants.CENTER);
-        buttonsAndTitle.add(imgTitle, BorderLayout.NORTH);
+        JLabel audioTitle = new JLabel(audioFile.getName(), SwingConstants.CENTER);
+        audioTitle.setBorder(new EmptyBorder(5,0,5,0));
+        buttonsAndTitle.add(audioTitle, BorderLayout.NORTH);
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up");
