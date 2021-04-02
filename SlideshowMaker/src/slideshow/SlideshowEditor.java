@@ -9,10 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -27,19 +24,18 @@ public class SlideshowEditor extends JFrame {
      * SlideshowEditor instance- instance of SlideshowEditor used for Singleton implementation
      * JPanel m_ImageLibrary- contains the ImageLibrary GUI component
      * JPanel m_AudioLibrary- contains the AudioLibrary GUI component
-     * JPanel m_Setting Panel- allows user to set automation status and Slide interval
      * boolean automated- indicates whether or not the Slideshow made will be automated
      * double slideInterval- if the Slideshow is automated, this indicates how long each Slide is shown
+     * JFrame settingsFrame- frame that pops up when user wishes to adjust automation settings
+     * boolean settingsPresent- indicates whether or not settings frame is already loaded, prevents duplicates
      */
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
     private static AudioLibrary m_AudioLibrary;
-
     private boolean automated;
-    private double slideInterval = 4.0;
-
-    private JFrame popup;
-    private boolean popupPresent = false;
+    private double slideInterval = 0.0;
+    private JFrame settingsFrame;
+    private boolean settingsPresent = false;
 
     public static void main(String[] args)
     {
@@ -66,27 +62,30 @@ public class SlideshowEditor extends JFrame {
 
         JButton settings = new JButton("Edit Slideshow Settings");
         settings.setMargin(new Insets(7,7,7,7));
+
         settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!popupPresent)
+                if (!settingsPresent)
                 {
-                    popupPresent = true;
+                    settingsPresent = true;
                     settingsPopup();
                 }
                 else
-                    popup.toFront();
+                    settingsFrame.toFront();
             }
         });
+
         settingsAndExport.add(settings,BorderLayout.NORTH);
 
         JButton export = new JButton("Save Slideshow into Directory");
         export.setMargin(new Insets(7,7,7,7));
+
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 long slideIntervalLong = (long) (slideInterval * 1000);
-                timeline.createSlideshow(automated, slideIntervalLong);
+                timeline.exportSlideshow(automated, slideIntervalLong);
             }
         });
         settingsAndExport.add(export, BorderLayout.SOUTH);
@@ -94,7 +93,7 @@ public class SlideshowEditor extends JFrame {
         timelineAndButtons.add(settingsAndExport, BorderLayout.SOUTH);
         add(timelineAndButtons, BorderLayout.EAST);
 
-        // CREATING THE LIBRARY & SETTINGS TABS
+        // CREATING THE MEDIA LIBRARIES
 
         JTabbedPane libraries = new JTabbedPane();
 
@@ -110,7 +109,7 @@ public class SlideshowEditor extends JFrame {
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
 
-        libraries.setPreferredSize(new Dimension(1000,895));
+        libraries.setPreferredSize(new Dimension(1000,800));
         add(libraries, BorderLayout.WEST);
 
         libraries.setBorder(BorderFactory.createTitledBorder("Media"));
@@ -129,7 +128,7 @@ public class SlideshowEditor extends JFrame {
 
         // CONFIGURING THE WINDOW
 
-        setSize(new Dimension(1400, 895));
+        setSize(new Dimension(1400, 800));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -142,7 +141,7 @@ public class SlideshowEditor extends JFrame {
      */
     private void settingsPopup()
     {
-        popup = new JFrame("Slideshow Settings");
+        settingsFrame = new JFrame("Slideshow Settings");
         JPanel settingsPanel = new JPanel();
 
         JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
@@ -152,8 +151,9 @@ public class SlideshowEditor extends JFrame {
         slideIntervalTF.setPreferredSize(new Dimension(50,25));
 
         if (automated)
+        {
             automatedCheckBox.setSelected(true);
-        else
+        } else
         {
             automatedCheckBox.setSelected(false);
             slideIntervalTF.setEnabled(false);
@@ -163,9 +163,14 @@ public class SlideshowEditor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (automatedCheckBox.isSelected())
+                {
                     slideIntervalTF.setEnabled(true);
-                else
+                    slideIntervalTF.setText("1.0");
+                }
+                else {
                     slideIntervalTF.setEnabled(false);
+                    slideIntervalTF.setText("0.0");
+                }
             }
         });
 
@@ -179,14 +184,14 @@ public class SlideshowEditor extends JFrame {
                 automated = automatedCheckBox.isSelected();
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
-                    popupPresent = false;
-                    popup.dispose();
+                    settingsPresent = false;
+                    settingsFrame.dispose();
                 } catch (Exception ex) {
                     if (automated)
                         error.setVisible(true);
                     else {
-                        popupPresent = false;
-                        popup.dispose();
+                        settingsPresent = false;
+                        settingsFrame.dispose();
                     }
                 }
             }
@@ -197,20 +202,30 @@ public class SlideshowEditor extends JFrame {
         settingsPanel.add(slideIntervalTF);
         settingsPanel.add(error);
         settingsPanel.add(submitChanges);
-        popup.add(settingsPanel);
+        settingsFrame.add(settingsPanel);
 
-        popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        popup.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                popupPresent = false;
+        //allows user to save new interval by hitting enter
+        slideIntervalTF.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e)
+            {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    submitChanges.doClick();
+                }
             }
         });
 
-        popup.setSize(new Dimension(290,140));
-        popup.setResizable(false);
-        popup.setLocationRelativeTo(null);
-        popup.setVisible(true);
+        settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        settingsFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                settingsPresent = false;
+            }
+        });
+
+        settingsFrame.setSize(new Dimension(290,140));
+        settingsFrame.setResizable(false);
+        settingsFrame.setLocationRelativeTo(null);
+        settingsFrame.setVisible(true);
     }
 
     /**
