@@ -1,5 +1,4 @@
 package transitions;
-import javax.swing.*;
 import java.util.ArrayList;
 
 /**
@@ -52,47 +51,6 @@ public class TransitionLibrary {
         }
 
         return desiredTransitions;
-    }
-
-    /**
-     * This function is used when the user adds Transition data to Slides in the SlideshowEditor
-     * @return
-     */
-    public String retrievalGUI()
-    {
-
-        String transitionInfo = new String();
-
-        String transitions[] = {"LRWipe", "RLWipe", "UpWipe", "DownWipe", "CrossFade"}; //set list of Transition options
-
-        String transChoice;
-        transChoice = (String) JOptionPane.showInputDialog(null, "What transition would you like to use?", "Transition Select", JOptionPane.PLAIN_MESSAGE, null, transitions, transitions[0]);
-
-        if (transChoice != null) //if user made a selection, proceed with Transition creation
-        {
-
-            if (retrieveTransitions(transChoice).size() > 0) //if Transition selected was valid, proceed
-            {
-                transitionInfo = transChoice + ": "; //save Transition selection to output message
-
-                Double times[] = {1.0, 2.0, 3.0, 4.0, 5.0}; //set options for Transition length
-
-                Double timeChoice;
-                timeChoice = (Double) JOptionPane.showInputDialog(null, "How many seconds do you want your transition to last?", "Transition Select", JOptionPane.PLAIN_MESSAGE, null, times, times[0]);
-
-                if (timeChoice != null) //if user made a valid Transition length selection...
-                {
-                    transitionInfo += timeChoice.toString();
-                    transitionInfo += " seconds";
-
-                } else { //if a valid length was not selected...
-                    return "None";
-                }
-            }
-        }
-
-        return transitionInfo;
-
     }
 
     /**
