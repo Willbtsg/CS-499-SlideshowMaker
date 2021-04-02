@@ -54,29 +54,31 @@ public class ImageLibrary extends JPanel {
     private ImageLibrary(Timeline timeline)
     {
         associatedTimeline = timeline; //set reference to destination Timeline
-        // Setting the GridLayout to (0,n) causes a new row
-        // to be created after every n images
-        GridLayout grid = new GridLayout(0,4);
-        setLayout(grid);
+        setLayout(new GridLayout(3,4)); //set size to 3 row minimum to keep library items at preferred size
+
+        int itemCounter = 0; //keeps track of how many items are in the library
+
         if (dir.isDirectory()) //if directory is valid
         {
             for (File file : dir.listFiles(imageFilter)) //for every valid image in the directory
             {
+
                 JPanel libraryItem = new JPanel(); //create a new JPanel to display image data
                 libraryItem.setLayout(new BorderLayout());
                 JPanel buttonAndTitle = new JPanel();
                 buttonAndTitle.setLayout(new BorderLayout());
 
-                JLabel imgTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                JLabel imgTitle = new JLabel(file.getName(), SwingConstants.CENTER); //set image name in Timeline
                 imgTitle.setBorder(new EmptyBorder(10,0,10,0));
+
                 buttonAndTitle.add(imgTitle, BorderLayout.NORTH);
                 JButton addButton = new JButton("Add");
 
-                addButton.addActionListener(new ActionListener() {
+                addButton.addActionListener(new ActionListener() //add image to the Timeline
+                {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        associatedTimeline.addSlide(dir + "\\" + file.getName()); //add image to the Timeline
-                        associatedTimeline.revalidate(); //update Timeline GUI
+                        associatedTimeline.addSlide(dir + "\\" + file.getName());
                     }
                 });
 
@@ -95,6 +97,11 @@ public class ImageLibrary extends JPanel {
 
                 libraryItem.setPreferredSize(new Dimension(200,300));
                 add(libraryItem); //add new image info panel to the library
+
+                if (itemCounter++ == 12) //when number of items maxes out grid...
+                {
+                    setLayout(new GridLayout(0, 4)); //set grid to increase dynamically
+                }
             }
             // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF PICS TO THE LIBRARY
             for (int i = 0; i < 30; i++)
@@ -111,7 +118,6 @@ public class ImageLibrary extends JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         associatedTimeline.addSlide("images\\download (1).png");
-                        associatedTimeline.revalidate();
                     }
                 });
                 buttonAndTitle.add(addButton, BorderLayout.SOUTH);
@@ -129,6 +135,11 @@ public class ImageLibrary extends JPanel {
 
                 libraryItem.setPreferredSize(new Dimension(200,200));
                 add(libraryItem);
+
+                if (itemCounter++ == 12)
+                {
+                    setLayout(new GridLayout(0, 4));
+                }
             }
         }
     }
