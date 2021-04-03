@@ -21,10 +21,13 @@ public class AudioLibrary extends JPanel {
     /**
      * AudioLibrary instance- instance of AudioLibrary for Singleton
      * Timeline associatedTimeline- reference to Timeline object sound data will be added to
+     * Clip currentClip - current clip being played by the user
      */
     private static AudioLibrary instance;
     private Timeline associatedTimeline;
-
+    private Clip currentClip;
+    private boolean isPlaying;
+    
     // Accesses the slideshow directory
     // TODO: This directory will need to be user-inputted
     private File dir = new File("images");
@@ -50,6 +53,8 @@ public class AudioLibrary extends JPanel {
 
     private AudioLibrary(Timeline timeline)
     {
+    	isPlaying = false; //Set initial boolean for isPlaying to false
+    	
         associatedTimeline = timeline; //set reference to destination Timeline
         setLayout(new GridLayout(3,4)); //set size to 3 row minimum to keep library items at preferred size
 
@@ -74,7 +79,9 @@ public class AudioLibrary extends JPanel {
                 audioTitle.setText(audioTitle.getText() + " (" + audioLength + ")"); //add audio length to title label
 
                 buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
+                JPanel buttons = new JPanel();
                 JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
+                JButton playButton = new JButton("   ▶️"); //add button for playing sound
 
                 addButton.addActionListener(new ActionListener() //add sound to the Timeline
                 {
@@ -83,8 +90,63 @@ public class AudioLibrary extends JPanel {
                         associatedTimeline.addSound(dir + "//" + file.getName(), tempLength); //pass in filepath and audio length
                     }
                 });
+                
+                playButton.addActionListener(new ActionListener() //add sound to the Timeline
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                    	// If no song is currently playing
+                    	if(!isPlaying) {
+	                        try {
+	                        	//Set isPlaying to true
+	                        	isPlaying = true;
+	                        	
+	                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file); //read in sound file
+	                            currentClip = AudioSystem.getClip(); //copy to Clip object to read length
+	                            currentClip.open(audioStream);
+	                            
+	                            //Start song
+	                            currentClip.start();
+	                            //Set button to stop button
+	                            playButton.setText("■");
+	                            // Add line listener to keep track of clip status
+	                            currentClip.addLineListener(new LineListener() {
+	                            	@Override
+	                            	public void update(LineEvent event) {
+	                            		LineEvent.Type type = event.getType(); //Get event type
+	                            		
+	                            		//If playback ends
+	                            		if (type == LineEvent.Type.STOP) {
+	                            			//Reset isPlaying
+	                            			isPlaying = false;
+	                            			//Stop Clip
+	                                    	currentClip.stop();
+	                                        currentClip.close();
+	                                        //Set button text back to play
+	                                        playButton.setText("   ▶️");
+	                                    }
+	                            	}
+	                            });
+	
+	                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+	                            ex.printStackTrace();
+	                        }
+	                    } // Stop playing song
+                        else {
+                			//Reset isPlaying
+                			isPlaying = false;
+                			//Stop Clip
+                        	currentClip.stop();
+                            currentClip.close();
+                            //Set button text back to play
+                            playButton.setText("   ▶️");
+                        }
+                    }
+                });
 
-                buttonAndTitle.add(addButton, BorderLayout.SOUTH);
+                buttons.add(addButton, BorderLayout.WEST);
+                buttons.add(playButton, BorderLayout.EAST);
+                buttonAndTitle.add(buttons, BorderLayout.SOUTH);
                 libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
 
                 JLabel icon = new JLabel("", SwingConstants.CENTER);
