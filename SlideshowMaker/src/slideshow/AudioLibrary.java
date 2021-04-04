@@ -22,10 +22,13 @@ public class AudioLibrary extends JPanel {
      * AudioLibrary instance- instance of AudioLibrary for Singleton
      * Timeline associatedTimeline- reference to Timeline object sound data will be added to
      * Clip currentClip - current clip being played by the user
+     * JButton prevButton - previous button pressed to keep track of which button was pressed last
+     * boolean isPlaying - keeps track of whether a clip is playing or not
      */
     private static AudioLibrary instance;
     private Timeline associatedTimeline;
     private Clip currentClip;
+    private JButton prevButton;
     private boolean isPlaying;
     
     // Accesses the slideshow directory
@@ -102,13 +105,60 @@ public class AudioLibrary extends JPanel {
 	                        	isPlaying = true;
 	                        	
 	                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file); //read in sound file
-	                            currentClip = AudioSystem.getClip(); //copy to Clip object to read length
+	                            currentClip = AudioSystem.getClip(); //copy to Clip object 
 	                            currentClip.open(audioStream);
 	                            
 	                            //Start song
 	                            currentClip.start();
 	                            //Set button to stop button
 	                            playButton.setText("■");
+	                            
+	                            prevButton = playButton;
+	                            
+	                            // Add line listener to keep track of clip status
+	                            currentClip.addLineListener(new LineListener() {
+	                            	@Override
+	                            	public void update(LineEvent event) {
+	                            		LineEvent.Type type = event.getType(); //Get event type
+	                            		
+	                            		//If playback ends
+	                            		if (prevButton != playButton && type == LineEvent.Type.STOP) {
+	                            			//Reset isPlaying
+	                            			isPlaying = false;
+	                            			//Stop Clip
+	                                    	currentClip.stop();
+	                                        currentClip.close();
+	                                        //Set button text back to play
+	                                        playButton.setText("   ▶️");
+	                                    }
+	                            	}
+	                            });
+	
+	                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+	                            ex.printStackTrace();
+	                        }
+	                    }
+                    	else if (prevButton != playButton) {
+                			//Stop Clip
+                        	currentClip.stop();
+                            currentClip.close();
+                            //Set button text back to play
+                            prevButton.setText("   ▶️");
+	                        try {
+	                        	//Set isPlaying to true
+	                        	isPlaying = true;
+	                        	
+	                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file); //read in sound file
+	                            currentClip = AudioSystem.getClip(); //copy to Clip object 
+	                            currentClip.open(audioStream);
+	                            
+	                            //Start song
+	                            currentClip.start();
+	                            //Set button to stop button
+	                            playButton.setText("■");
+	                            // Keep track of button being pressed last
+	                            prevButton = playButton;
+	                            
 	                            // Add line listener to keep track of clip status
 	                            currentClip.addLineListener(new LineListener() {
 	                            	@Override
@@ -131,7 +181,8 @@ public class AudioLibrary extends JPanel {
 	                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
 	                            ex.printStackTrace();
 	                        }
-	                    } // Stop playing song
+                    	}
+                    	// Stop playing song
                         else {
                 			//Reset isPlaying
                 			isPlaying = false;
