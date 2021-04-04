@@ -32,6 +32,7 @@ public class SlideshowEditor extends JFrame {
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
     private static AudioLibrary m_AudioLibrary;
+    private static Timeline timeline;
     private boolean automated;
     private double slideInterval = 0.0;
     private JFrame settingsFrame;
@@ -54,7 +55,7 @@ public class SlideshowEditor extends JFrame {
         JPanel timelineAndButtons = new JPanel();
         timelineAndButtons.setLayout(new BorderLayout());
 
-        Timeline timeline = Timeline.getInstance();
+        timeline = Timeline.getInstance();
         timelineAndButtons.add(timeline, BorderLayout.NORTH);
 
         JPanel settingsAndExport = new JPanel();
@@ -146,7 +147,7 @@ public class SlideshowEditor extends JFrame {
 
         JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
 
-        JLabel slideIntervalLabel = new JLabel("Slide Interval (in seconds)");
+        JLabel slideIntervalLabel = new JLabel("Default Slide Duration (sec): ");
         JTextField slideIntervalTF = new JTextField(String.valueOf(slideInterval));
         slideIntervalTF.setPreferredSize(new Dimension(50,25));
 
@@ -165,7 +166,7 @@ public class SlideshowEditor extends JFrame {
                 if (automatedCheckBox.isSelected())
                 {
                     slideIntervalTF.setEnabled(true);
-                    slideIntervalTF.setText("1.0");
+                    slideIntervalTF.setText("3.0");
                 }
                 else {
                     slideIntervalTF.setEnabled(false);
@@ -182,13 +183,17 @@ public class SlideshowEditor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 automated = automatedCheckBox.isSelected();
+                timeline.setSlideDurationVisible(automated);
+                timeline.setDefaultSlideDuration(Double.parseDouble(slideIntervalTF.getText()));
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
                     settingsPresent = false;
                     settingsFrame.dispose();
                 } catch (Exception ex) {
                     if (automated)
+                    {
                         error.setVisible(true);
+                    }
                     else {
                         settingsPresent = false;
                         settingsFrame.dispose();

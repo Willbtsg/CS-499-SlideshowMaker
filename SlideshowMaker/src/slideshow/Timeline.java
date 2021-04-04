@@ -39,6 +39,11 @@ public class Timeline extends JTabbedPane {
     private JScrollPane audioScroll;
     private ArrayList<Slide> slideList;
     private ArrayList<String> soundList;
+    private ArrayList<JPanel> slideDurationPanels;
+    private ArrayList<JTextField> slideDurations;
+
+    private Double defaultSlideDuration = 3.0;
+    private boolean automated = false;
 
     /////////////
     // METHODS //
@@ -53,6 +58,9 @@ public class Timeline extends JTabbedPane {
 
         slideList = new ArrayList();
         soundList = new ArrayList();
+
+        slideDurationPanels = new ArrayList<JPanel>();
+        slideDurations = new ArrayList<JTextField>();
 
         GridLayout grid = new GridLayout(2,1); //layout to be used for Slide and Audio tabs
         slidePanel.setLayout(grid); //set tab layouts
@@ -77,7 +85,8 @@ public class Timeline extends JTabbedPane {
      * Used by ImageLibrary to add new image to the Slideshow. Creates JPanel with Slide information to display in slidePanel
      * @param filePath- filepath of image being added to Timeline
      */
-    public void addSlide(String filePath) {
+    public void addSlide(String filePath)
+    {
         Slide thisSlide = new Slide(filePath);
         slideList.add(thisSlide);
 
@@ -92,6 +101,44 @@ public class Timeline extends JTabbedPane {
         JLabel imgTitle = new JLabel(image.getName(), SwingConstants.CENTER);
         imgTitle.setBorder(new EmptyBorder(5, 0, 5, 0));
         buttonsAndTitle.add(imgTitle, BorderLayout.NORTH);
+
+        JPanel slideDuration = new JPanel();
+        slideDuration.setLayout(new BorderLayout());
+        JCheckBox defaultDuration = new JCheckBox("Use Default Slide Duration");
+        defaultDuration.setSelected(true);
+        slideDuration.add(defaultDuration, BorderLayout.NORTH);
+
+        JPanel durationEntry = new JPanel();
+        durationEntry.setLayout(new BorderLayout());
+        JLabel lblDuration = new JLabel("Duration (sec): ");
+        JTextField txtDuration = new JTextField();
+        txtDuration.setText(String.valueOf(defaultSlideDuration));
+        slideDurations.add(txtDuration);
+        txtDuration.setPreferredSize(new Dimension(195,20));
+        durationEntry.add(lblDuration, BorderLayout.WEST);
+        durationEntry.add(txtDuration, BorderLayout.EAST);
+        durationEntry.setVisible(false);
+        slideDuration.add(durationEntry, BorderLayout.SOUTH);
+
+        defaultDuration.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (defaultDuration.isSelected())
+                {
+                    durationEntry.setVisible(false);
+                    txtDuration.setText(String.valueOf(defaultSlideDuration));
+                }
+                else
+                {
+                    durationEntry.setVisible(true);
+                    txtDuration.setText(String.valueOf(defaultSlideDuration));
+                }
+            }
+        });
+
+        slideDuration.setVisible(automated);
+        slideDurationPanels.add(slideDuration);
+        buttonsAndTitle.add(slideDuration, BorderLayout.SOUTH);
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up"); //create button to move slide towards beginning of Timeline
@@ -128,6 +175,8 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 slidePanel.remove(thisSlideDisplay); //remove slide from display
                 timelineSlides.remove(thisSlideDisplay); //remove slide from Timeline database
+                slideDurationPanels.remove(slideDuration);
+                slideDurations.remove(txtDuration);
 
                 if (timelineSlides.size() == 1) {
                     slidePanel.setLayout(new GridLayout(2, 1));
@@ -175,7 +224,8 @@ public class Timeline extends JTabbedPane {
         buttons.add(deleteButton, BorderLayout.CENTER);
         buttons.add(moveDown, BorderLayout.EAST);
 
-        buttonsAndTitle.add(buttons, BorderLayout.SOUTH);
+        buttonsAndTitle.add(buttons, BorderLayout.CENTER);
+
         thisSlideDisplay.add(buttonsAndTitle, BorderLayout.SOUTH); //add control buttons and image name to Panel
 
         JLabel thumbnail = new JLabel("", SwingConstants.CENTER);
@@ -481,17 +531,56 @@ public class Timeline extends JTabbedPane {
     public void exportSlideshow(boolean automated, long slideInterval)
     {
         Slideshow slideshow = new Slideshow(); //create new Slideshow object to hold data
-
         slideshow.setAutomated(automated);
 
-        for (Slide slide : slideList) //set display interval for each Slide in the Timeline
+        if (automated)
         {
-            slide.setTime(slideInterval);
+            int index = 0;
+            try
+            {
+                for (int i = 0; i < slideList.size(); i++)
+                {
+                    index = i;
+                    double slideDurationDb = Double.parseDouble(slideDurations.get(i).getText());
+                    long slideDuration = (long)(slideDurationDb*1000);
+                    slideList.get(i).setTime(slideDuration);
+                }
+                slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
+                slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
+                DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
+            }
+            catch (Exception e)
+            {
+                index++;
+                String errorMsg = "Invalid value entered for the duration of slide " + index;
+                JOptionPane.showMessageDialog(SlideshowEditor.getInstance(), errorMsg);
+            }
+        }
+        else
+        {
+            slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
+            slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
+            DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
         }
 
-        slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
-        slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
-        DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
+    }
+
+    /**
+     * This function sets the visibility of the slide duration options depending on whether
+     * the slideshow is set to automatic.
+     *
+     * @param visible The visibility settings of the slide duration options.
+     */
+    public void setSlideDurationVisible(boolean visible)
+    {
+        automated = visible;
+        for (JPanel slideDuration : slideDurationPanels)
+            slideDuration.setVisible(visible);
+    }
+
+    public void setDefaultSlideDuration(Double dur)
+    {
+        defaultSlideDuration = dur;
     }
 
     /**
