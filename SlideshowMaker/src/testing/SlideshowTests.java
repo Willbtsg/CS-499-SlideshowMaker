@@ -40,7 +40,7 @@ public class SlideshowTests {
 		JSONObject testJSON = testSlideshow.toJSON();
 		
 		// Test that slide values were correctly converted
-		assertEquals("[{\"name\":\"TestSlide1\",\"hasTransitions\":false}]", testJSON.get("SlideList").toString());
+		assertEquals("[{\"imgTime\":0,\"name\":\"TestSlide1\",\"hasTransitions\":false}]", testJSON.get("SlideList").toString());
 	}
 	
 	// Test set and get slidelist functions (Will throw error, but that doesn't matter as faulty names are passed)

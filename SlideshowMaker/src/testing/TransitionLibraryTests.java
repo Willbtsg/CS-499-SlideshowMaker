@@ -55,12 +55,4 @@ public class TransitionLibraryTests {
 		assertEquals(testTransitionList.get(0).getType(), "CrossFade");
 		assertEquals(testTransitionList.get(1).getType(), "CrossFade");
 	}
-	
-	// Test retrieve GUI method
-	@Test
-	void testRetrievalGUI() {
-		ArrayList<Transition> tempList = testLibrary.retrievalGUI();
-		
-		assertEquals(tempList.size(),2); 
-	}
 }
