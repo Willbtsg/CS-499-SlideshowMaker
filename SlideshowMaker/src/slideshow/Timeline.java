@@ -207,7 +207,11 @@ public class Timeline extends JTabbedPane {
                 timelineSlides.remove(thisSlideDisplay); //remove slide from Timeline database
                 slideDurationPanels.remove(slideDuration);
                 slideDurations.remove(durationLabel);
-                totalSlideTime -= Integer.parseInt(durationLabel.getText());
+
+                if (automated) //if Slideshow is automated, update the total runtime
+                {
+                    totalSlideTime -= Integer.parseInt(durationLabel.getText());
+                }
 
                 if (timelineSlides.size() == 1) {
                     slidePanel.setLayout(new GridLayout(2, 1));
