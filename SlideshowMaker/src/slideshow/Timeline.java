@@ -335,7 +335,7 @@ public class Timeline extends JTabbedPane {
         revalidate(); //update GUI after adding new component
 
         JScrollBar verticalBar = slideScroll.getVerticalScrollBar();
-        verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
+        verticalBar.addAdjustmentListener(new ScrollAdjusterSlides(verticalBar)); //set scrollbar to adjust to bottom to show new data
     }
 
     /**
@@ -477,27 +477,49 @@ public class Timeline extends JTabbedPane {
         revalidate();
 
         JScrollBar verticalBar = audioScroll.getVerticalScrollBar();
-        verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
+        verticalBar.addAdjustmentListener(new ScrollAdjusterAudio(verticalBar)); //set scrollbar to adjust to bottom to show new data
     }
 
     /**
-     * This AdjustmentListener monitors the most recently updated JScrollPane. When adding a new item causes the
+     * These AdjustmentListeners monitors the most recently updated JScrollPane. When adding a new item causes the
      * scrollbar to adjust, this listener sets the display position to the bottom of the scrollbar
      */
-    static class ScrollAdjuster implements AdjustmentListener {
+    static class ScrollAdjusterSlides implements AdjustmentListener {
 
         JScrollBar parent; //JScrollBar that this listener is being attached to
 
-        public ScrollAdjuster(JScrollBar parentScroll)
+        public ScrollAdjusterSlides(JScrollBar parentScroll)
         {
             parent = parentScroll;
         }
 
         public void adjustmentValueChanged(final AdjustmentEvent e) //when the JScrollBar is adjusted...
         {
-        Adjustable adjustable = e.getAdjustable();
-        adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
-        parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
+            if (getInstance().getSlideCount() > 1)
+            {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
+                parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
+            }
+        }
+    }
+    static class ScrollAdjusterAudio implements AdjustmentListener {
+
+        JScrollBar parent; //JScrollBar that this listener is being attached to
+
+        public ScrollAdjusterAudio(JScrollBar parentScroll)
+        {
+            parent = parentScroll;
+        }
+
+        public void adjustmentValueChanged(final AdjustmentEvent e) //when the JScrollBar is adjusted...
+        {
+            if (getInstance().getAudioCount() > 1)
+            {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
+                parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
+            }
         }
     }
 
@@ -578,10 +600,10 @@ public class Timeline extends JTabbedPane {
             slideDuration.setVisible(visible);
     }
 
-    public void setDefaultSlideDuration(Double dur)
-    {
-        defaultSlideDuration = dur;
-    }
+    public void setDefaultSlideDuration(Double dur) { defaultSlideDuration = dur; }
+
+    public int getSlideCount() { return slideList.size(); }
+    public int getAudioCount() { return soundList.size(); }
 
     /**
      * This function returns the instance of Timeline. If no instance exists, then one is created.
