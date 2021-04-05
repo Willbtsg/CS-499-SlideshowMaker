@@ -330,6 +330,11 @@ public class Timeline extends JTabbedPane {
                     transLength.setEnabled(true);
                 else
                     transLength.setEnabled(false);
+
+                    Double transitionLength = (Double) transLength.getSelectedItem(); //make sure Transition timing is saved when switching
+                    transitionLength *= 1000;
+                    long transitionLengthMs = transitionLength.longValue();
+                    thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
             }
         });
 
