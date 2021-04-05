@@ -98,39 +98,6 @@ public class DBWizard {
     }
 
     /**
-     * Gets songList from json file. Not used currently, will probably delete
-     * @return
-     */
-    public static ArrayList<String> getSongs()
-    {
-        JSONParser parser = new JSONParser();
-        ArrayList<String> theList = new ArrayList<String>();
-
-        try {
-            Object obj = parser.parse(new FileReader(DBNAME));
-            //
-            //Read JSON file
-            JSONObject jsonObject = (JSONObject) obj;
-            JSONArray soundList = (JSONArray) jsonObject.get("SoundList");
-
-            for (Object j : soundList) {
-
-                JSONObject tempJ = (JSONObject) j;
-                theList.add((String) tempJ.get("name")); //use the ClipFactory to make the specified Clip
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return theList;
-    }
-
-    /**
      * This function returns the instance of DBWizard. If no instance exists, then one is created.
      *
      * @return instance- pointer to instance of DBWizard to be used
