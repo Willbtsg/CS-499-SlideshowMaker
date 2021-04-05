@@ -183,16 +183,17 @@ public class SlideshowEditor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 automated = automatedCheckBox.isSelected();
-                timeline.setSlideDurationVisible(automated);
-                timeline.setDefaultSlideDuration(Double.parseDouble(slideIntervalTF.getText()));
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
+                    timeline.setSlideDurationVisible(automated);
+                    timeline.setDefaultSlideDuration(Double.parseDouble(slideIntervalTF.getText()));
                     settingsPresent = false;
                     settingsFrame.dispose();
                 } catch (Exception ex) {
                     if (automated)
                     {
                         error.setVisible(true);
+                        automated = false;
                     }
                     else {
                         settingsPresent = false;
