@@ -29,6 +29,11 @@ public class Timeline extends JTabbedPane {
      * JScrollPane audioScroll- scrollPane used to wrap audioPanel
      * ArrayList<Slide> slideList- list of Slide objects to be used in a Slideshow
      * ArrayList<String> soundList- list of sound filepaths to be used in a Slideshow
+     * ArrayList<JPanel> slideDurationPanels- JPanels used for displaying slide interval data in Timeline items
+     * ArrayList<JLabel> slideDurations- JLabels from Timeline items containing that item's set interval
+     * int totalSlideTime- total time (in seconds) that the automated Slideshow will last
+     * double defaultDuration- default slide interval for Timeline items in an automated Slideshow
+     * boolean automated- flag used to indicate whether the Slideshow being created will be automated or not
      */
     private static Timeline instance;
     private ArrayList<JPanel> timelineSlides;
@@ -40,8 +45,9 @@ public class Timeline extends JTabbedPane {
     private ArrayList<Slide> slideList;
     private ArrayList<String> soundList;
     private ArrayList<JPanel> slideDurationPanels;
-    private ArrayList<JTextField> slideDurations;
-
+    private ArrayList<JLabel> slideDurations;
+    private int totalSlideTime = 0;
+    private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
     private boolean automated = false;
 
@@ -60,7 +66,7 @@ public class Timeline extends JTabbedPane {
         soundList = new ArrayList();
 
         slideDurationPanels = new ArrayList<JPanel>();
-        slideDurations = new ArrayList<JTextField>();
+        slideDurations = new ArrayList<JLabel>();
 
         GridLayout grid = new GridLayout(2,1); //layout to be used for Slide and Audio tabs
         slidePanel.setLayout(grid); //set tab layouts
@@ -85,8 +91,7 @@ public class Timeline extends JTabbedPane {
      * Used by ImageLibrary to add new image to the Slideshow. Creates JPanel with Slide information to display in slidePanel
      * @param filePath- filepath of image being added to Timeline
      */
-    public void addSlide(String filePath)
-    {
+    public void addSlide(String filePath) {
         Slide thisSlide = new Slide(filePath);
         slideList.add(thisSlide);
 
@@ -108,30 +113,48 @@ public class Timeline extends JTabbedPane {
         defaultDuration.setSelected(true);
         slideDuration.add(defaultDuration, BorderLayout.NORTH);
 
-        JPanel durationEntry = new JPanel();
-        durationEntry.setLayout(new BorderLayout());
-        JLabel lblDuration = new JLabel("Duration (sec): ");
-        JTextField txtDuration = new JTextField();
-        txtDuration.setText(String.valueOf(defaultSlideDuration));
-        slideDurations.add(txtDuration);
-        txtDuration.setPreferredSize(new Dimension(195,20));
-        durationEntry.add(lblDuration, BorderLayout.WEST);
-        durationEntry.add(txtDuration, BorderLayout.EAST);
-        durationEntry.setVisible(false);
-        slideDuration.add(durationEntry, BorderLayout.SOUTH);
+        JPanel durationAdjust = new JPanel();
+        durationAdjust.setLayout(new BorderLayout());
+        JLabel lblHeader = new JLabel("Duration (sec): ");
+        JLabel durationLabel = new JLabel("", SwingConstants.CENTER);
+        JButton changeDuration = new JButton("Change Duration");
+        slideDurations.add(durationLabel);
+        durationAdjust.add(lblHeader, BorderLayout.WEST);
+        durationAdjust.add(durationLabel, BorderLayout.CENTER);
+        durationAdjust.add(changeDuration, BorderLayout.EAST);
+        durationAdjust.setVisible(false);
+        slideDuration.add(durationAdjust, BorderLayout.SOUTH);
 
-        defaultDuration.addActionListener(new ActionListener() {
+        defaultDuration.addActionListener(new ActionListener() //only show textfield for different slide interval if "Use Default" is unchecked
+        {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (defaultDuration.isSelected())
-                {
-                    durationEntry.setVisible(false);
-                    txtDuration.setText(String.valueOf(defaultSlideDuration));
+                if (defaultDuration.isSelected()) {
+                    durationAdjust.setVisible(false);
+                } else {
+                    durationAdjust.setVisible(true);
                 }
-                else
+
+                durationLabel.setText(String.valueOf(defaultSlideDuration));
+            }
+        });
+
+        changeDuration.addActionListener(new ActionListener() //adds modal popup for changing Slide interval
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newValue = JOptionPane.showInputDialog(null, "Enter New Slide Interval");
+
+                try
                 {
-                    durationEntry.setVisible(true);
-                    txtDuration.setText(String.valueOf(defaultSlideDuration));
+                    if (Double.parseDouble(newValue) > 0) //change set interval if users selects a valid duration greater than zero
+                    {
+                        durationLabel.setText(newValue);
+                    }
+                }
+                catch (Exception ex) //inform user that their input was invalid
+                {
+                    JOptionPane.showMessageDialog(null, "Invalid interval. Slide will not be updated.");
                 }
             }
         });
@@ -139,6 +162,11 @@ public class Timeline extends JTabbedPane {
         slideDuration.setVisible(automated);
         slideDurationPanels.add(slideDuration);
         buttonsAndTitle.add(slideDuration, BorderLayout.SOUTH);
+
+        if (automated)
+        {
+            totalSlideTime += defaultSlideDuration;
+        }
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up"); //create button to move slide towards beginning of Timeline
@@ -157,6 +185,8 @@ public class Timeline extends JTabbedPane {
                     timelineSlides.add(currentItemIndex - 1, thisSlideDisplay); //adjust the slide's display position in the backend
                     slideList.remove(currentItemIndex);
                     slideList.add(currentItemIndex - 1, thisSlide); //also update position of Slide item itself
+                    slideDurations.remove(currentItemIndex);
+                    slideDurations.add(currentItemIndex - 1, durationLabel);
 
                     for (int i = 0; i < timelineSlides.size(); i++) {
                         timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i + 1)));
@@ -176,7 +206,8 @@ public class Timeline extends JTabbedPane {
                 slidePanel.remove(thisSlideDisplay); //remove slide from display
                 timelineSlides.remove(thisSlideDisplay); //remove slide from Timeline database
                 slideDurationPanels.remove(slideDuration);
-                slideDurations.remove(txtDuration);
+                slideDurations.remove(durationLabel);
+                totalSlideTime -= Integer.parseInt(durationLabel.getText());
 
                 if (timelineSlides.size() == 1) {
                     slidePanel.setLayout(new GridLayout(2, 1));
@@ -186,7 +217,7 @@ public class Timeline extends JTabbedPane {
 
                 for (int i = 0; i < timelineSlides.size(); i++) {
                     timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i + 1)));
-                    slidePanel.add(timelineSlides.get(i)); //add all slides back int he new order
+                    slidePanel.add(timelineSlides.get(i)); //add all slides back in the new order
                 }
                 repaint(); //update display to reflect changes
                 revalidate();
@@ -209,6 +240,8 @@ public class Timeline extends JTabbedPane {
                     timelineSlides.add(currentItemIndex + 1, thisSlideDisplay); //adjust the slide's display position in the backend
                     slideList.remove(currentItemIndex);
                     slideList.add(currentItemIndex + 1, thisSlide); //also update position of Slide item itself
+                    slideDurations.remove(currentItemIndex);
+                    slideDurations.add(currentItemIndex + 1, durationLabel);
 
                     for (int i = 0; i < timelineSlides.size(); i++) {
                         timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i + 1)));
@@ -253,16 +286,11 @@ public class Timeline extends JTabbedPane {
 
         JPanel transitionComboBoxes = new JPanel(); //create panel for Transition dropdowns
         transitionComboBoxes.setLayout(new BorderLayout());
-        JComboBox<String> transSelect = new JComboBox<>();
-        transSelect.setPreferredSize(new Dimension(145, 20));
-        transSelect.addItem("None");
-        transSelect.addItem("Wipe Right");
-        transSelect.addItem("Wipe Left");
-        transSelect.addItem("Wipe Up");
-        transSelect.addItem("Wipe Down");
-        transSelect.addItem("Crossfade");
-        transitionComboBoxes.add(transSelect, BorderLayout.WEST); //add dropdown with Transition options
 
+        String transitionOptions[] = {"None", "Wipe Right", "Wipe Left", "Wipe Up", "Wipe Down", "Crossfade"}; //array of Transitions to choose from
+        JComboBox<String> transSelect = new JComboBox<>(transitionOptions);
+        transSelect.setPreferredSize(new Dimension(145, 20));
+        transitionComboBoxes.add(transSelect, BorderLayout.WEST); //add dropdown with Transition options
 
         Double lengthOptions[] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
         JComboBox transLength = new JComboBox(lengthOptions);
@@ -279,19 +307,19 @@ public class Timeline extends JTabbedPane {
 
                 switch (userTrans) //use switch statement to convert dropdown selection into format expected by backend
                 {
-                    case "Wipe Right" :
+                    case "Wipe Right":
                         transition = "LRWipe";
                         break;
-                    case "Wipe Left" :
+                    case "Wipe Left":
                         transition = "RLWipe";
                         break;
-                    case "Wipe Up" :
+                    case "Wipe Up":
                         transition = "UpWipe";
                         break;
-                    case "Wipe Down" :
+                    case "Wipe Down":
                         transition = "DownWipe";
                         break;
-                    case "Crossfade" :
+                    case "Crossfade":
                         transition = "CrossFade";
                         break;
                 }
@@ -331,11 +359,14 @@ public class Timeline extends JTabbedPane {
             slidePanel.setLayout(new GridLayout(0, 1));
         }
 
+        if (timelineSlides.size() > 1) //if necessary, prep scrollpane to adjust to bottom to make it clear new panel was added
+        {
+            JScrollBar verticalBar = slideScroll.getVerticalScrollBar();
+            verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
+        }
+
         slidePanel.add(thisSlideDisplay);
         revalidate(); //update GUI after adding new component
-
-        JScrollBar verticalBar = slideScroll.getVerticalScrollBar();
-        verticalBar.addAdjustmentListener(new ScrollAdjusterSlides(verticalBar)); //set scrollbar to adjust to bottom to show new data
     }
 
     /**
@@ -353,13 +384,13 @@ public class Timeline extends JTabbedPane {
         buttonsAndTitle.setLayout(new BorderLayout());
 
         File audioFile = new File(soundName);
-        JLabel audioTitle = new JLabel(audioFile.getName(), SwingConstants.CENTER);
+        String audioInfo = "<html>" + audioFile.getName() + "<br>(" + calculateMinSecLength(soundLength) + ")</html>";
+        JLabel audioTitle = new JLabel("<html><div style='text-align: center;'>" + audioInfo + "</div></html>", SwingConstants.CENTER);
         audioTitle.setBorder(new EmptyBorder(5,0,5,0));
 
-        String audioLength = calculateMinSecLength(soundLength); //get MINUTES:SECONDS format of audio length
-        audioTitle.setText(audioTitle.getText() + " (" + audioLength + ")"); //add new length to existing label
-
         buttonsAndTitle.add(audioTitle, BorderLayout.NORTH);
+
+        totalAudioTime += soundLength;
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up"); //create button to move audio closer to beginning of Timeline
@@ -398,6 +429,7 @@ public class Timeline extends JTabbedPane {
             public void actionPerformed(ActionEvent e) {
                 audioPanel.remove(thisSound); //remove sound from GUI
                 timelineAudio.remove(thisSound); //remove sound from backend GUI list
+                totalAudioTime -= soundLength;
 
                 if (timelineAudio.size() == 1)
                 {
@@ -473,53 +505,35 @@ public class Timeline extends JTabbedPane {
             audioPanel.setLayout(new GridLayout(0, 1));
         }
 
+        if (timelineAudio.size() > 1) //if necessary, prep scrollpane to adjust to bottom to make it clear new panel was added
+        {
+            JScrollBar verticalBar = audioScroll.getVerticalScrollBar();
+            verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
+        }
+
+
         audioPanel.add(thisSound); //add new sound to GUI
         revalidate();
-
-        JScrollBar verticalBar = audioScroll.getVerticalScrollBar();
-        verticalBar.addAdjustmentListener(new ScrollAdjusterAudio(verticalBar)); //set scrollbar to adjust to bottom to show new data
     }
 
     /**
-     * These AdjustmentListeners monitors the most recently updated JScrollPane. When adding a new item causes the
+     * This AdjustmentListener monitors the most recently updated JScrollPane. When adding a new item causes the
      * scrollbar to adjust, this listener sets the display position to the bottom of the scrollbar
      */
-    static class ScrollAdjusterSlides implements AdjustmentListener {
+    static class ScrollAdjuster implements AdjustmentListener {
 
         JScrollBar parent; //JScrollBar that this listener is being attached to
 
-        public ScrollAdjusterSlides(JScrollBar parentScroll)
+        public ScrollAdjuster(JScrollBar parentScroll)
         {
             parent = parentScroll;
         }
 
         public void adjustmentValueChanged(final AdjustmentEvent e) //when the JScrollBar is adjusted...
         {
-            if (getInstance().getSlideCount() > 1)
-            {
-                Adjustable adjustable = e.getAdjustable();
-                adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
-                parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
-            }
-        }
-    }
-    static class ScrollAdjusterAudio implements AdjustmentListener {
-
-        JScrollBar parent; //JScrollBar that this listener is being attached to
-
-        public ScrollAdjusterAudio(JScrollBar parentScroll)
-        {
-            parent = parentScroll;
-        }
-
-        public void adjustmentValueChanged(final AdjustmentEvent e) //when the JScrollBar is adjusted...
-        {
-            if (getInstance().getAudioCount() > 1)
-            {
-                Adjustable adjustable = e.getAdjustable();
-                adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
-                parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
-            }
+            Adjustable adjustable = e.getAdjustable();
+            adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
+            parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
         }
     }
 
@@ -548,14 +562,13 @@ public class Timeline extends JTabbedPane {
     /**
      * Converts items in Timeline into a Slideshow for export to desired file
      * @param automated- indicates whether or not this Slideshow should be automated
-     * @param slideInterval- indicates default interval for Slide display (if not automated, interval is set to 0)
      */
-    public void exportSlideshow(boolean automated, long slideInterval)
+    public void exportSlideshow(boolean automated)
     {
         Slideshow slideshow = new Slideshow(); //create new Slideshow object to hold data
         slideshow.setAutomated(automated);
 
-        if (automated)
+        if (automated) //export Slideshow with slide intervals if user has selected automated playback
         {
             int index = 0;
             try
@@ -568,6 +581,7 @@ public class Timeline extends JTabbedPane {
                     slideList.get(i).setTime(slideDuration);
                 }
                 slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
+                slideshow.calculateLength();
                 slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
                 DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
             }
@@ -578,8 +592,12 @@ public class Timeline extends JTabbedPane {
                 JOptionPane.showMessageDialog(SlideshowEditor.getInstance(), errorMsg);
             }
         }
-        else
+        else //otherwise, export Slideshow
         {
+            for (Slide slide : slideList) //ensures Slide time in layout file is set to zero if Slideshow is manual
+            {
+                slide.setTime(0);
+            }
             slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
             slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
             DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
@@ -596,14 +614,32 @@ public class Timeline extends JTabbedPane {
     public void setSlideDurationVisible(boolean visible)
     {
         automated = visible;
+
         for (JPanel slideDuration : slideDurationPanels)
+        {
             slideDuration.setVisible(visible);
+        }
+
+        totalSlideTime = 0;
+
+        if (automated)
+        {
+            for (JLabel interval : slideDurations) {
+                try {
+                    totalSlideTime += Integer.parseInt(interval.getText());
+                } catch (Exception ex) {
+                    totalSlideTime += defaultSlideDuration;
+                    interval.setText(String.valueOf(defaultSlideDuration));
+                }
+            }
+        }
     }
 
-    public void setDefaultSlideDuration(Double dur) { defaultSlideDuration = dur; }
-
-    public int getSlideCount() { return slideList.size(); }
-    public int getAudioCount() { return soundList.size(); }
+    /**
+     * Sets default interval for Slides in an automated slideshow
+     * @param duration- default interval in seconds
+     */
+    public void setDefaultSlideDuration(Double duration) { defaultSlideDuration = duration; }
 
     /**
      * This function returns the instance of Timeline. If no instance exists, then one is created.
