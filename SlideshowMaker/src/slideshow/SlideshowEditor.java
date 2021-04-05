@@ -85,8 +85,7 @@ public class SlideshowEditor extends JFrame {
         export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                long slideIntervalLong = (long) (slideInterval * 1000);
-                timeline.exportSlideshow(automated, slideIntervalLong);
+                timeline.exportSlideshow(automated);
             }
         });
         settingsAndExport.add(export, BorderLayout.SOUTH);
@@ -151,7 +150,7 @@ public class SlideshowEditor extends JFrame {
         JTextField slideIntervalTF = new JTextField(String.valueOf(slideInterval));
         slideIntervalTF.setPreferredSize(new Dimension(50,25));
 
-        if (automated)
+        if (automated) //only allow user to set a Slide interval if "Automatic Slideshow" is selected
         {
             automatedCheckBox.setSelected(true);
         } else
@@ -160,7 +159,8 @@ public class SlideshowEditor extends JFrame {
             slideIntervalTF.setEnabled(false);
         }
 
-        automatedCheckBox.addActionListener(new ActionListener() {
+        automatedCheckBox.addActionListener(new ActionListener() //makes interval field active/inactive as user checks/unchecks the box
+        {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (automatedCheckBox.isSelected())
