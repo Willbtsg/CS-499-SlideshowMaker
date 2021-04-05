@@ -32,18 +32,4 @@ public class DBWizardTests {
 		testSlideShow.setAutomated(true);
 		assertEquals(testSlideShow.getAutomated(), true);
 	}
-	
-	// Test get songs method
-	@Test
-	void testGetSongs() {
-		ArrayList<String> testSongList = DBWizard.getSongs();
-		// If song list gets declared correctly
-		if(testSongList.size() >= 0) {
-			// Test passed
-			assertEquals(1, 1);
-		} // Otherwise, test failed
-		else {
-			assertEquals(0,1);
-		}
-	}
 }

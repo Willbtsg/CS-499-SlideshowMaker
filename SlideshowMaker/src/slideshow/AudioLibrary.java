@@ -120,7 +120,7 @@ public class AudioLibrary extends JPanel {
 	                            		LineEvent.Type type = event.getType(); //Get event type
 	                            		
 	                            		//If playback ends
-	                            		if (prevButton != playButton && type == LineEvent.Type.STOP) {
+	                            		if (type == LineEvent.Type.STOP) {
 	                            			//Reset isPlaying
 	                            			isPlaying = false;
 	                            			//Stop Clip
