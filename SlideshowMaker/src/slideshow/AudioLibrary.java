@@ -73,15 +73,13 @@ public class AudioLibrary extends JPanel {
                 JPanel buttonAndTitle = new JPanel();
                 buttonAndTitle.setLayout(new BorderLayout());
 
-                JLabel audioTitle = new JLabel(file.getName(), SwingConstants.CENTER);
+                int tempLength = getAudioLength((file));
+                String audioInfo = "<html>" + file.getName() + "<br>(" + calculateMinSecLength(tempLength) + ")</html>";
+                JLabel audioTitle = new JLabel("<html><div style='text-align: center;'>" + audioInfo + "</div></html>", SwingConstants.CENTER);
                 audioTitle.setBorder(new EmptyBorder(10,0,10,0));
 
-                int tempLength = getAudioLength(file); //gets length of audio clip in seconds
-                String audioLength = calculateAudioLength(tempLength); //converts second length into MINUTES:SECONDS
-
-                audioTitle.setText(audioTitle.getText() + " (" + audioLength + ")"); //add audio length to title label
-
                 buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
+
                 JPanel buttons = new JPanel();
                 JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
                 JButton playButton = new JButton("   ▶️"); //add button for playing sound
@@ -94,7 +92,7 @@ public class AudioLibrary extends JPanel {
                     }
                 });
                 
-                playButton.addActionListener(new ActionListener() //add sound to the Timeline
+                playButton.addActionListener(new ActionListener() //add audio preview to library item
                 {
                     @Override
                     public void actionPerformed(ActionEvent e){
@@ -245,7 +243,7 @@ public class AudioLibrary extends JPanel {
      * @param tempLength- length of audio clip in seconds
      * @return- String in MINUTES:SECONDS format
      */
-    public String calculateAudioLength(int tempLength)
+    public String calculateMinSecLength(int tempLength)
     {
         String minLength = (int) Math.floor(tempLength / 60) + ":"; //calculate number of complete minutes this audio lasts
         int secLength = tempLength % 60; //determine how many extra seconds there are
