@@ -16,7 +16,7 @@ public abstract class Transition {
     public Transition() {m_type = null;};
     public String getType() { return m_type; }
     public void setTime(long time) { m_time = time; }
-    public double getTime() { return m_time; }
+    public long getTime() { return m_time; }
     public abstract void doTrans(JLabel imgLabel, Image newImage); //replace Image currently in imgLabel with newImage
 
 }
