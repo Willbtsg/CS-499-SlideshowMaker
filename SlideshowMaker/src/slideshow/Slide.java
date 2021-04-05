@@ -103,7 +103,7 @@ public class Slide {
             if (m_hasTransitions) //only try to write Transition information if the Slide has Transitions
             {
                 obj.put("forward", m_forward.getType()); //since m_backwards is dependent on the type of m_forward, only one has to be stored
-                obj.put("transTime", (long)m_forward.getTime());
+                obj.put("transTime", m_forward.getTime());
             }
         }
         catch (Exception e) {e.printStackTrace();}
@@ -186,6 +186,10 @@ public class Slide {
      */
     public double getTransTime() { return m_forward.getTime(); }
 
+    /**
+     * Sets both Transitions at once based off the users selection from the Transition dropdown in Timeline
+     * @param transition- what Transition (if any) the user wishes to use
+     */
     public void setTransitions(String transition)
     {
         if (!transition.equals("None"))
@@ -201,15 +205,17 @@ public class Slide {
         }
     }
 
+    /**
+     * If the Slide has Transitions, set their duration to the long being passed in
+     * @param length- new duration for this Slide's Transitions
+     */
     public void setTransitionLength(long length)
     {
-        if (length != 0)
+        if (m_hasTransitions)
         {
             m_forward.setTime(length);
             m_backwards.setTime(length);
         }
-        else
-            m_hasTransitions = false;
     }
 
     /**
