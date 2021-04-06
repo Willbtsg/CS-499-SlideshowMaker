@@ -200,8 +200,6 @@ public class AudioLibrary extends JPanel {
                         }
                     }
                 });
-                
-                
 
                 buttons.add(addButton, BorderLayout.WEST);
                 buttons.add(playButton, BorderLayout.EAST);
