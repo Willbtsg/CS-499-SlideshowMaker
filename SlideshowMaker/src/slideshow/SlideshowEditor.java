@@ -40,7 +40,20 @@ public class SlideshowEditor extends JFrame {
     private boolean settingsPresent = false;
 
     public static void main(String[] args)
-    {
+    {	
+        try {
+        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+		    e.printStackTrace();
+		} catch (InstantiationException e) {
+		    e.printStackTrace();
+		} catch (IllegalAccessException e) {
+		    e.printStackTrace();
+		} catch (javax.swing.UnsupportedLookAndFeelException e) {
+		    e.printStackTrace();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
         SlideshowEditor.getInstance();
     }
 
@@ -126,7 +139,7 @@ public class SlideshowEditor extends JFrame {
                 libraries.setSelectedIndex(timeline.getSelectedIndex()); //makes selected library matches Timeline tab
             }
         });
-
+        
         // CONFIGURING THE WINDOW
 
         setSize(new Dimension(1400, 800));

@@ -62,7 +62,7 @@ public class ImageLibrary extends JPanel {
         c.weightx = 0.5;
         c.weighty = 0.5;
         c.anchor = GridBagConstraints.PAGE_START;
-
+        
         int itemCounter = 0; //keeps track of how many items are in the library
 
         if (dir.isDirectory()) //if directory is valid
@@ -101,7 +101,7 @@ public class ImageLibrary extends JPanel {
                 img = new ImageIcon(imgIcon);
                 thumbnail.setIcon(img);
                 libraryItem.add(thumbnail, BorderLayout.CENTER); //after loading and scaling the image, add it to the info panel
-
+                
                 libraryItem.setPreferredSize(new Dimension(200,300));
                 add(libraryItem, c); //add new image info panel to the library
 
