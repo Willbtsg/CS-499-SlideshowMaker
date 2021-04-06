@@ -54,7 +54,12 @@ public class ImageLibrary extends JPanel {
     private ImageLibrary(Timeline timeline)
     {
         associatedTimeline = timeline; //set reference to destination Timeline
-        setLayout(new GridLayout(0,4)); //set dynamic size to keep items in panel till size determined
+        setLayout(new GridBagLayout()); //set dynamic size to keep items in panel till size determined
+        GridBagConstraints  c = new GridBagConstraints();
+        // Set initial parameters for grid bag constraints
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.5;
 
         int itemCounter = 0; //keeps track of how many items are in the library
 
@@ -96,44 +101,16 @@ public class ImageLibrary extends JPanel {
                 libraryItem.add(thumbnail, BorderLayout.CENTER); //after loading and scaling the image, add it to the info panel
 
                 libraryItem.setPreferredSize(new Dimension(200,300));
-                add(libraryItem); //add new image info panel to the library
+                add(libraryItem, c); //add new image info panel to the library
 
-                itemCounter++;
-            }
-            // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF PICS TO THE LIBRARY
-            for (int i = 0; i < 35; i++)
-            {
-                JPanel libraryItem = new JPanel();
-                libraryItem.setLayout(new BorderLayout());
-                JPanel buttonAndTitle = new JPanel();
-                buttonAndTitle.setLayout(new BorderLayout());
-
-                JLabel imgTitle = new JLabel("download (1).png", SwingConstants.CENTER);
-                buttonAndTitle.add(imgTitle, BorderLayout.NORTH);
-                JButton addButton = new JButton("Add");
-                addButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        associatedTimeline.addSlide("images\\download (1).png");
-                    }
-                });
-                buttonAndTitle.add(addButton, BorderLayout.SOUTH);
-                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
-
-                JLabel thumbnail = new JLabel("", SwingConstants.CENTER);
-                ImageIcon img = new ImageIcon("images\\download (1).png");
-                double proportion = 200.0/img.getIconWidth();
-                double db_newHeight = proportion*img.getIconHeight();
-                int newHeight = (int)Math.round(db_newHeight);
-                Image imgIcon = img.getImage().getScaledInstance(200,newHeight,Image.SCALE_REPLICATE);
-                img = new ImageIcon(imgIcon);
-                thumbnail.setIcon(img);
-                libraryItem.add(thumbnail, BorderLayout.CENTER);
-
-                libraryItem.setPreferredSize(new Dimension(200,200));
-                add(libraryItem);
-
-                itemCounter++;
+                // Update grid x coordinate
+                c.gridx++;
+                // If 4 elements put in 1 row
+                if(++itemCounter%4 == 0) {
+                	// Increment y and set x back to 0
+                	c.gridy++;
+                	c.gridx = 0;
+                }
             }
         }
     }

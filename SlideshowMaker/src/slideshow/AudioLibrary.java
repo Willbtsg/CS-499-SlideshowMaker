@@ -59,8 +59,13 @@ public class AudioLibrary extends JPanel {
     	isPlaying = false; //Set initial boolean for isPlaying to false
     	
         associatedTimeline = timeline; //set reference to destination Timeline
-        setLayout(new GridLayout(0,4)); //set size dynamic keep library items adding correctly
-
+        setLayout(new GridBagLayout()); //set dynamic size to keep items in panel till size determined
+        GridBagConstraints  c = new GridBagConstraints();
+        // Set initial parameters for grid bag constraints
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.5;
+        
         int itemCounter = 0; //keeps track of how many items are in the library
 
         ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
@@ -161,49 +166,16 @@ public class AudioLibrary extends JPanel {
                 libraryItem.add(icon, BorderLayout.CENTER); //set audio icon
 
                 libraryItem.setPreferredSize(new Dimension(200,200));
-                add(libraryItem); //add JPanel of sound data to library
-            }
-            
-            // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF Sounds TO THE LIBRARY (Playback doesn't work for these)
-            for (int i = 0; i < 12; i++) //for every wav, aif, or aiff file in the directory...
-            {
-                JPanel libraryItem = new JPanel(); //create a new JPanel to display sound info
-                libraryItem.setLayout(new BorderLayout());
-                JPanel buttonAndTitle = new JPanel();
-                buttonAndTitle.setLayout(new BorderLayout());
-
-                int tempLength = 100;
-                String audioInfo = "<html>Sample.wav<br>(" + calculateMinSecLength(tempLength) + ")</html>";
-                JLabel audioTitle = new JLabel("<html><div style='text-align: center;'>" + audioInfo + "</div></html>", SwingConstants.CENTER);
-                audioTitle.setBorder(new EmptyBorder(10,0,10,0));
-
-                buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
-
-                JPanel buttons = new JPanel();
-                JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
-                JButton playButton = new JButton("   ▶️"); //add button for playing sound
-
-                addButton.addActionListener(new ActionListener() //add sound to the Timeline
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e){
-                        associatedTimeline.addSound(dir + "//Sample.wav", tempLength); //pass in filepath and audio length
-                    }
-                });
+                add(libraryItem, c); //add JPanel of sound data to library
                 
-                
-
-                buttons.add(addButton, BorderLayout.WEST);
-                buttons.add(playButton, BorderLayout.EAST);
-                buttonAndTitle.add(buttons, BorderLayout.SOUTH);
-                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
-
-                JLabel icon = new JLabel("", SwingConstants.CENTER);
-                icon.setIcon(audioIcon);
-                libraryItem.add(icon, BorderLayout.CENTER); //set audio icon
-
-                libraryItem.setPreferredSize(new Dimension(200,200));
-                add(libraryItem); //add JPanel of sound data to library
+                // Update grid x coordinate
+                c.gridx++;
+                // If 4 elements put in 1 row
+                if(++itemCounter%4 == 0) {
+                	// Increment y and set x back to 0
+                	c.gridy++;
+                	c.gridx = 0;
+                }
             }
         }
     }
