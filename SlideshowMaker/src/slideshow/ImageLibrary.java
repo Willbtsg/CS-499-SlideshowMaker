@@ -60,6 +60,8 @@ public class ImageLibrary extends JPanel {
         c.gridx = 0;
         c.gridy = 0;
         c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.anchor = GridBagConstraints.PAGE_START;
 
         int itemCounter = 0; //keeps track of how many items are in the library
 
