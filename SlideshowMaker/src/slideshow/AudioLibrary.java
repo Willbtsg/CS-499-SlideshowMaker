@@ -143,6 +143,51 @@ public class AudioLibrary extends JPanel {
 	                            ex.printStackTrace();
 	                        }
 	                    }
+                    	else if(prevButton != playButton) {
+	                        try {
+	                			//Stop Clip
+	                        	currentClip.stop();
+	                            currentClip.close();
+	                            //Set button text back to play
+	                            prevButton.setText("   ▶️");
+	                            
+	                        	//Set isPlaying to true
+	                        	isPlaying = true;
+	                        	
+	                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file); //read in sound file
+	                            currentClip = AudioSystem.getClip(); //copy to Clip object 
+	                            currentClip.open(audioStream);
+	                            
+	                            //Start song
+	                            currentClip.start();
+	                            //Set button to stop button
+	                            playButton.setText("■");
+	                            
+	                            prevButton = playButton;
+	                            
+	                            // Add line listener to keep track of clip status
+	                            currentClip.addLineListener(new LineListener() {
+	                            	@Override
+	                            	public void update(LineEvent event) {
+	                            		LineEvent.Type type = event.getType(); //Get event type
+	                            		
+	                            		//If playback ends
+	                            		if (type == LineEvent.Type.STOP) {
+	                            			//Reset isPlaying
+	                            			isPlaying = false;
+	                            			//Stop Clip
+	                                    	currentClip.stop();
+	                                        currentClip.close();
+	                                        //Set button text back to play
+	                                        playButton.setText("   ▶️");
+	                                    }
+	                            	}
+	                            });
+	
+	                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+	                            ex.printStackTrace();
+	                        }
+	                    }
                     	// Stop playing song
                         else {
                 			//Reset isPlaying
