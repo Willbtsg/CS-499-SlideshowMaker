@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 
@@ -35,7 +36,6 @@ public class Slide {
     private Transition m_forward;
     private Transition m_backwards;
     private Boolean m_hasTransitions;
-    private TransitionLibrary m_TransitionLibrary;
     private long m_time;
 
     /**
@@ -47,7 +47,6 @@ public class Slide {
         m_name = name;
         setImage(name);
         m_hasTransitions = false;
-        m_TransitionLibrary = TransitionLibrary.getInstance();
     }
 
     /**
@@ -131,6 +130,14 @@ public class Slide {
             Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
             m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
 
+            if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
+            {
+                float[] scales = {1f, 1f, 1f, 0f};  // R, G, B, A
+                float[] offsets = {255f, 255f, 255f, 255f};   // R, G, B, A
+                RescaleOp rescaler = new RescaleOp(scales, offsets, null);
+                m_image = rescaler.filter(m_image, null);
+            }
+
             Graphics2D g2d = m_image.createGraphics();
             g2d.drawImage(tempImage, 0, 0, null);
             g2d.dispose();
@@ -194,7 +201,8 @@ public class Slide {
     {
         if (!transition.equals("None"))
         {
-            ArrayList<Transition> transitions = m_TransitionLibrary.retrieveTransitions(transition);
+            TransitionLibrary transitionLibrary = TransitionLibrary.getInstance();
+            ArrayList<Transition> transitions = transitionLibrary.retrieveTransitions(transition);
             m_forward = transitions.get(0);
             m_backwards = transitions.get(1);
             m_hasTransitions = true;
