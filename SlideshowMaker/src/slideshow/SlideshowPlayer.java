@@ -87,6 +87,26 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         add(m_controlPanel);
+        
+        // Add in Nimbus Theme
+        try {
+          for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+          }
+        } catch (ClassNotFoundException e) {
+          e.printStackTrace();
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (javax.swing.UnsupportedLookAndFeelException e) {
+          e.printStackTrace();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
 
         //Change appearance of JFrame
         setSize(800, 500); //800 width and 500 height
@@ -120,7 +140,6 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         m_Jukebox.playAll();
-
     }
 
     /**

@@ -59,7 +59,7 @@ public class AudioLibrary extends JPanel {
     	isPlaying = false; //Set initial boolean for isPlaying to false
     	
         associatedTimeline = timeline; //set reference to destination Timeline
-        setLayout(new GridLayout(3,4)); //set size to 3 row minimum to keep library items at preferred size
+        setLayout(new GridLayout(0,4)); //set size dynamic keep library items adding correctly
 
         int itemCounter = 0; //keeps track of how many items are in the library
 
@@ -136,50 +136,6 @@ public class AudioLibrary extends JPanel {
 	                            ex.printStackTrace();
 	                        }
 	                    }
-                    	else if (prevButton != playButton) {
-                			//Stop Clip
-                        	currentClip.stop();
-                            currentClip.close();
-                            //Set button text back to play
-                            prevButton.setText("   ▶️");
-	                        try {
-	                        	//Set isPlaying to true
-	                        	isPlaying = true;
-	                        	
-	                            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file); //read in sound file
-	                            currentClip = AudioSystem.getClip(); //copy to Clip object 
-	                            currentClip.open(audioStream);
-	                            
-	                            //Start song
-	                            currentClip.start();
-	                            //Set button to stop button
-	                            playButton.setText("■");
-	                            // Keep track of button being pressed last
-	                            prevButton = playButton;
-	                            
-	                            // Add line listener to keep track of clip status
-	                            currentClip.addLineListener(new LineListener() {
-	                            	@Override
-	                            	public void update(LineEvent event) {
-	                            		LineEvent.Type type = event.getType(); //Get event type
-	                            		
-	                            		//If playback ends
-	                            		if (type == LineEvent.Type.STOP) {
-	                            			//Reset isPlaying
-	                            			isPlaying = false;
-	                            			//Stop Clip
-	                                    	currentClip.stop();
-	                                        currentClip.close();
-	                                        //Set button text back to play
-	                                        playButton.setText("   ▶️");
-	                                    }
-	                            	}
-	                            });
-	
-	                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
-	                            ex.printStackTrace();
-	                        }
-                    	}
                     	// Stop playing song
                         else {
                 			//Reset isPlaying
@@ -192,6 +148,8 @@ public class AudioLibrary extends JPanel {
                         }
                     }
                 });
+                
+                
 
                 buttons.add(addButton, BorderLayout.WEST);
                 buttons.add(playButton, BorderLayout.EAST);
@@ -204,11 +162,48 @@ public class AudioLibrary extends JPanel {
 
                 libraryItem.setPreferredSize(new Dimension(200,200));
                 add(libraryItem); //add JPanel of sound data to library
+            }
+            
+            // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF Sounds TO THE LIBRARY (Playback doesn't work for these)
+            for (int i = 0; i < 12; i++) //for every wav, aif, or aiff file in the directory...
+            {
+                JPanel libraryItem = new JPanel(); //create a new JPanel to display sound info
+                libraryItem.setLayout(new BorderLayout());
+                JPanel buttonAndTitle = new JPanel();
+                buttonAndTitle.setLayout(new BorderLayout());
 
-                if (itemCounter++ == 12) //when number of items maxes out grid...
+                int tempLength = 100;
+                String audioInfo = "<html>Sample.wav<br>(" + calculateMinSecLength(tempLength) + ")</html>";
+                JLabel audioTitle = new JLabel("<html><div style='text-align: center;'>" + audioInfo + "</div></html>", SwingConstants.CENTER);
+                audioTitle.setBorder(new EmptyBorder(10,0,10,0));
+
+                buttonAndTitle.add(audioTitle, BorderLayout.NORTH);
+
+                JPanel buttons = new JPanel();
+                JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
+                JButton playButton = new JButton("   ▶️"); //add button for playing sound
+
+                addButton.addActionListener(new ActionListener() //add sound to the Timeline
                 {
-                    setLayout(new GridLayout(0, 4)); //set grid to increase dynamically
-                }
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        associatedTimeline.addSound(dir + "//Sample.wav", tempLength); //pass in filepath and audio length
+                    }
+                });
+                
+                
+
+                buttons.add(addButton, BorderLayout.WEST);
+                buttons.add(playButton, BorderLayout.EAST);
+                buttonAndTitle.add(buttons, BorderLayout.SOUTH);
+                libraryItem.add(buttonAndTitle, BorderLayout.SOUTH);
+
+                JLabel icon = new JLabel("", SwingConstants.CENTER);
+                icon.setIcon(audioIcon);
+                libraryItem.add(icon, BorderLayout.CENTER); //set audio icon
+
+                libraryItem.setPreferredSize(new Dimension(200,200));
+                add(libraryItem); //add JPanel of sound data to library
             }
         }
     }

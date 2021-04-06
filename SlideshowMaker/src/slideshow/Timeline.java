@@ -293,12 +293,12 @@ public class Timeline extends JTabbedPane {
 
         String transitionOptions[] = {"None", "Wipe Right", "Wipe Left", "Wipe Up", "Wipe Down", "Crossfade"}; //array of Transitions to choose from
         JComboBox<String> transSelect = new JComboBox<>(transitionOptions);
-        transSelect.setPreferredSize(new Dimension(145, 20));
+        transSelect.setPreferredSize(new Dimension(130, 20));
         transitionComboBoxes.add(transSelect, BorderLayout.WEST); //add dropdown with Transition options
 
         Double lengthOptions[] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
         JComboBox transLength = new JComboBox(lengthOptions);
-        transLength.setPreferredSize(new Dimension(145, 20));
+        transLength.setPreferredSize(new Dimension(130, 20));
         transLength.setEnabled(false);
         transitionComboBoxes.add(transLength, BorderLayout.EAST); //add dropdown with Transition timing options
 

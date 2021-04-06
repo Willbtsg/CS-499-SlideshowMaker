@@ -54,7 +54,7 @@ public class ImageLibrary extends JPanel {
     private ImageLibrary(Timeline timeline)
     {
         associatedTimeline = timeline; //set reference to destination Timeline
-        setLayout(new GridLayout(3,4)); //set size to 3 row minimum to keep library items at preferred size
+        setLayout(new GridLayout(0,4)); //set dynamic size to keep items in panel till size determined
 
         int itemCounter = 0; //keeps track of how many items are in the library
 
@@ -98,13 +98,10 @@ public class ImageLibrary extends JPanel {
                 libraryItem.setPreferredSize(new Dimension(200,300));
                 add(libraryItem); //add new image info panel to the library
 
-                if (itemCounter++ == 12) //when number of items maxes out grid...
-                {
-                    setLayout(new GridLayout(0, 4)); //set grid to increase dynamically
-                }
+                itemCounter++;
             }
             // THIS IS JUST A TESTING LOOP FOR ADDING A BUNCH OF PICS TO THE LIBRARY
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 35; i++)
             {
                 JPanel libraryItem = new JPanel();
                 libraryItem.setLayout(new BorderLayout());
@@ -136,10 +133,7 @@ public class ImageLibrary extends JPanel {
                 libraryItem.setPreferredSize(new Dimension(200,200));
                 add(libraryItem);
 
-                if (itemCounter++ == 12)
-                {
-                    setLayout(new GridLayout(0, 4));
-                }
+                itemCounter++;
             }
         }
     }

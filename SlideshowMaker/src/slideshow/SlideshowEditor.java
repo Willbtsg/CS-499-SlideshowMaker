@@ -1,6 +1,7 @@
 package slideshow;
 
 import transitions.Transition;
+
 import transitions.TransitionLibrary;
 
 import javax.swing.*;
@@ -125,6 +126,26 @@ public class SlideshowEditor extends JFrame {
                 libraries.setSelectedIndex(timeline.getSelectedIndex()); //makes selected library matches Timeline tab
             }
         });
+        
+        // Change to nimbus theme
+        try {
+          for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+          }
+        } catch (ClassNotFoundException e) {
+          e.printStackTrace();
+        } catch (InstantiationException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (javax.swing.UnsupportedLookAndFeelException e) {
+          e.printStackTrace();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
 
         // CONFIGURING THE WINDOW
 
