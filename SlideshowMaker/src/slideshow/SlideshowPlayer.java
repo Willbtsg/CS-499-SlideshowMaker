@@ -53,19 +53,6 @@ public class SlideshowPlayer extends JFrame  {
      */
     public static void main(String[] args)
     {
-        try {
-        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-		    e.printStackTrace();
-		} catch (InstantiationException e) {
-		    e.printStackTrace();
-		} catch (IllegalAccessException e) {
-		    e.printStackTrace();
-		} catch (javax.swing.UnsupportedLookAndFeelException e) {
-		    e.printStackTrace();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
         SlideshowPlayer.getInstance();
     }
 
@@ -101,6 +88,12 @@ public class SlideshowPlayer extends JFrame  {
 //
 //        String slideshowPath = directory + "\\" + slideshowChoice;
 
+        try { //set theme for SlideshowPlayer
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setTitle("Slideshow Player");
         setLayout(null);
 
@@ -131,21 +124,6 @@ public class SlideshowPlayer extends JFrame  {
 
         add(m_controlPanel);
 
-        
-        try {
-        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-		    e.printStackTrace();
-		} catch (InstantiationException e) {
-		    e.printStackTrace();
-		} catch (IllegalAccessException e) {
-		    e.printStackTrace();
-		} catch (javax.swing.UnsupportedLookAndFeelException e) {
-		    e.printStackTrace();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-        
         //Change appearance of JFrame
         setSize(800, 500); //800 width and 500 height
         setLocationRelativeTo(null);
