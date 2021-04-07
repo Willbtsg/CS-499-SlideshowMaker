@@ -44,25 +44,27 @@ public class SlideshowEditor extends JFrame {
 
     public static void main(String[] args)
     {	
-        try {
-        	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-		    e.printStackTrace();
-		} catch (InstantiationException e) {
-		    e.printStackTrace();
-		} catch (IllegalAccessException e) {
-		    e.printStackTrace();
-		} catch (javax.swing.UnsupportedLookAndFeelException e) {
-		    e.printStackTrace();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+
         SlideshowEditor.getInstance();
     }
 
     public SlideshowEditor()
     {
         // INITIALIZING THE WINDOW
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (javax.swing.UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setTitle("Slideshow Editor");
         setLayout(new BorderLayout());
