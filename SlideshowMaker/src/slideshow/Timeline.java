@@ -75,13 +75,13 @@ public class Timeline extends JTabbedPane {
         slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
-        slideScroll.setPreferredSize(new Dimension(320, 700));
+        slideScroll.setPreferredSize(new Dimension(320, 680));
         add("Slides", slideScroll);
 
         audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
-        audioScroll.setPreferredSize(new Dimension(320, 700));
+        audioScroll.setPreferredSize(new Dimension(320, 680));
         add("Audio", audioScroll);
 
         setBorder(BorderFactory.createTitledBorder("Timeline"));
@@ -149,6 +149,8 @@ public class Timeline extends JTabbedPane {
                 {
                     if (Double.parseDouble(newValue) > 0) //change set interval if users selects a valid duration greater than zero
                     {
+                        totalSlideTime -= Integer.parseInt(durationLabel.getText());
+                        totalSlideTime += Integer.parseInt(newValue);
                         durationLabel.setText(newValue);
                     }
                 }
