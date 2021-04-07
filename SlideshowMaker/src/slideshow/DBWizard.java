@@ -4,6 +4,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -25,7 +27,8 @@ public class DBWizard {
      */
 
     private static DBWizard instance;
-    private static String DBNAME = "images/test.json";
+    private static String DBNAME;
+    private static String workingDir;
 
     /**
      * Writes the list of slides out to the master database.
@@ -34,17 +37,36 @@ public class DBWizard {
      */
     public static void writeDB(JSONObject obj)
     {
-
-        try(FileWriter file =  new FileWriter(DBNAME))
+        String fileName = JOptionPane.showInputDialog(null, "Enter a filename for your slideshow layout file:");
+        if (fileName != null)
         {
-            file.write(obj.toString());
-            file.flush();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
+            if (!fileName.equals(""))
+                DBNAME = workingDir + "\\" + fileName + ".json";
+            else
+            {
+                DBNAME = null;
+                JOptionPane.showMessageDialog(null, "We're incredibly disappointed right now.\n" +
+                        "You failed to specified a file name, so we can't save the incredible beauty that is your slideshow.\n" +
+                        "Click OK and please, try again so that the world can bask in the glory of your creation.");
+            }
         }
 
+        if (DBNAME != null)
+        {
+            try(FileWriter file =  new FileWriter(DBNAME))
+            {
+                file.write(obj.toString());
+                file.flush();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "Your slideshow was saved!\nIf you want to make another slideshow, " +
+                    "whether with this directory or a different one,\n" +
+                    "just click OK and stick around.\n" +
+                    "Otherwise, once you've clicked OK, feel free to close the app - all your work is saved!");
+        }
     }
 
     /**
@@ -58,7 +80,6 @@ public class DBWizard {
         ArrayList<Slide> slideList = new ArrayList<Slide>();
         ArrayList<String> soundList = new ArrayList();
         Slideshow slideshow = new Slideshow();
-
 
         try {
             Object obj = parser.parse(new FileReader(DBNAME));
@@ -95,6 +116,47 @@ public class DBWizard {
             e.printStackTrace();
         }
         return slideshow;
+    }
+
+    /**
+     * This function pops up a file explorer which the user will use to select a directory to work with.
+     *
+     * @return Returns the user-selected file path as a string
+     */
+    public static String getDirectory()
+    {
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int open = fileChooser.showOpenDialog(null);
+
+        if (open == JFileChooser.APPROVE_OPTION)
+        {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            workingDir = filePath;
+            return filePath;
+        }
+        else
+            return null;
+    }
+
+    /**
+     * When a given slideshow is saved, this function asks the user to name the layout file.
+     */
+    public static void setDBNAME()
+    {
+        String fileName = JOptionPane.showInputDialog(null, "Enter a filename for your slideshow layout file:");
+        if (fileName != null)
+        {
+            if (!fileName.equals(""))
+                DBNAME = workingDir + "\\" + fileName + ".json";
+            else
+            {
+                DBNAME = null;
+                JOptionPane.showMessageDialog(null, "We're incredibly disappointed right now.\n" +
+                        "You failed to specified a file name, so we can't save the incredible beauty that is your slideshow.\n" +
+                        "Click OK and, please, try again so that the world can bask in the glory of your creation.");
+            }
+        }
     }
 
     /**

@@ -520,7 +520,6 @@ public class Timeline extends JTabbedPane {
             verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
         }
 
-
         audioPanel.add(thisSound); //add new sound to GUI
         revalidate();
     }
@@ -574,44 +573,48 @@ public class Timeline extends JTabbedPane {
      */
     public void exportSlideshow(boolean automated)
     {
-        Slideshow slideshow = new Slideshow(); //create new Slideshow object to hold data
-        slideshow.setAutomated(automated);
-
-        if (automated) //export Slideshow with slide intervals if user has selected automated playback
+        if (!slideList.isEmpty())
         {
-            int index = 0;
-            try
+            Slideshow slideshow = new Slideshow(); //create new Slideshow object to hold data
+            slideshow.setAutomated(automated);
+
+            if (automated) //export Slideshow with slide intervals if user has selected automated playback
             {
-                for (int i = 0; i < slideList.size(); i++)
+                int index = 0;
+                try
                 {
-                    index = i;
-                    double slideDurationDb = Double.parseDouble(slideDurations.get(i).getText());
-                    long slideDuration = (long)(slideDurationDb*1000);
-                    slideList.get(i).setTime(slideDuration);
+                    for (int i = 0; i < slideList.size(); i++)
+                    {
+                        index = i;
+                        double slideDurationDb = Double.parseDouble(slideDurations.get(i).getText());
+                        long slideDuration = (long)(slideDurationDb*1000);
+                        slideList.get(i).setTime(slideDuration);
+                    }
+                    slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
+                    slideshow.calculateLength();
+                    slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
+                    DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
+                }
+                catch (Exception e)
+                {
+                    index++;
+                    String errorMsg = "Invalid value entered for the duration of slide " + index;
+                    JOptionPane.showMessageDialog(SlideshowEditor.getInstance(), errorMsg);
+                }
+            }
+            else //otherwise, export Slideshow
+            {
+                for (Slide slide : slideList) //ensures Slide time in layout file is set to zero if Slideshow is manual
+                {
+                    slide.setTime(0);
                 }
                 slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
-                slideshow.calculateLength();
                 slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
                 DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
             }
-            catch (Exception e)
-            {
-                index++;
-                String errorMsg = "Invalid value entered for the duration of slide " + index;
-                JOptionPane.showMessageDialog(SlideshowEditor.getInstance(), errorMsg);
-            }
         }
-        else //otherwise, export Slideshow
-        {
-            for (Slide slide : slideList) //ensures Slide time in layout file is set to zero if Slideshow is manual
-            {
-                slide.setTime(0);
-            }
-            slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
-            slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
-            DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
-        }
-
+        else
+            JOptionPane.showMessageDialog(null, "You don't have any slides yet!");
     }
 
     /**
@@ -663,4 +666,10 @@ public class Timeline extends JTabbedPane {
         return instance;
     }
 
+    public static Timeline reset()
+    {
+        instance = null;
+        Timeline newTimeline = getInstance();
+        return newTimeline;
+    }
 }

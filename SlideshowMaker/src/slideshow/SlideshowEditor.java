@@ -38,6 +38,8 @@ public class SlideshowEditor extends JFrame {
     private double slideInterval = 0.0;
     private JFrame settingsFrame;
     private boolean settingsPresent = false;
+    private String directory;
+    private JTabbedPane libraries;
 
     public static void main(String[] args)
     {	
@@ -93,6 +95,50 @@ public class SlideshowEditor extends JFrame {
 
         settingsAndExport.add(settings,BorderLayout.NORTH);
 
+        JButton switchDir = new JButton("Open a New Directory");
+        switchDir.setMargin(new Insets(7,7,7,7));
+
+        switchDir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                directory = DBWizard.getDirectory();
+
+                if (directory != null)
+                {
+                    timelineAndButtons.remove(timeline);
+                    timeline = Timeline.reset();
+                    timelineAndButtons.add(timeline, BorderLayout.NORTH);
+
+                    m_ImageLibrary = ImageLibrary.resetLibrary(timeline, directory);
+                    JScrollPane spImages = new JScrollPane(m_ImageLibrary);
+                    spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    spImages.getVerticalScrollBar().setUnitIncrement(20);
+                    libraries.remove(0);
+                    libraries.add("Images", spImages);
+
+                    m_AudioLibrary = AudioLibrary.resetLibrary(timeline, directory);
+                    JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
+                    spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    spAudio.getVerticalScrollBar().setUnitIncrement(20);
+                    libraries.remove(0);
+                    libraries.add("Audio", spAudio);
+
+                    libraries.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent e) {
+                            timeline.setSelectedIndex(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
+                        }
+                    });
+
+                    timeline.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent e) {
+                            libraries.setSelectedIndex(timeline.getSelectedIndex()); //makes selected library matches Timeline tab
+                        }
+                    });
+                }
+            }
+        });
+        settingsAndExport.add(switchDir, BorderLayout.CENTER);
+
         JButton export = new JButton("Save Slideshow into Directory");
         export.setMargin(new Insets(7,7,7,7));
 
@@ -109,15 +155,15 @@ public class SlideshowEditor extends JFrame {
 
         // CREATING THE MEDIA LIBRARIES
 
-        JTabbedPane libraries = new JTabbedPane();
+        libraries = new JTabbedPane();
 
-        m_ImageLibrary = ImageLibrary.getInstance(timeline);
+        m_ImageLibrary = ImageLibrary.getInstance(timeline, directory);
         JScrollPane spImages = new JScrollPane(m_ImageLibrary);
         spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spImages.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Images", spImages);
 
-        m_AudioLibrary = AudioLibrary.getInstance(timeline);
+        m_AudioLibrary = AudioLibrary.getInstance(timeline, directory);
         JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
         spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
@@ -148,6 +194,11 @@ public class SlideshowEditor extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+        String welcomeMsg = "Welcome to the greatest slideshow creator ever made.\nTo start creating a slideshow, " +
+                "click the \"Open a New Directory\" in the bottom right corner\nand select the directory containing the images and audio you'd like to work with.\n" +
+                "It will also be the directory you'll save your slideshow into.\nGo ahead. Select one. (You know you want to.)";
+        JOptionPane.showMessageDialog(null, welcomeMsg);
     }
     
     /**
