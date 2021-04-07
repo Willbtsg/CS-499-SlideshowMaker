@@ -76,6 +76,9 @@ public class DBWizard {
      */
     public static Slideshow getSlideshow()
     {
+        // TODO: This will need to be user-set
+        DBNAME = "images/test.json";
+
         JSONParser parser = new JSONParser();
         ArrayList<Slide> slideList = new ArrayList<Slide>();
         ArrayList<String> soundList = new ArrayList();
@@ -137,26 +140,6 @@ public class DBWizard {
         }
         else
             return null;
-    }
-
-    /**
-     * When a given slideshow is saved, this function asks the user to name the layout file.
-     */
-    public static void setDBNAME()
-    {
-        String fileName = JOptionPane.showInputDialog(null, "Enter a filename for your slideshow layout file:");
-        if (fileName != null)
-        {
-            if (!fileName.equals(""))
-                DBNAME = workingDir + "\\" + fileName + ".json";
-            else
-            {
-                DBNAME = null;
-                JOptionPane.showMessageDialog(null, "We're incredibly disappointed right now.\n" +
-                        "You failed to specified a file name, so we can't save the incredible beauty that is your slideshow.\n" +
-                        "Click OK and, please, try again so that the world can bask in the glory of your creation.");
-            }
-        }
     }
 
     /**

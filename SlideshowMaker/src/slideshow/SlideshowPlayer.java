@@ -75,6 +75,32 @@ public class SlideshowPlayer extends JFrame  {
      */
     private SlideshowPlayer()
     {
+//        String directory = DBWizard.getDirectory();
+//        File dir = new File(directory);
+//        String[] ext = new String[]{"json"};
+//        FilenameFilter jsonFilter = new FilenameFilter() {
+//            @Override
+//            public boolean accept(File dir, String name) {
+//                for (String ex : ext) {
+//                    if (name.endsWith("." + ex))
+//                        return true;
+//                }
+//                return false;
+//            }
+//        };
+//
+//        ArrayList<String> slideshowOptions = new ArrayList<>();
+//        for (File file : dir.listFiles(jsonFilter))
+//            slideshowOptions.add(file.getName());
+//        String[] slideshowOptionsStr = new String[slideshowOptions.size()];
+//        for (int i = 0; i < slideshowOptions.size(); i++)
+//            slideshowOptionsStr[i] = slideshowOptions.get(i);
+//
+//        String slideshowChoice = (String) JOptionPane.showInputDialog(null, "Select a slideshow from your directory:", "Slideshow Selection",
+//                    JOptionPane.PLAIN_MESSAGE, null, slideshowOptionsStr, slideshowOptionsStr[0]);
+//
+//        String slideshowPath = directory + "\\" + slideshowChoice;
+
         setTitle("Slideshow Player");
         setLayout(null);
 
