@@ -23,7 +23,8 @@ public class DBWizard {
 
     /**
      * static DBWizard instance- contains instance of DBWizard for Singleton implementation
-     * String DBName- contains filepath of slideshow layout file
+     * String DBName- contains complete filepath for slideshow layout file
+     * String workingDir- contains filepath to chosen slideshow directory
      */
 
     private static DBWizard instance;
@@ -37,35 +38,41 @@ public class DBWizard {
      */
     public static void writeDB(JSONObject obj)
     {
-        String fileName = JOptionPane.showInputDialog(null, "Enter a filename for your slideshow layout file:");
+        String outputMessage;
+        String fileName = JOptionPane.showInputDialog(null, "Enter a filename for your slideshow layout file:", "File Select", JOptionPane.QUESTION_MESSAGE);
+
         if (fileName != null)
         {
-            if (!fileName.equals(""))
+            if (!fileName.equals("")) //if user typed in a filename...
+            {
                 DBNAME = workingDir + "\\" + fileName + ".json";
-            else
+
+                try (FileWriter file = new FileWriter(DBNAME)) //try to write the json data to that file
+                {
+                    file.write(obj.toString());
+                    file.flush();
+                    outputMessage = "<html><div style='text-align: center;'>Your slideshow was saved!<br>" +
+                            "If you want to make another slideshow, whether with this directory<br> or a different one, " +
+                            "just click OK and stick around.<br>Otherwise, once you've clicked OK, feel free to close the app - all your work is saved!";
+                    JOptionPane.showMessageDialog(null, outputMessage, "Save Successful!", JOptionPane.INFORMATION_MESSAGE);
+
+                } catch (IOException e) //if the file's name is invalid, let the user know
+                {
+                    e.printStackTrace();
+                    outputMessage  ="<html><div style='text-align: center;'>We're sorry, we were unable to save your slideshow.<br>" +
+                            "Your filename was either too long or contained one or more of the following characters: '\\ / : * \" &lt > |'<br>" +
+                            "Please pick a new name and try again. </div></html>";
+                    JOptionPane.showMessageDialog(null, outputMessage, "Save Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else //if the user hit enter and left the text field blank, express disappointment
             {
                 DBNAME = null;
-                JOptionPane.showMessageDialog(null, "We're incredibly disappointed right now.\n" +
-                        "You failed to specified a file name, so we can't save the incredible beauty that is your slideshow.\n" +
-                        "Click OK and please, try again so that the world can bask in the glory of your creation.");
+                outputMessage  ="<html><div style='text-align: center;'>We're " +
+                        "incredibly disappointed right now.<br>You failed to specify a file name, so we can't save the incredible" +
+                        " beauty that is your slideshow.<br>Click OK and please, try again so that the world can bask in the glory of your creation.</div></html>";
+                JOptionPane.showMessageDialog(null, outputMessage, "Save Failed", JOptionPane.ERROR_MESSAGE);
             }
-        }
-
-        if (DBNAME != null)
-        {
-            try(FileWriter file =  new FileWriter(DBNAME))
-            {
-                file.write(obj.toString());
-                file.flush();
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-            }
-            JOptionPane.showMessageDialog(null, "Your slideshow was saved!\nIf you want to make another slideshow, " +
-                    "whether with this directory or a different one,\n" +
-                    "just click OK and stick around.\n" +
-                    "Otherwise, once you've clicked OK, feel free to close the app - all your work is saved!");
         }
     }
 
