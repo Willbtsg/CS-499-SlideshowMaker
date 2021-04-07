@@ -26,10 +26,13 @@ public class SlideshowEditor extends JFrame {
      * SlideshowEditor instance- instance of SlideshowEditor used for Singleton implementation
      * JPanel m_ImageLibrary- contains the ImageLibrary GUI component
      * JPanel m_AudioLibrary- contains the AudioLibrary GUI component
+     * Timeline timeline- contains Timeline GUI component
      * boolean automated- indicates whether or not the Slideshow made will be automated
      * double slideInterval- if the Slideshow is automated, this indicates how long each Slide is shown
      * JFrame settingsFrame- frame that pops up when user wishes to adjust automation settings
      * boolean settingsPresent- indicates whether or not settings frame is already loaded, prevents duplicates
+     * String directory-
+     * JTabbedPane libraries-
      */
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
@@ -52,16 +55,8 @@ public class SlideshowEditor extends JFrame {
     {
         // INITIALIZING THE WINDOW
 
-        try {
+        try { //set theme for SlideshowEditor
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (javax.swing.UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,47 +65,8 @@ public class SlideshowEditor extends JFrame {
         setLayout(new BorderLayout());
 
         // CREATING THE TIMELINE
-
-        JPanel timelineAndButtons = new JPanel();
-        timelineAndButtons.setLayout(new BorderLayout());
-
         timeline = Timeline.getInstance();
-        timelineAndButtons.add(timeline, BorderLayout.NORTH);
-
-        JPanel settingsAndExport = new JPanel();
-        settingsAndExport.setLayout(new BorderLayout());
-
-        JButton settings = new JButton("Edit Slideshow Settings");
-        settings.setMargin(new Insets(7,7,7,7));
-
-        settings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!settingsPresent)
-                {
-                    settingsPresent = true;
-                    settingsPopup();
-                }
-                else
-                    settingsFrame.toFront();
-            }
-        });
-
-        settingsAndExport.add(settings,BorderLayout.NORTH);
-
-        JButton export = new JButton("Save Slideshow into Directory");
-        export.setMargin(new Insets(7,7,7,7));
-
-        export.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timeline.exportSlideshow(automated);
-            }
-        });
-        settingsAndExport.add(export, BorderLayout.SOUTH);
-
-        timelineAndButtons.add(settingsAndExport, BorderLayout.SOUTH);
-        add(timelineAndButtons, BorderLayout.EAST);
+        add(timeline, BorderLayout.EAST);
 
         // CREATING THE MEDIA LIBRARIES
 
@@ -135,60 +91,27 @@ public class SlideshowEditor extends JFrame {
 
         libraries.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                timeline.setSelectedIndex(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
+                timeline.setActivePane(libraries.getSelectedIndex()); //makes sure Timeline tab matches selected library
             }
         });
 
-        timeline.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                libraries.setSelectedIndex(timeline.getSelectedIndex()); //makes selected library matches Timeline tab
-            }
-        });
-        
+        timeline.enablePaneMatch(libraries);
+
         // CONFIGURING THE WINDOW
 
         JMenuBar topMenu = new JMenuBar(); //create a menu bar for the window
         setJMenuBar(topMenu);
 
         JMenu fileMenu = new JMenu("File");
+        topMenu.add(fileMenu);
 
         JMenuItem newDirectory = new JMenuItem("Set Directory"); //allow user to set directory for Slideshow creation
-        newDirectory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                directory = DBWizard.getDirectory(); //use DBWizard to select a directory
-
-                if (directory != null) //if a valid directory was selected...
-                {
-                    timelineAndButtons.remove(timeline); //...reset the Timeline object to purge any existing Slides...
-                    timeline = Timeline.reset();
-                    timelineAndButtons.add(timeline, BorderLayout.NORTH);
-
-                    m_ImageLibrary = ImageLibrary.resetLibrary(timeline, directory); //...reset the libraries to purge the current contents...
-                    JScrollPane spImages = new JScrollPane(m_ImageLibrary);
-                    spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                    spImages.getVerticalScrollBar().setUnitIncrement(20);
-                    libraries.remove(0);
-                    libraries.add("Images", spImages);
-
-                    m_AudioLibrary = AudioLibrary.resetLibrary(timeline, directory);
-                    JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
-                    spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                    spAudio.getVerticalScrollBar().setUnitIncrement(20);
-                    libraries.remove(0);
-                    libraries.add("Audio", spAudio);
-
-                    timeline.addChangeListener(new ChangeListener() //..and reset the listener to ensure selected library tab is same as Timeline
-                    {
-                        public void stateChanged(ChangeEvent e) {
-                            libraries.setSelectedIndex(timeline.getSelectedIndex());
-                        }
-                    });
-                }
-            }
-        });
+        newDirectory.addActionListener(event -> changeDirectory());
         fileMenu.add(newDirectory);
-        topMenu.add(fileMenu);
+
+        JMenuItem exportSlideshow = new JMenuItem("Export Slideshow");
+        exportSlideshow.addActionListener(event -> timeline.exportSlideshow(automated));
+        fileMenu.add(exportSlideshow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
         closeProgram.addActionListener(new ActionListener() {
@@ -197,8 +120,26 @@ public class SlideshowEditor extends JFrame {
                 System.exit(0);
             }
         });
-
         fileMenu.add(closeProgram);
+
+        JMenu settingsMenu = new JMenu("Settings");
+        topMenu.add(settingsMenu);
+
+        JMenuItem changeSettings = new JMenuItem("Change Playback Settings");
+        changeSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!settingsPresent)
+                {
+                    settingsPresent = true;
+                    settingsPopup();
+                }
+                else
+                    settingsFrame.toFront();
+            }
+        });
+
+        settingsMenu.add(changeSettings);
 
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
         Image icon = windowIcon.getImage();
@@ -315,6 +256,31 @@ public class SlideshowEditor extends JFrame {
         settingsFrame.setVisible(true);
     }
 
+    private void changeDirectory()
+    {
+        directory = DBWizard.getDirectory(); //use DBWizard to select a directory
+
+        if (directory != null) //if a valid directory was selected...
+        {
+            timeline.reset();
+            timeline.setSlideDurationVisible(automated);
+            timeline.setDefaultSlideDuration(slideInterval);
+
+            m_ImageLibrary = ImageLibrary.resetLibrary(timeline, directory); //...reset the libraries to purge the current contents...
+            JScrollPane spImages = new JScrollPane(m_ImageLibrary);
+            spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            spImages.getVerticalScrollBar().setUnitIncrement(20);
+            libraries.remove(0);
+            libraries.add("Images", spImages);
+
+            m_AudioLibrary = AudioLibrary.resetLibrary(timeline, directory);
+            JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
+            spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            spAudio.getVerticalScrollBar().setUnitIncrement(20);
+            libraries.remove(0);
+            libraries.add("Audio", spAudio);
+        }
+    }
     /**
      * This function returns the instance of SlideshowPlayer. If no instance exists, then one is created.
      *
