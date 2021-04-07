@@ -247,7 +247,7 @@ public class SlideshowPlayer extends JFrame  {
             m_slideStart = System.currentTimeMillis();
             m_automationTimer.start(); //...start the Timer with the new Slide's delay
         }
-        else { //if the Slideshow is now over...
+        else if (m_currentSlideIndex != 0){ //if the Slideshow is now over...
 
             m_Jukebox.pausePlayback(); //...stop Jukebox from playing...
 
@@ -255,6 +255,11 @@ public class SlideshowPlayer extends JFrame  {
 
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); //...and exit SlideshowPlayer
 
+        }
+        else { //if hitting Previous Slide on first slide, restart the Slide's timer
+            m_automationTimer.setInitialDelay(m_automationTimer.getDelay());
+            m_slideStart = System.currentTimeMillis();
+            m_automationTimer.start();
         }
 
     }
