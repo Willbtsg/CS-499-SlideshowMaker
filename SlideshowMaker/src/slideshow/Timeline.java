@@ -3,6 +3,8 @@ package slideshow;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +19,11 @@ import java.util.*;
  * This class allows users to manage the sound and image files they have added to their Slideshow
  */
 
-public class Timeline extends JTabbedPane {
+public class Timeline extends JPanel {
 
     /**
      * Timeline instance- instance of Timeline for Singleton
+     * JTabbedPane timelinePanes-
      * ArrayList<JPanel> timelineSlides- contains slide data to be displayed in Timeline's "Slides" tab
      * ArrayList<JPanel> timelineAudio- contains sound data to be displayed in Timeline's "Audio" tab
      * JPanel slidePanel- JPanel used to display timelineSlides
@@ -31,11 +34,13 @@ public class Timeline extends JTabbedPane {
      * ArrayList<String> soundList- list of sound filepaths to be used in a Slideshow
      * ArrayList<JPanel> slideDurationPanels- JPanels used for displaying slide interval data in Timeline items
      * ArrayList<JLabel> slideDurations- JLabels from Timeline items containing that item's set interval
+     * JPanel runtimeDisplay-
      * int totalSlideTime- total time (in seconds) that the automated Slideshow will last
      * double defaultDuration- default slide interval for Timeline items in an automated Slideshow
      * boolean automated- flag used to indicate whether the Slideshow being created will be automated or not
      */
     private static Timeline instance;
+    private JTabbedPane timelinePanes;
     private ArrayList<JPanel> timelineSlides;
     private ArrayList<JPanel> timelineAudio;
     private JPanel slidePanel;
@@ -46,7 +51,9 @@ public class Timeline extends JTabbedPane {
     private ArrayList<String> soundList;
     private ArrayList<JPanel> slideDurationPanels;
     private ArrayList<JLabel> slideDurations;
-    private int totalSlideTime = 0;
+    private JPanel runtimeDisplay;
+    private JLabel runtimeLabel;
+    private Double totalSlideTime = 0.0;
     private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
     private boolean automated = false;
@@ -57,6 +64,11 @@ public class Timeline extends JTabbedPane {
 
     private Timeline()
     {
+        new BorderLayout();
+        setBorder(BorderFactory.createTitledBorder("Timeline"));
+        setSize(320, 750);
+
+        timelinePanes = new JTabbedPane();
         timelineSlides = new ArrayList<JPanel>(); //create list of objects to display Slide data
         timelineAudio = new ArrayList<JPanel>(); //create list of object to display sound data
         slidePanel = new JPanel(); //create JPanel for Slide tab
@@ -76,15 +88,28 @@ public class Timeline extends JTabbedPane {
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
         slideScroll.setPreferredSize(new Dimension(320, 680));
-        add("Slides", slideScroll);
+        timelinePanes.add("Slides", slideScroll);
 
         audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
         audioScroll.setPreferredSize(new Dimension(320, 680));
-        add("Audio", audioScroll);
+        timelinePanes.add("Audio", audioScroll);
 
-        setBorder(BorderFactory.createTitledBorder("Timeline"));
+        add(timelinePanes, BorderLayout.NORTH);
+
+        runtimeDisplay = new JPanel();
+        runtimeDisplay.setLayout(new BorderLayout());
+        runtimeDisplay.setBorder(BorderFactory.createTitledBorder("Runtime"));
+        runtimeDisplay.setSize(320, 70);
+
+        runtimeLabel = new JLabel();
+        updateRuntimeLabel();
+
+        runtimeDisplay.add(runtimeLabel, BorderLayout.CENTER);
+        add(runtimeDisplay, BorderLayout.SOUTH);
+
+
     }
 
     /**
@@ -116,7 +141,7 @@ public class Timeline extends JTabbedPane {
         JPanel durationAdjust = new JPanel();
         durationAdjust.setLayout(new BorderLayout());
         JLabel lblHeader = new JLabel("Duration (sec): ");
-        JLabel durationLabel = new JLabel("", SwingConstants.CENTER);
+        JLabel durationLabel = new JLabel(String.valueOf(defaultSlideDuration), SwingConstants.CENTER);
         JButton changeDuration = new JButton("Change Duration");
         slideDurations.add(durationLabel);
         durationAdjust.add(lblHeader, BorderLayout.WEST);
@@ -149,8 +174,8 @@ public class Timeline extends JTabbedPane {
                 {
                     if (Double.parseDouble(newValue) > 0) //change set interval if users selects a valid duration greater than zero
                     {
-                        totalSlideTime -= Integer.parseInt(durationLabel.getText());
-                        totalSlideTime += Integer.parseInt(newValue);
+                        totalSlideTime -= Double.parseDouble(durationLabel.getText()) * 1000;
+                        totalSlideTime += Double.parseDouble(newValue) * 1000;
                         durationLabel.setText(newValue);
                     }
                 }
@@ -212,7 +237,7 @@ public class Timeline extends JTabbedPane {
 
                 if (automated) //if Slideshow is automated, update the total runtime
                 {
-                    totalSlideTime -= Integer.parseInt(durationLabel.getText());
+                    totalSlideTime -= Double.parseDouble(durationLabel.getText()) * 1000;
                 }
 
                 if (timelineSlides.size() == 1) {
@@ -402,6 +427,7 @@ public class Timeline extends JTabbedPane {
         buttonsAndTitle.add(audioTitle, BorderLayout.NORTH);
 
         totalAudioTime += soundLength;
+        updateRuntimeLabel();
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up"); //create button to move audio closer to beginning of Timeline
@@ -441,6 +467,7 @@ public class Timeline extends JTabbedPane {
                 audioPanel.remove(thisSound); //remove sound from GUI
                 timelineAudio.remove(thisSound); //remove sound from backend GUI list
                 totalAudioTime -= soundLength;
+                updateRuntimeLabel();
 
                 if (timelineAudio.size() == 1)
                 {
@@ -569,6 +596,15 @@ public class Timeline extends JTabbedPane {
         return itemLength;
     }
 
+    public void updateRuntimeLabel()
+    {
+        String runtimeOutput = "";
+
+        runtimeOutput += calculateMinSecLength(totalAudioTime);
+
+        runtimeLabel.setText(runtimeOutput);
+    }
+
     /**
      * Converts items in Timeline into a Slideshow for export to desired file
      * @param automated- indicates whether or not this Slideshow should be automated
@@ -634,13 +670,13 @@ public class Timeline extends JTabbedPane {
             slideDuration.setVisible(visible);
         }
 
-        totalSlideTime = 0;
+        totalSlideTime = 0.0;
 
         if (automated)
         {
             for (JLabel interval : slideDurations) {
                 try {
-                    totalSlideTime += Integer.parseInt(interval.getText());
+                    totalSlideTime += Double.parseDouble(interval.getText());
                 } catch (Exception ex) {
                     totalSlideTime += defaultSlideDuration;
                     interval.setText(String.valueOf(defaultSlideDuration));
@@ -655,6 +691,54 @@ public class Timeline extends JTabbedPane {
      */
     public void setDefaultSlideDuration(Double duration) { defaultSlideDuration = duration; }
 
+    public void setActivePane(int index)
+    {
+        timelinePanes.setSelectedIndex(index);
+    }
+
+    public void updateSlideTime()
+    {
+
+    }
+
+    public void updateAudioTime()
+    {
+
+    }
+
+    public void enablePaneMatch(JTabbedPane libraries)
+    {
+        timelinePanes.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                libraries.setSelectedIndex(timelinePanes.getSelectedIndex()); //makes selected library matches Timeline tab
+            }
+        });
+    }
+
+    /**
+     * This function resets all data within Timeline. It is called whenever the slideshow directory is changed
+     */
+    public void reset()
+    {
+        slidePanel.removeAll();
+        slidePanel.setLayout(new GridLayout(2, 1));
+        timelineSlides.clear();
+        slideDurationPanels.clear();
+        slideDurations.clear();
+        slideList.clear();
+
+        audioPanel.removeAll();
+        audioPanel.setLayout(new GridLayout(2, 1));
+        timelineAudio.clear();
+        soundList.clear();
+
+        totalSlideTime = 0.0;
+        totalAudioTime = 0;
+
+        repaint();
+        revalidate();
+    }
+
     /**
      * This function returns the instance of Timeline. If no instance exists, then one is created.
      *
@@ -668,10 +752,4 @@ public class Timeline extends JTabbedPane {
         return instance;
     }
 
-    public static Timeline reset()
-    {
-        instance = null;
-        Timeline newTimeline = getInstance();
-        return newTimeline;
-    }
 }
