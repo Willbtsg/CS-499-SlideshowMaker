@@ -104,6 +104,10 @@ public class SlideshowPlayer extends JFrame  {
         setTitle("Slideshow Player");
         setLayout(null);
 
+        ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        Image icon = windowIcon.getImage();
+        setIconImage(icon);
+
         m_pathPrefix = "images"; //set directory name
 
         m_imageLabel = new JLabel();

@@ -188,6 +188,9 @@ public class SlideshowEditor extends JFrame {
         
         // CONFIGURING THE WINDOW
 
+        ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        Image icon = windowIcon.getImage();
+        setIconImage(icon);
         setSize(new Dimension(1400, 800));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
