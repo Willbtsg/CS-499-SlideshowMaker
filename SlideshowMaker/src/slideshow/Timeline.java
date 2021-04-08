@@ -649,14 +649,24 @@ public class Timeline extends JPanel {
 
             if (automated) //export Slideshow with slide intervals if user has selected automated playback
             {
-                int index = 0;
+                int errorIndex = 0;
+
                 try
                 {
+                    double slideDurationDb;
+                    long slideDuration;
+
                     for (int i = 0; i < slideList.size(); i++)
                     {
-                        index = i;
-                        double slideDurationDb = Double.parseDouble(slideDurations.get(i).getText());
-                        long slideDuration = (long)(slideDurationDb*1000);
+                        errorIndex = i;
+
+                        try {
+                            slideDurationDb = Double.parseDouble(slideDurations.get(i).getText());
+                        } catch (Exception ex) {
+                            slideDurationDb = defaultSlideDuration;
+                        }
+
+                        slideDuration = (long)(slideDurationDb*1000);
                         slideList.get(i).setTime(slideDuration);
                     }
                     slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
@@ -666,8 +676,8 @@ public class Timeline extends JPanel {
                 }
                 catch (Exception e)
                 {
-                    index++;
-                    String errorMsg = "Invalid value entered for the duration of slide " + index;
+                    errorIndex++;
+                    String errorMsg = "Invalid value entered for the duration of slide " + errorIndex;
                     JOptionPane.showMessageDialog(SlideshowEditor.getInstance(), errorMsg);
                 }
             }
