@@ -213,7 +213,7 @@ public class SlideshowEditor extends JFrame {
                 automated = automatedCheckBox.isSelected();
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
-                    if (slideInterval <= 0)
+                    if (slideInterval <= 0 && automated)
                     {
                         automated = false;
                         JOptionPane.showMessageDialog(null, "Invalid Slide Interval entered!");
@@ -225,7 +225,10 @@ public class SlideshowEditor extends JFrame {
 	                    settingsFrame.dispose();
                     }
                     else {
-                    	
+                    	automated = false;
+                    	settingsPresent = false;
+                    	timeline.setSlideDurationVisible(automated);
+                    	settingsFrame.dispose();
                     }
                 } catch (Exception ex) {
                     if (automated)
