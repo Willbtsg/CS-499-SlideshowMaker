@@ -166,7 +166,13 @@ public class SlideshowEditor extends JFrame {
     private void settingsPopup()
     {
         settingsFrame = new JFrame("Slideshow Settings");
-        JPanel settingsPanel = new JPanel();
+        JPanel settingsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints  c = new GridBagConstraints();
+        // Set initial parameters for grid bag constraints
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        c.anchor = GridBagConstraints.CENTER;
 
         JCheckBox automatedCheckBox = new JCheckBox("Automatic Slideshow");
 
@@ -231,11 +237,19 @@ public class SlideshowEditor extends JFrame {
             }
         });
 
-        settingsPanel.add(automatedCheckBox);
-        settingsPanel.add(slideIntervalLabel);
-        settingsPanel.add(slideIntervalTF);
+        settingsPanel.add(automatedCheckBox, c);
+        c.gridy = 1;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        settingsPanel.add(slideIntervalLabel, c);
+        c.gridx = 2;
+        c.gridwidth = 2;
+        settingsPanel.add(slideIntervalTF, c);
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridwidth = 3;
         settingsPanel.add(error);
-        settingsPanel.add(submitChanges);
+        settingsPanel.add(submitChanges, c);
         settingsFrame.add(settingsPanel);
 
         //allows user to save new interval by hitting enter
