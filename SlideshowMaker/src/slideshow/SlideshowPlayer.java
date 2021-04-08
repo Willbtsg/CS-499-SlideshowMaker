@@ -247,21 +247,51 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setAutomatedControls()
     {
-        m_nextSlide = new JButton("Next Slide");
+        ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
+        ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+        
+        // Transform temp pause and play icons and store them in new variables
+        Image image = tempNextIcon.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon nextIcon = new ImageIcon(newimg); 
+        
+        image = tempPrevIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon prevIcon = new ImageIcon(newimg); 
+        
+        m_nextSlide = new JButton();
         m_nextSlide.setBounds(530, 20, 120, 20);
+        m_nextSlide.setIcon(nextIcon);
         m_controlPanel.add(m_nextSlide);
 
         m_nextSlide.addActionListener(event -> timedShowSlide(1, true));
 
-        m_previousSlide = new JButton("Previous Slide");
+        m_previousSlide = new JButton();
         m_previousSlide.setBounds(150, 20, 120, 20);
+        m_previousSlide.setIcon(prevIcon);
         m_controlPanel.add(m_previousSlide);
 
         m_previousSlide.addActionListener(event -> timedShowSlide(-1, true));
 
-        m_Pause = new JButton("Pause");
+        m_Pause = new JButton();
         m_Pause.setBounds(350, 20, 100, 20);
         m_controlPanel.add(m_Pause);
+        
+        ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
+        ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
+        ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
+        
+        // Transform temp pause and play icons and store them in new variables
+        image = tempPlayIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(15, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon playIcon = new ImageIcon(newimg); 
+        
+        image = tempPauseIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(15, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon pauseIcon = new ImageIcon(newimg); 
+        
+        //Set icon for pause button
+        m_Pause.setIcon(pauseIcon);
 
         m_Pause.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -270,7 +300,7 @@ public class SlideshowPlayer extends JFrame  {
                     m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
                     m_automationTimer.start();
                     m_Jukebox.resumePlayback();
-                    m_Pause.setText("Pause");
+                    m_Pause.setIcon(pauseIcon);
                     m_paused = false;
                 }
                 else { //otherwise, pause the Slideshow and the Jukebox
@@ -281,7 +311,7 @@ public class SlideshowPlayer extends JFrame  {
                     m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
 
                     m_Jukebox.pausePlayback();
-                    m_Pause.setText("Resume");
+                    m_Pause.setIcon(playIcon);
                     m_paused = true;
                 }
             }
@@ -293,14 +323,28 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setManualControls()
     {
-        m_nextSlide = new JButton("Next Slide");
+        ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
+        ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+        
+        // Transform temp pause and play icons and store them in new variables
+        Image image = tempNextIcon.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon nextIcon = new ImageIcon(newimg); 
+        
+        image = tempPrevIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        ImageIcon prevIcon = new ImageIcon(newimg); 
+        
+        m_nextSlide = new JButton();
         m_nextSlide.setBounds(500, 20, 100, 20);
+        m_nextSlide.setIcon(nextIcon);
         m_controlPanel.add(m_nextSlide);
 
         m_nextSlide.addActionListener(event -> showSlide(1, false));
 
-        m_previousSlide = new JButton("Previous Slide");
+        m_previousSlide = new JButton();
         m_previousSlide.setBounds(200, 20, 120, 20);
+        m_previousSlide.setIcon(prevIcon);
         m_controlPanel.add(m_previousSlide);
 
         m_previousSlide.addActionListener(event -> showSlide(-1, false));
