@@ -413,7 +413,8 @@ public class Timeline extends JPanel {
             JScrollBar verticalBar = slideScroll.getVerticalScrollBar();
             verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
         }
-
+        
+        removeFocusFromAllObjects(thisSlideDisplay);
         slidePanel.add(thisSlideDisplay);
         revalidate(); //update GUI after adding new component
     }
@@ -562,8 +563,24 @@ public class Timeline extends JPanel {
             verticalBar.addAdjustmentListener(new ScrollAdjuster(verticalBar)); //set scrollbar to adjust to bottom to show new data
         }
 
+        removeFocusFromAllObjects(thisSound); // Get rid of 
         audioPanel.add(thisSound); //add new sound to GUI
         revalidate();
+    }
+    
+    /**
+     * Removes focusable dotted line from all components
+     * @param container - object with components to set focus for 
+     */
+    public void removeFocusFromAllObjects(Container container) {
+        container.setFocusable(false);
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                removeFocusFromAllObjects((Container) child);
+            } else {
+                child.setFocusable(false);
+            }
+        }
     }
 
     /**

@@ -136,9 +136,24 @@ public class ImageLibrary extends JPanel {
 	                    }
                 	}
                 }
+                removeFocusFromAllObjects(this);
             }
         }
 
+    }
+    /**
+     * Removes focusable dotted line from all components
+     * @param container - object with components to set focus for 
+     */
+    public void removeFocusFromAllObjects(Container container) {
+        container.setFocusable(false);
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                removeFocusFromAllObjects((Container) child);
+            } else {
+                child.setFocusable(false);
+            }
+        }
     }
 
     /**

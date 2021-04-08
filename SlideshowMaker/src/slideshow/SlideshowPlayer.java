@@ -129,6 +129,8 @@ public class SlideshowPlayer extends JFrame  {
         setLocationRelativeTo(null);
         setVisible(true); //making the frame visible
         setResizable(false); //disable maximize button
+        setFocusable(false);
+        removeFocusFromAllObjects(this);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -157,6 +159,23 @@ public class SlideshowPlayer extends JFrame  {
 
         m_Jukebox.playAll();
     }
+    
+    /**
+     * Removes focusable dotted line from all components
+     * @param container - object with components to set focus for 
+     */
+    public void removeFocusFromAllObjects(Container container) {
+        container.setFocusable(false);
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                removeFocusFromAllObjects((Container) child);
+            } else {
+                child.setFocusable(false);
+            }
+        }
+    }
+
+
 
     /**
      * Retrieves the desired Slide (next or previous) from m_SlideList
@@ -336,7 +355,7 @@ public class SlideshowPlayer extends JFrame  {
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
-        m_nextSlide.setBounds(500, 20, 100, 20);
+        m_nextSlide.setBounds(500, 20, 120, 20);
         m_nextSlide.setIcon(nextIcon);
         m_controlPanel.add(m_nextSlide);
 
