@@ -281,17 +281,17 @@ public class SlideshowEditor extends JFrame {
     {
         directory = SlideshowManager.getDirectory(); //use SlideshowManager to select a directory
 
-        JFrame loading = new JFrame("Loading...");
-        Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
-        loading.setIconImage(icon);
-        loading.setResizable(false);
-        loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        loading.setSize(new Dimension(250,30));
-        loading.setLocationRelativeTo(null);
-        loading.setVisible(true);
-
         if (directory != null) //if a valid directory was selected...
         {
+            JFrame loading = new JFrame("Loading...");
+            Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+            loading.setIconImage(icon);
+            loading.setResizable(false);
+            loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            loading.setSize(new Dimension(250,30));
+            loading.setLocationRelativeTo(null);
+            loading.setVisible(true);
+            
             timeline.reset();
             timeline.setSlideDurationVisible(automated);
             timeline.setDefaultSlideDuration(slideInterval);
