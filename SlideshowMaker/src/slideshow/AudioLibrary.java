@@ -74,6 +74,18 @@ public class AudioLibrary extends JPanel {
             int itemCounter = 0; //keeps track of how many items are in the library
 
             ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
+            ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
+            ImageIcon tempStopIcon = new ImageIcon("images\\stopbuttonicon.png");
+            
+            // Transform temp stop and play icons and store them in new variables
+            Image image = tempPlayIcon.getImage(); // transform it 
+            Image newimg = image.getScaledInstance(12, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+            ImageIcon playIcon = new ImageIcon(newimg); 
+            
+            image = tempStopIcon.getImage(); // transform it 
+            newimg = image.getScaledInstance(12, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+            ImageIcon stopIcon = new ImageIcon(newimg); 
+            
             if (dir.isDirectory()) //if directory is valid
             {
                 for (File file : dir.listFiles(audioFilter)) //for every wav, aif, or aiff file in the directory...
@@ -92,7 +104,9 @@ public class AudioLibrary extends JPanel {
 
                     JPanel buttons = new JPanel();
                     JButton addButton = new JButton("Add"); //add button for adding sound to Timeline
-                    JButton playButton = new JButton("   ▶️"); //add button for playing sound
+                    JButton playButton = new JButton(); //add button for playing sound
+                    playButton.setIcon(playIcon);
+                    
 
                     addButton.addActionListener(new ActionListener() //add sound to the Timeline
                     {
@@ -119,7 +133,7 @@ public class AudioLibrary extends JPanel {
                                     //Start song
                                     currentClip.start();
                                     //Set button to stop button
-                                    playButton.setText("■");
+                                    playButton.setIcon(stopIcon);
 
                                     prevButton = playButton;
 
@@ -136,8 +150,8 @@ public class AudioLibrary extends JPanel {
                                                 //Stop Clip
                                                 currentClip.stop();
                                                 currentClip.close();
-                                                //Set button text back to play
-                                                playButton.setText("   ▶️");
+                                                //Set button back to play
+                                                playButton.setIcon(playIcon);
                                             }
                                         }
                                     });
@@ -152,7 +166,7 @@ public class AudioLibrary extends JPanel {
                                     currentClip.stop();
                                     currentClip.close();
                                     //Set button text back to play
-                                    prevButton.setText("   ▶️");
+                                    playButton.setIcon(playIcon);
 
                                     //Set isPlaying to true
                                     isPlaying = true;
@@ -164,7 +178,7 @@ public class AudioLibrary extends JPanel {
                                     //Start song
                                     currentClip.start();
                                     //Set button to stop button
-                                    playButton.setText("■");
+                                    playButton.setIcon(stopIcon);
 
                                     prevButton = playButton;
 
@@ -181,8 +195,8 @@ public class AudioLibrary extends JPanel {
                                                 //Stop Clip
                                                 currentClip.stop();
                                                 currentClip.close();
-                                                //Set button text back to play
-                                                playButton.setText("   ▶️");
+                                                //Set button back to play
+                                                playButton.setIcon(playIcon);
                                             }
                                         }
                                     });
@@ -198,8 +212,8 @@ public class AudioLibrary extends JPanel {
                                 //Stop Clip
                                 currentClip.stop();
                                 currentClip.close();
-                                //Set button text back to play
-                                playButton.setText("   ▶️");
+                                //Set button back to play
+                                playButton.setIcon(playIcon);
                             }
                         }
                     });
