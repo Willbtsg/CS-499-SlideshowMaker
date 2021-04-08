@@ -209,8 +209,12 @@ public class SlideshowEditor extends JFrame {
                 automated = automatedCheckBox.isSelected();
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
+                    if (slideInterval == 0)
+                    {
+                        automated = false;
+                    }
+                    timeline.setDefaultSlideDuration(slideInterval);
                     timeline.setSlideDurationVisible(automated);
-                    timeline.setDefaultSlideDuration(Double.parseDouble(slideIntervalTF.getText()));
                     settingsPresent = false;
                     settingsFrame.dispose();
                 } catch (Exception ex) {

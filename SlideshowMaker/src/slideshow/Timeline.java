@@ -51,9 +51,9 @@ public class Timeline extends JPanel {
     private ArrayList<String> soundList;
     private ArrayList<JPanel> slideDurationPanels;
     private ArrayList<JLabel> slideDurations;
-    private JPanel runtimeDisplay;
+    private ArrayList<JComboBox> transitionDurations;
     private JLabel runtimeLabel;
-    private Double totalSlideTime = 0.0;
+    private double totalSlideTime = 0.0;
     private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
     private boolean automated = false;
@@ -79,6 +79,7 @@ public class Timeline extends JPanel {
 
         slideDurationPanels = new ArrayList<JPanel>();
         slideDurations = new ArrayList<JLabel>();
+        transitionDurations = new ArrayList();
 
         GridLayout grid = new GridLayout(2,1); //layout to be used for Slide and Audio tabs
         slidePanel.setLayout(grid); //set tab layouts
@@ -87,28 +88,20 @@ public class Timeline extends JPanel {
         slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
-        slideScroll.setPreferredSize(new Dimension(320, 740));
+        slideScroll.setPreferredSize(new Dimension(320, 720));
         timelinePanes.add("Slides", slideScroll);
 
         audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
-        audioScroll.setPreferredSize(new Dimension(320, 740));
+        audioScroll.setPreferredSize(new Dimension(320, 720));
         timelinePanes.add("Audio", audioScroll);
 
         add(timelinePanes, BorderLayout.NORTH);
 
-        //runtimeDisplay = new JPanel();
-        //runtimeDisplay.setLayout(new BorderLayout());
-        //runtimeDisplay.setBorder(BorderFactory.createBevelBorder(2));
-        //runtimeDisplay.setBorder(BorderFactory.createTitledBorder("Runtime"));
-        //runtimeDisplay.setSize(320, 140);
-
         runtimeLabel = new JLabel();
         updateRuntimeLabel();
 
-        //runtimeDisplay.add(runtimeLabel, BorderLayout.CENTER);
-        //add(runtimeDisplay, BorderLayout.SOUTH);
         add(runtimeLabel, BorderLayout.SOUTH);
     }
 
@@ -141,7 +134,7 @@ public class Timeline extends JPanel {
         JPanel durationAdjust = new JPanel();
         durationAdjust.setLayout(new BorderLayout());
         JLabel lblHeader = new JLabel("Duration (sec): ");
-        JLabel durationLabel = new JLabel(String.valueOf(defaultSlideDuration), SwingConstants.CENTER);
+        JLabel durationLabel = new JLabel("", SwingConstants.CENTER);
         JButton changeDuration = new JButton("Change Duration");
         slideDurations.add(durationLabel);
         durationAdjust.add(lblHeader, BorderLayout.WEST);
@@ -154,13 +147,21 @@ public class Timeline extends JPanel {
         {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                try {
+                    totalSlideTime -= Double.parseDouble(durationLabel.getText());
+                } catch (Exception ex) {
+                    totalSlideTime -= defaultSlideDuration;
+                }
+
+                totalSlideTime += defaultSlideDuration;
+                durationLabel.setText(String.valueOf(defaultSlideDuration));
+
                 if (defaultDuration.isSelected()) {
                     durationAdjust.setVisible(false);
                 } else {
                     durationAdjust.setVisible(true);
                 }
-
-                durationLabel.setText(String.valueOf(defaultSlideDuration));
             }
         });
 
@@ -168,15 +169,17 @@ public class Timeline extends JPanel {
         {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String newValue = JOptionPane.showInputDialog(null, "Enter New Slide Interval");
 
                 try
                 {
                     if (Double.parseDouble(newValue) > 0) //change set interval if users selects a valid duration greater than zero
                     {
-                        totalSlideTime -= Double.parseDouble(durationLabel.getText()) * 1000;
-                        totalSlideTime += Double.parseDouble(newValue) * 1000;
+                        totalSlideTime -= Double.parseDouble(durationLabel.getText());
+                        totalSlideTime += Double.parseDouble(newValue);
                         durationLabel.setText(newValue);
+                        updateRuntimeLabel();
                     }
                 }
                 catch (Exception ex) //inform user that their input was invalid
@@ -193,7 +196,93 @@ public class Timeline extends JPanel {
         if (automated)
         {
             totalSlideTime += defaultSlideDuration;
+            updateRuntimeLabel();
         }
+
+        JPanel transitionDropdowns = new JPanel();
+        transitionDropdowns.setLayout(new BorderLayout()); //create panel for Transition settings
+
+        JPanel transitionDropdownLabels = new JPanel(); //create label for Transition dropdown boxes
+        transitionDropdownLabels.setLayout(new BorderLayout());
+        JLabel transSelectLabel = new JLabel("Transition Type:");
+        transSelectLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
+        transitionDropdownLabels.add(transSelectLabel, BorderLayout.WEST);
+        JLabel transLengthLabel = new JLabel("Transition Length (sec):", SwingConstants.CENTER);
+        transLengthLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
+        transitionDropdownLabels.add(transLengthLabel, BorderLayout.EAST);
+        transitionDropdowns.add(transitionDropdownLabels, BorderLayout.NORTH);
+
+        JPanel transitionComboBoxes = new JPanel(); //create panel for Transition dropdowns
+        transitionComboBoxes.setLayout(new BorderLayout());
+
+        String transitionOptions[] = {"None", "Wipe Right", "Wipe Left", "Wipe Up", "Wipe Down", "Crossfade"}; //array of Transitions to choose from
+        JComboBox<String> transSelect = new JComboBox<>(transitionOptions);
+        transSelect.setPreferredSize(new Dimension(130, 20));
+        transitionComboBoxes.add(transSelect, BorderLayout.WEST); //add dropdown with Transition options
+
+        Double lengthOptions[] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
+        JComboBox transLength = new JComboBox(lengthOptions);
+        transLength.setPreferredSize(new Dimension(130, 20));
+        transLength.setEnabled(false);
+        transitionComboBoxes.add(transLength, BorderLayout.EAST); //add dropdown with Transition timing options
+        transitionDurations.add(transLength);
+
+        transSelect.addActionListener(new ActionListener() //change corresponding Slide Transition whenever dropdown is changed
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userTrans = (String) transSelect.getSelectedItem();
+                String transition = "None"; //set None as default for if no actual Transition is selected
+
+                switch (userTrans) //use switch statement to convert dropdown selection into format expected by backend
+                {
+                    case "Wipe Right":
+                        transition = "LRWipe";
+                        break;
+                    case "Wipe Left":
+                        transition = "RLWipe";
+                        break;
+                    case "Wipe Up":
+                        transition = "UpWipe";
+                        break;
+                    case "Wipe Down":
+                        transition = "DownWipe";
+                        break;
+                    case "Crossfade":
+                        transition = "CrossFade";
+                        break;
+                }
+
+                thisSlide.setTransitions(transition); //set Transition information in Slide object
+
+                if (transSelect.getSelectedItem() != "None") //only have timing dropdown enabled if a transition is in use
+                    transLength.setEnabled(true);
+                else
+                    transLength.setEnabled(false);
+
+                Double transitionLength = (Double) transLength.getSelectedItem(); //make sure Transition timing is saved when switching
+                transitionLength *= 1000;
+                long transitionLengthMs = transitionLength.longValue();
+                thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
+                updateRuntimeLabel();
+            }
+        });
+
+        transLength.addActionListener(new ActionListener() //update Slide's Transition timing when dropdown is changed
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Double transitionLength = (Double) transLength.getSelectedItem();
+                transitionLength *= 1000;
+                long transitionLengthMs = transitionLength.longValue();
+                thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
+                updateRuntimeLabel();
+            }
+        });
+
+        transitionDropdowns.add(transitionComboBoxes, BorderLayout.SOUTH);
+
+        thisSlideDisplay.add(transitionDropdowns, BorderLayout.NORTH);
 
         JPanel buttons = new JPanel();
         JButton moveUp = new JButton("Move Up"); //create button to move slide towards beginning of Timeline
@@ -234,10 +323,16 @@ public class Timeline extends JPanel {
                 timelineSlides.remove(thisSlideDisplay); //remove slide from Timeline database
                 slideDurationPanels.remove(slideDuration);
                 slideDurations.remove(durationLabel);
+                transitionDurations.remove(transLength);
 
                 if (automated) //if Slideshow is automated, update the total runtime
                 {
-                    totalSlideTime -= Double.parseDouble(durationLabel.getText()) * 1000;
+                    try {
+                        totalSlideTime -= Double.parseDouble(durationLabel.getText());
+                    } catch (Exception ex) {
+                        totalSlideTime -= defaultSlideDuration;
+                    }
+                    updateRuntimeLabel();
                 }
 
                 if (timelineSlides.size() == 1) {
@@ -301,88 +396,6 @@ public class Timeline extends JPanel {
         img = new ImageIcon(imgIcon);
         thumbnail.setIcon(img);
         thisSlideDisplay.add(thumbnail, BorderLayout.CENTER); //create image icon then add to display
-
-        JPanel transitionDropdowns = new JPanel();
-        transitionDropdowns.setLayout(new BorderLayout()); //create panel for Transition settings
-
-        JPanel transitionDropdownLabels = new JPanel(); //create label for Transition dropdown boxes
-        transitionDropdownLabels.setLayout(new BorderLayout());
-        JLabel transSelectLabel = new JLabel("Transition Type:");
-        transSelectLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        transitionDropdownLabels.add(transSelectLabel, BorderLayout.WEST);
-        JLabel transLengthLabel = new JLabel("Transition Length (sec):", SwingConstants.CENTER);
-        transLengthLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        transitionDropdownLabels.add(transLengthLabel, BorderLayout.EAST);
-        transitionDropdowns.add(transitionDropdownLabels, BorderLayout.NORTH);
-
-        JPanel transitionComboBoxes = new JPanel(); //create panel for Transition dropdowns
-        transitionComboBoxes.setLayout(new BorderLayout());
-
-        String transitionOptions[] = {"None", "Wipe Right", "Wipe Left", "Wipe Up", "Wipe Down", "Crossfade"}; //array of Transitions to choose from
-        JComboBox<String> transSelect = new JComboBox<>(transitionOptions);
-        transSelect.setPreferredSize(new Dimension(130, 20));
-        transitionComboBoxes.add(transSelect, BorderLayout.WEST); //add dropdown with Transition options
-
-        Double lengthOptions[] = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0};
-        JComboBox transLength = new JComboBox(lengthOptions);
-        transLength.setPreferredSize(new Dimension(130, 20));
-        transLength.setEnabled(false);
-        transitionComboBoxes.add(transLength, BorderLayout.EAST); //add dropdown with Transition timing options
-
-        transSelect.addActionListener(new ActionListener() //change corresponding Slide Transition whenever dropdown is changed
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userTrans = (String) transSelect.getSelectedItem();
-                String transition = "None"; //set None as default for if no actual Transition is selected
-
-                switch (userTrans) //use switch statement to convert dropdown selection into format expected by backend
-                {
-                    case "Wipe Right":
-                        transition = "LRWipe";
-                        break;
-                    case "Wipe Left":
-                        transition = "RLWipe";
-                        break;
-                    case "Wipe Up":
-                        transition = "UpWipe";
-                        break;
-                    case "Wipe Down":
-                        transition = "DownWipe";
-                        break;
-                    case "Crossfade":
-                        transition = "CrossFade";
-                        break;
-                }
-
-                thisSlide.setTransitions(transition); //set Transition information in Slide object
-
-                if (transSelect.getSelectedItem() != "None") //only have timing dropdown enabled if a transition is in use
-                    transLength.setEnabled(true);
-                else
-                    transLength.setEnabled(false);
-
-                    Double transitionLength = (Double) transLength.getSelectedItem(); //make sure Transition timing is saved when switching
-                    transitionLength *= 1000;
-                    long transitionLengthMs = transitionLength.longValue();
-                    thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
-            }
-        });
-
-        transLength.addActionListener(new ActionListener() //update Slide's Transition timing when dropdown is changed
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Double transitionLength = (Double) transLength.getSelectedItem();
-                transitionLength *= 1000;
-                long transitionLengthMs = transitionLength.longValue();
-                thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
-            }
-        });
-
-        transitionDropdowns.add(transitionComboBoxes, BorderLayout.SOUTH);
-
-        thisSlideDisplay.add(transitionDropdowns, BorderLayout.NORTH);
 
         Border timelineItemBorder = BorderFactory.createTitledBorder(String.valueOf(timelineSlides.size() + 1));
         thisSlideDisplay.setBorder(timelineItemBorder);
@@ -585,7 +598,7 @@ public class Timeline extends JPanel {
         int secLength = tempLength % 60; //determine how many extra seconds there are
         String itemLength;
 
-        if (secLength < 9) //combine minLength and secLength with appropriate number of places
+        if (secLength < 10) //combine minLength and secLength with appropriate number of places
         {
             itemLength = minLength + "0" + secLength;
         }
@@ -600,11 +613,22 @@ public class Timeline extends JPanel {
     {
         String runtimeOutput = "";
 
-        runtimeOutput += "Runtime of Slides: ";
-        // TODO: Make this set to actual runtime
-        runtimeOutput += "0:00";
+        if (automated)
+        {
+            double transitionRuntime = 0.0;
 
-        runtimeOutput += "   |   Runtime of Audio: ";
+            for (JComboBox transition : transitionDurations) {
+                if (transition.isEnabled()) {
+                    transitionRuntime += (Double) transition.getSelectedItem();
+                }
+            }
+
+            runtimeOutput += "Slideshow Runtime: ";
+            runtimeOutput += calculateMinSecLength((int) (totalSlideTime + transitionRuntime));
+            runtimeOutput += "   |   ";
+        }
+
+        runtimeOutput += "Audio Runtime: ";
         runtimeOutput += calculateMinSecLength(totalAudioTime);
 
         runtimeLabel.setText(runtimeOutput);
@@ -686,10 +710,11 @@ public class Timeline extends JPanel {
                     totalSlideTime += Double.parseDouble(interval.getText());
                 } catch (Exception ex) {
                     totalSlideTime += defaultSlideDuration;
-                    interval.setText(String.valueOf(defaultSlideDuration));
                 }
             }
         }
+
+        updateRuntimeLabel();
     }
 
     /**
@@ -701,16 +726,6 @@ public class Timeline extends JPanel {
     public void setActivePane(int index)
     {
         timelinePanes.setSelectedIndex(index);
-    }
-
-    public void updateSlideTime()
-    {
-
-    }
-
-    public void updateAudioTime()
-    {
-
     }
 
     public void enablePaneMatch(JTabbedPane libraries)
