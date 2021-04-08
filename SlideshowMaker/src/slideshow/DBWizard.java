@@ -160,6 +160,6 @@ public class DBWizard {
             instance = new DBWizard();
         }
         return instance;
-    }
+    }}
 
 }

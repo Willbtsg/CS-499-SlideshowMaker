@@ -171,6 +171,7 @@ public class SlideshowEditor extends JFrame {
         // Set initial parameters for grid bag constraints
         c.gridx = 1;
         c.gridy = 0;
+        c.weighty = 0.5;
         c.gridwidth = 3;
         c.anchor = GridBagConstraints.CENTER;
 
