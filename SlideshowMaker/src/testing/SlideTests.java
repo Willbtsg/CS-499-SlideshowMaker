@@ -32,9 +32,9 @@ public class SlideTests {
 	@Test
 	void testSetandGetImage() {
 		// Slide(String name) function calls setimage function
-		Slide newSlide = new Slide("images/download (1).png");
+		Slide newSlide = new Slide("images/audioicon.png");
 		
-		assertEquals("images/download (1).png", newSlide.getName());	
+		assertEquals("images/audioicon.png", newSlide.getName());	
 		
 		if(newSlide.getImage() != null) {
 			// Test passed

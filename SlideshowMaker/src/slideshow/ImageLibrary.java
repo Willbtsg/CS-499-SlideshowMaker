@@ -64,7 +64,6 @@ public class ImageLibrary extends JPanel {
             c.gridy = 0;
             c.weightx = 0.5;
             c.weighty = 0.5;
-            c.anchor = GridBagConstraints.PAGE_START;
 
             int itemCounter = 0; //keeps track of how many items are in the library
 
@@ -116,6 +115,26 @@ public class ImageLibrary extends JPanel {
                         c.gridy++;
                         c.gridx = 0;
                     }
+                }
+                // If panel isn't at minimum capacity
+                if (itemCounter < 12) {
+                	// Loop through till 12 panels have been added
+                	while(itemCounter < 12) {
+	                	// Create empty panel
+	                	JPanel spaceFill = new JPanel();
+	                	JLabel emptyLB = new JLabel("");
+	                	spaceFill.add(emptyLB);
+	                	add(spaceFill, c);
+	                	
+	                    // Update grid x coordinate
+	                    c.gridx++;
+	                    // If 4 elements put in 1 row
+	                    if(++itemCounter%4 == 0) {
+	                        // Increment y and set x back to 0
+	                        c.gridy++;
+	                        c.gridx = 0;
+	                    }
+                	}
                 }
             }
         }
