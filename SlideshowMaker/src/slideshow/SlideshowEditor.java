@@ -206,9 +206,6 @@ public class SlideshowEditor extends JFrame {
             }
         });
 
-        JLabel error = new JLabel("Invalid slide interval!");
-        error.setVisible(false);
-
         JButton submitChanges = new JButton("Submit Changes");
         submitChanges.addActionListener(new ActionListener() {
             @Override
@@ -216,18 +213,23 @@ public class SlideshowEditor extends JFrame {
                 automated = automatedCheckBox.isSelected();
                 try {
                     slideInterval = Double.parseDouble(slideIntervalTF.getText());
-                    if (slideInterval == 0)
+                    if (slideInterval <= 0)
                     {
                         automated = false;
+                        JOptionPane.showMessageDialog(null, "Invalid Slide Interval entered!");
                     }
-                    timeline.setDefaultSlideDuration(slideInterval);
-                    timeline.setSlideDurationVisible(automated);
-                    settingsPresent = false;
-                    settingsFrame.dispose();
+                    else if(slideInterval > 0) {
+	                    timeline.setDefaultSlideDuration(slideInterval);
+	                    timeline.setSlideDurationVisible(automated);
+	                    settingsPresent = false;
+	                    settingsFrame.dispose();
+                    }
+                    else {
+                    	
+                    }
                 } catch (Exception ex) {
                     if (automated)
                     {
-                        error.setVisible(true);
                         automated = false;
                     }
                     else {
@@ -249,7 +251,6 @@ public class SlideshowEditor extends JFrame {
         c.gridx = 1;
         c.gridy = 2;
         c.gridwidth = 3;
-        settingsPanel.add(error);
         settingsPanel.add(submitChanges, c);
         settingsFrame.add(settingsPanel);
 
