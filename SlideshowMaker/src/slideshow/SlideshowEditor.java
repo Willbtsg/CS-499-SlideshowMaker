@@ -65,6 +65,7 @@ public class SlideshowEditor extends JFrame {
         setLayout(new BorderLayout());
 
         // CREATING THE TIMELINE
+
         timeline = Timeline.getInstance();
         add(timeline, BorderLayout.EAST);
 
@@ -152,7 +153,7 @@ public class SlideshowEditor extends JFrame {
         setVisible(true);
 
 
-        String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow creator ever made!<br>To start creating a slideshow, " +
+        String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow creator ever made.<br>To start creating a slideshow, " +
                 "use the \"File\" menu in the top left corner<br>and select the directory containing the images and audio you'd like to work with.<br>" +
                 "This will also be the directory you'll save your slideshow into.<br>Go ahead. Select one. (You know you want to.)</div></html>";
         JOptionPane.showMessageDialog(null, welcomeMsg, "Welcome to Slideshow Editor!", JOptionPane.INFORMATION_MESSAGE);
@@ -260,6 +261,15 @@ public class SlideshowEditor extends JFrame {
     {
         directory = DBWizard.getDirectory(); //use DBWizard to select a directory
 
+//        JFrame loading = new JFrame();
+//        loading.setLayout(new BorderLayout());
+//        loading.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+//        JLabel lblLoading = new JLabel("Loading...");
+//        loading.add(lblLoading, BorderLayout.CENTER);
+//        loading.pack();
+//        loading.setLocationRelativeTo(null);
+//        loading.setVisible(true);
+
         if (directory != null) //if a valid directory was selected...
         {
             timeline.reset();
@@ -279,6 +289,8 @@ public class SlideshowEditor extends JFrame {
             spAudio.getVerticalScrollBar().setUnitIncrement(20);
             libraries.remove(0);
             libraries.add("Audio", spAudio);
+
+            //loading.dispose();
         }
     }
     /**

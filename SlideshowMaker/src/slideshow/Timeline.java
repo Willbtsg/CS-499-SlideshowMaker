@@ -64,7 +64,7 @@ public class Timeline extends JPanel {
 
     private Timeline()
     {
-        new BorderLayout();
+        setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Timeline"));
         setSize(320, 750);
 
@@ -87,29 +87,29 @@ public class Timeline extends JPanel {
         slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
-        slideScroll.setPreferredSize(new Dimension(320, 680));
+        slideScroll.setPreferredSize(new Dimension(320, 740));
         timelinePanes.add("Slides", slideScroll);
 
         audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
-        audioScroll.setPreferredSize(new Dimension(320, 680));
+        audioScroll.setPreferredSize(new Dimension(320, 740));
         timelinePanes.add("Audio", audioScroll);
 
         add(timelinePanes, BorderLayout.NORTH);
 
-        runtimeDisplay = new JPanel();
-        runtimeDisplay.setLayout(new BorderLayout());
-        runtimeDisplay.setBorder(BorderFactory.createTitledBorder("Runtime"));
-        runtimeDisplay.setSize(320, 70);
+        //runtimeDisplay = new JPanel();
+        //runtimeDisplay.setLayout(new BorderLayout());
+        //runtimeDisplay.setBorder(BorderFactory.createBevelBorder(2));
+        //runtimeDisplay.setBorder(BorderFactory.createTitledBorder("Runtime"));
+        //runtimeDisplay.setSize(320, 140);
 
         runtimeLabel = new JLabel();
         updateRuntimeLabel();
 
-        runtimeDisplay.add(runtimeLabel, BorderLayout.CENTER);
-        add(runtimeDisplay, BorderLayout.SOUTH);
-
-
+        //runtimeDisplay.add(runtimeLabel, BorderLayout.CENTER);
+        //add(runtimeDisplay, BorderLayout.SOUTH);
+        add(runtimeLabel, BorderLayout.SOUTH);
     }
 
     /**
@@ -600,9 +600,16 @@ public class Timeline extends JPanel {
     {
         String runtimeOutput = "";
 
+        runtimeOutput += "Runtime of Slides: ";
+        // TODO: Make this set to actual runtime
+        runtimeOutput += "0:00";
+
+        runtimeOutput += "   |   Runtime of Audio: ";
         runtimeOutput += calculateMinSecLength(totalAudioTime);
 
         runtimeLabel.setText(runtimeOutput);
+        runtimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        runtimeLabel.setBorder(new EmptyBorder(7,0,7,0));
     }
 
     /**
