@@ -231,6 +231,7 @@ public class SlideshowEditor extends JFrame {
                     if (automated)
                     {
                         automated = false;
+                        JOptionPane.showMessageDialog(null, "Invalid Slide Interval entered!");
                     }
                     else {
                         settingsPresent = false;
