@@ -11,6 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
@@ -261,14 +262,14 @@ public class SlideshowEditor extends JFrame {
     {
         directory = DBWizard.getDirectory(); //use DBWizard to select a directory
 
-//        JFrame loading = new JFrame();
-//        loading.setLayout(new BorderLayout());
-//        loading.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-//        JLabel lblLoading = new JLabel("Loading...");
-//        loading.add(lblLoading, BorderLayout.CENTER);
-//        loading.pack();
-//        loading.setLocationRelativeTo(null);
-//        loading.setVisible(true);
+        JFrame loading = new JFrame("Loading...");
+        Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+        loading.setIconImage(icon);
+        loading.setResizable(false);
+        loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        loading.setSize(new Dimension(250,30));
+        loading.setLocationRelativeTo(null);
+        loading.setVisible(true);
 
         if (directory != null) //if a valid directory was selected...
         {
@@ -290,7 +291,7 @@ public class SlideshowEditor extends JFrame {
             libraries.remove(0);
             libraries.add("Audio", spAudio);
 
-            //loading.dispose();
+            loading.dispose();
         }
     }
     /**
