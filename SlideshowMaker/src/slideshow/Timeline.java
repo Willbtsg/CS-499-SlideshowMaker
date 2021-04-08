@@ -672,7 +672,7 @@ public class Timeline extends JPanel {
                     slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
                     slideshow.calculateLength();
                     slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
-                    DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
+                    SlideshowManager.writeDB(slideshow.toJSON()); //call SlideshowManager to write Slideshow's JSON data to file
                 }
                 catch (Exception e)
                 {
@@ -689,7 +689,7 @@ public class Timeline extends JPanel {
                 }
                 slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
                 slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
-                DBWizard.writeDB(slideshow.toJSON()); //call DBWizard to write Slideshow's JSON data to file
+                SlideshowManager.writeDB(slideshow.toJSON()); //call SlideshowManager to write Slideshow's JSON data to file
             }
         }
         else

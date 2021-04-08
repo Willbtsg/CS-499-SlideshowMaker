@@ -6,29 +6,29 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-import slideshow.DBWizard;
+import slideshow.SlideshowManager;
 import slideshow.Slideshow;
 
 /**
- * Class name: DBWizardTests
+ * Class name: SlideshowManagerTests
  *
- * This class tests the methods of the DBWizard class.
+ * This class tests the methods of the SlideshowManager class.
  */
-public class DBWizardTests {
+public class SlideshowManagerTests {
 	// Instantiate an object to perform test methods on
-	private static DBWizard testDBWizard = DBWizard.getInstance();
+	private static SlideshowManager testSlideshowManager = SlideshowManager.getInstance();
 	
 	// Test get instance method
 	@Test
 	void testGetInstance() {
-		assertEquals(testDBWizard, DBWizard.getInstance());
+		assertEquals(testSlideshowManager, SlideshowManager.getInstance());
 	}
 	
 	// Test get slide show method
 	@Test
 	void testGetSlideshow() {
 		// Test if declared slideshow is actually returned, works because testSlideshow is never declared
-		Slideshow testSlideShow = DBWizard.getSlideshow();
+		Slideshow testSlideShow = SlideshowManager.getSlideshow();
 		testSlideShow.setAutomated(true);
 		assertEquals(testSlideShow.getAutomated(), true);
 	}

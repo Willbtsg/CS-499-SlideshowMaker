@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * This class is implemented as a Singleton.
  */
 
-public class DBWizard {
+public class SlideshowManager {
 
     /**
      * static DBWizard instance- contains instance of DBWizard for Singleton implementation
@@ -27,7 +27,7 @@ public class DBWizard {
      * String workingDir- contains filepath to chosen slideshow directory
      */
 
-    private static DBWizard instance;
+    private static SlideshowManager instance;
     private static String DBNAME;
     private static String workingDir;
 
@@ -154,12 +154,12 @@ public class DBWizard {
      *
      * @return instance- pointer to instance of DBWizard to be used
      */
-    public static DBWizard getInstance()
+    public static SlideshowManager getInstance()
     {
         if (instance == null) {
-            instance = new DBWizard();
+            instance = new SlideshowManager();
         }
         return instance;
-    }}
+    }
 
 }

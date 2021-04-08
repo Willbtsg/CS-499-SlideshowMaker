@@ -62,7 +62,7 @@ public class SlideshowPlayer extends JFrame  {
      */
     private SlideshowPlayer()
     {
-//        String directory = DBWizard.getDirectory();
+//        String directory = SlideshowManager.getDirectory();
 //        File dir = new File(directory);
 //        String[] ext = new String[]{"json"};
 //        FilenameFilter jsonFilter = new FilenameFilter() {
@@ -107,7 +107,7 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(150, 50, 500, 313);
         add(m_imageLabel);
 
-        m_Slideshow = DBWizard.getInstance().getSlideshow(); //construct Slideshow using the layout file
+        m_Slideshow = SlideshowManager.getInstance().getSlideshow(); //construct Slideshow using the layout file
 
         m_controlPanel = new JPanel();
         m_controlPanel.setLayout(null);

@@ -279,7 +279,7 @@ public class SlideshowEditor extends JFrame {
 
     private void changeDirectory()
     {
-        directory = DBWizard.getDirectory(); //use DBWizard to select a directory
+        directory = SlideshowManager.getDirectory(); //use SlideshowManager to select a directory
 
         JFrame loading = new JFrame("Loading...");
         Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
