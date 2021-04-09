@@ -165,14 +165,6 @@ public class Slide {
             
             // Load image with full boundary area
             m_image = new BufferedImage(scrnWidth,(int) (scrnHeight*0.85), BufferedImage.TYPE_INT_ARGB);
-
-            if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
-            {
-                float[] scales = {1f, 1f, 1f, 0f};  // R, G, B, A
-                float[] offsets = {255f, 255f, 255f, 255f};   // R, G, B, A
-                RescaleOp rescaler = new RescaleOp(scales, offsets, null);
-                m_image = rescaler.filter(m_image, null);
-            }
             
             // Calculate offsets for image placement
             int xOffset = (int)((scrnWidth - ((scrnHeight*0.85)*proportionW))/2);
@@ -187,9 +179,13 @@ public class Slide {
             
             // Determine draw case and draw image
             if (proportionH < 1) {
+            	g2d.setColor(Color.WHITE); // Set color to white
+            	g2d.fillRect(0, yOffset,(int) (scrnWidth),(int) (scrnWidth*proportionH)); // Put rectangle that fills behind the picture with white (to display transparent images)
             	g2d.drawImage(tempImage, 0, yOffset, null);
             }
             else {
+            	g2d.setColor(Color.WHITE); // Set color to white
+            	g2d.fillRect(xOffset, 0,(int) ((scrnHeight*0.85)*proportionW),(int) (scrnHeight*0.85)); // Put rectangle that fills behind the picture with white (to display transparent images)
             	g2d.drawImage(tempImage, xOffset, 0, null);
             }
             g2d.dispose(); // Stop drawing
