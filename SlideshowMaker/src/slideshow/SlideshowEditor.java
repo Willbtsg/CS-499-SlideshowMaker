@@ -151,7 +151,6 @@ public class SlideshowEditor extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-        removeFocusFromAllObjects(this);
         setVisible(true);
 
 
@@ -159,21 +158,6 @@ public class SlideshowEditor extends JFrame {
                 "use the \"File\" menu in the top left corner<br>and select the directory containing the images and audio you'd like to work with.<br>" +
                 "This will also be the directory you'll save your slideshow into.<br>Go ahead. Select one. (You know you want to.)</div></html>";
         JOptionPane.showMessageDialog(null, welcomeMsg, "Welcome to Slideshow Editor!", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    /**
-     * Removes focusable dotted line from all components
-     * @param container - object with components to set focus for 
-     */
-    public void removeFocusFromAllObjects(Container container) {
-        container.setFocusable(false);
-        for (Component child : container.getComponents()) {
-            if (child instanceof Container) {
-                removeFocusFromAllObjects((Container) child);
-            } else {
-                child.setFocusable(false);
-            }
-        }
     }
     
     /**
@@ -200,6 +184,7 @@ public class SlideshowEditor extends JFrame {
         if (automated) //only allow user to set a Slide interval if "Automatic Slideshow" is selected
         {
             automatedCheckBox.setSelected(true);
+            slideIntervalTF.setEnabled(true);
         } else
         {
             automatedCheckBox.setSelected(false);
@@ -295,7 +280,6 @@ public class SlideshowEditor extends JFrame {
         settingsFrame.setSize(new Dimension(290,140));
         settingsFrame.setResizable(false);
         settingsFrame.setLocationRelativeTo(null);
-        removeFocusFromAllObjects(settingsFrame);
         settingsFrame.setVisible(true);
     }
 

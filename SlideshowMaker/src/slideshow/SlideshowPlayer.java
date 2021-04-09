@@ -169,7 +169,7 @@ public class SlideshowPlayer extends JFrame  {
         for (Component child : container.getComponents()) {
             if (child instanceof Container) {
                 removeFocusFromAllObjects((Container) child);
-            } else {
+            } else if (!(child instanceof JTextField)) {
                 child.setFocusable(false);
             }
         }

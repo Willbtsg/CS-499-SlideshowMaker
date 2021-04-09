@@ -2,67 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="419e30d3-5cb1-4552-abe8-eccce13e4988" name="Default Changelist" comment="ImageLibrary v0.2, AudioLibrary v0.1, JTabbedPane in Editor">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/test.json" beforeDir="false" afterPath="$PROJECT_DIR$/images/test.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$3$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/AudioLibrary.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/DBWizard.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/DBWizard.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/ImageLibrary.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Jukebox$AudioListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Jukebox$AudioListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Jukebox.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Jukebox.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Slide.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Slide.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Slideshow.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Slideshow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$7.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor$8.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowEditor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/SlideshowPlayer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$ScrollAdjuster.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline$ScrollAdjuster.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/slideshow/Timeline.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/AudioLibraryTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/CrossFadeTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/DBWizardTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/DownWipeTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/JukeboxTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/LRWipeTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/RLWipeTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/SlideTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/SlideshowTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/TransitionLibraryTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/TransitionTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/testing/UpWipeTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/CrossFade.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/CrossFade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/DownWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/DownWipe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/LRWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/LRWipe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/RLWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/RLWipe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/Transition.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/Transition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/TransitionLibrary.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/TransitionLibrary.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/UpWipe.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SlideshowMaker/transitions/UpWipe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/slideshow/Timeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/slideshow/Timeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/slideshow/SlideshowEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/slideshow/SlideshowEditor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
