@@ -127,27 +127,43 @@ public class Slide {
      */
     public void setImage(String name)
     {
+    	// Get screen size width and height
     	Dimension scrnSize = Toolkit. getDefaultToolkit().getScreenSize();
     	int scrnWidth = (int) scrnSize.getWidth();
     	int scrnHeight = (int) scrnSize.getHeight();
     	
         try {
+        	// Read in original image
             BufferedImage orgImage = ImageIO.read(new File(name));
             
             
-            
+            // Declare temp image variable and proportion variables for sizing the image
             Image tempImage;
             double proportionW = 1;
             double proportionH = 1;
+            
+            // If landscape photo
             if (orgImage.getHeight() < orgImage.getWidth()) {
+            	// Get height proportion value
             	proportionH = (double) (orgImage.getHeight())/(double) (orgImage.getWidth());
-            	tempImage = orgImage.getScaledInstance((int) (scrnWidth),(int) (scrnWidth*proportionH), Image.SCALE_SMOOTH);
-            } else {
+            	
+            	// If new height exceeds boundary height
+            	if ((int) (scrnWidth*proportionH) > (int) (scrnHeight*0.85)){ 
+            		// Resize to where the bottom or top of image isn't cut off
+                	proportionW = (double) (orgImage.getWidth())/(double) (orgImage.getHeight());
+                	tempImage = orgImage.getScaledInstance((int) ((scrnHeight*0.85)*proportionW),(int) (scrnHeight*0.85), Image.SCALE_SMOOTH);
+                	
+                	// Reset H value 
+                	proportionH = 1;
+            	}else { // Otherwise, resize image as is
+            		tempImage = orgImage.getScaledInstance((int) (scrnWidth),(int) (scrnWidth*proportionH), Image.SCALE_SMOOTH);
+            	}
+            } else { // If portrait or square photo
             	proportionW = (double) (orgImage.getWidth())/(double) (orgImage.getHeight());
             	tempImage = orgImage.getScaledInstance((int) ((scrnHeight*0.85)*proportionW),(int) (scrnHeight*0.85), Image.SCALE_SMOOTH);
             }
             
-            
+            // Load image with full boundary area
             m_image = new BufferedImage(scrnWidth,(int) (scrnHeight*0.85), BufferedImage.TYPE_INT_ARGB);
 
             if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
@@ -158,21 +174,25 @@ public class Slide {
                 m_image = rescaler.filter(m_image, null);
             }
             
-            int rectWidth = (int)((scrnWidth - ((scrnHeight*0.85)*proportionW))/2);
-            int rectHeight = (int)(((scrnHeight*0.85) - (scrnWidth*proportionH))/2);
-
-            Graphics2D g2d = m_image.createGraphics();
-            g2d.setColor(Color.BLACK);
+            // Calculate offsets for image placement
+            int xOffset = (int)((scrnWidth - ((scrnHeight*0.85)*proportionW))/2);
+            int yOffset = (int)(((scrnHeight*0.85) - (scrnWidth*proportionH))/2);
             
+            // Start drawing
+            Graphics2D g2d = m_image.createGraphics();
+            g2d.setColor(Color.BLACK); // Set color to black
+            
+            // Fill background with black square to cover whole boundary
             g2d.fillRect(0, 0, scrnWidth, (int)(scrnHeight*0.85));
             
+            // Determine draw case and draw image
             if (proportionH < 1) {
-            	g2d.drawImage(tempImage, 0, rectHeight, null);
-            }else 
-            {
-            	g2d.drawImage(tempImage, rectWidth, 0, null);
+            	g2d.drawImage(tempImage, 0, yOffset, null);
             }
-            g2d.dispose();
+            else {
+            	g2d.drawImage(tempImage, xOffset, 0, null);
+            }
+            g2d.dispose(); // Stop drawing
 
         } 
         catch (IIOException e) {
