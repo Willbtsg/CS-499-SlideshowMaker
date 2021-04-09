@@ -37,6 +37,8 @@ public class Slide {
     private Transition m_backwards;
     private Boolean m_hasTransitions;
     private long m_time;
+    private static final GraphicsConfiguration config = 
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
     /**
      * Constructor for Slide object. Sets filename before assigning Transitions
@@ -128,9 +130,20 @@ public class Slide {
     	Dimension scrnSize = Toolkit. getDefaultToolkit().getScreenSize();
     	int scrnWidth = (int) scrnSize.getWidth();
     	int scrnHeight = (int) scrnSize.getHeight();
+    	
         try {
             BufferedImage orgImage = ImageIO.read(new File(name));
-            Image tempImage = orgImage.getScaledInstance(scrnWidth,(int) (scrnHeight*0.85), Image.SCALE_SMOOTH);
+            
+            double proportionW = 1;
+            double proportionH = 1;
+            if (orgImage.getHeight() < orgImage.getWidth()) {
+            	proportionH = (double)(orgImage.getHeight())/(double) (orgImage.getWidth());
+            } else {
+            	proportionW = (double)(orgImage.getWidth())/(double) (orgImage.getHeight());
+            }
+            
+            System.out.println(orgImage.getHeight()/orgImage.getWidth());
+            Image tempImage = orgImage.getScaledInstance((int) (scrnWidth*proportionW),(int) (scrnHeight*0.85*proportionH), Image.SCALE_SMOOTH);
             m_image = new BufferedImage(scrnWidth,(int) (scrnHeight*0.85), BufferedImage.TYPE_INT_ARGB);
 
             if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
@@ -140,9 +153,23 @@ public class Slide {
                 RescaleOp rescaler = new RescaleOp(scales, offsets, null);
                 m_image = rescaler.filter(m_image, null);
             }
+            
+            int rectWidth = (int)((scrnWidth - (scrnWidth*proportionW))/2);
+            int rectHeight = (int)(((scrnHeight*0.85) - (scrnHeight*0.85*proportionH))/2);
 
             Graphics2D g2d = m_image.createGraphics();
-            g2d.drawImage(tempImage, 0, 0, null);
+            g2d.setColor(Color.BLACK);
+            
+            if (proportionH < 1) {
+            	g2d.fillRect(0, 0, scrnWidth, rectHeight);
+            	g2d.drawImage(tempImage, 0, rectHeight, null);
+            	g2d.fillRect(0, rectHeight + (int) (scrnHeight*0.85*proportionH), scrnWidth, rectHeight);
+            }else 
+            {
+            	g2d.fillRect(0, 0, rectWidth, (int) (scrnHeight*0.85));
+            	g2d.drawImage(tempImage, rectWidth, 0, null);
+            	g2d.fillRect(rectWidth + (int) (scrnWidth*proportionW), 0, rectWidth, (int) (scrnHeight*0.85));
+            }
             g2d.dispose();
 
         } 
