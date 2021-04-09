@@ -292,6 +292,9 @@ public class SlideshowEditor extends JFrame {
             }
         });
 
+        ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        Image icon = windowIcon.getImage();
+        settingsFrame.setIconImage(icon);
         settingsFrame.setSize(new Dimension(290,140));
         settingsFrame.setResizable(false);
         settingsFrame.setLocationRelativeTo(null);
