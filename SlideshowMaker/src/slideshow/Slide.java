@@ -134,16 +134,20 @@ public class Slide {
         try {
             BufferedImage orgImage = ImageIO.read(new File(name));
             
+            
+            
+            Image tempImage;
             double proportionW = 1;
             double proportionH = 1;
             if (orgImage.getHeight() < orgImage.getWidth()) {
-            	proportionH = (double)(orgImage.getHeight())/(double) (orgImage.getWidth());
+            	proportionH = (double) (orgImage.getHeight())/(double) (orgImage.getWidth());
+            	tempImage = orgImage.getScaledInstance((int) (scrnWidth),(int) (scrnWidth*proportionH), Image.SCALE_SMOOTH);
             } else {
-            	proportionW = (double)(orgImage.getWidth())/(double) (orgImage.getHeight());
+            	proportionW = (double) (orgImage.getWidth())/(double) (orgImage.getHeight());
+            	tempImage = orgImage.getScaledInstance((int) ((scrnHeight*0.85)*proportionW),(int) (scrnHeight*0.85), Image.SCALE_SMOOTH);
             }
             
-            System.out.println(orgImage.getHeight()/orgImage.getWidth());
-            Image tempImage = orgImage.getScaledInstance((int) (scrnWidth*proportionW),(int) (scrnHeight*0.85*proportionH), Image.SCALE_SMOOTH);
+            
             m_image = new BufferedImage(scrnWidth,(int) (scrnHeight*0.85), BufferedImage.TYPE_INT_ARGB);
 
             if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
@@ -154,21 +158,19 @@ public class Slide {
                 m_image = rescaler.filter(m_image, null);
             }
             
-            int rectWidth = (int)((scrnWidth - (scrnWidth*proportionW))/2);
-            int rectHeight = (int)(((scrnHeight*0.85) - (scrnHeight*0.85*proportionH))/2);
+            int rectWidth = (int)((scrnWidth - ((scrnHeight*0.85)*proportionW))/2);
+            int rectHeight = (int)(((scrnHeight*0.85) - (scrnWidth*proportionH))/2);
 
             Graphics2D g2d = m_image.createGraphics();
             g2d.setColor(Color.BLACK);
             
+            g2d.fillRect(0, 0, scrnWidth, (int)(scrnHeight*0.85));
+            
             if (proportionH < 1) {
-            	g2d.fillRect(0, 0, scrnWidth, rectHeight);
             	g2d.drawImage(tempImage, 0, rectHeight, null);
-            	g2d.fillRect(0, rectHeight + (int) (scrnHeight*0.85*proportionH), scrnWidth, rectHeight);
             }else 
             {
-            	g2d.fillRect(0, 0, rectWidth, (int) (scrnHeight*0.85));
             	g2d.drawImage(tempImage, rectWidth, 0, null);
-            	g2d.fillRect(rectWidth + (int) (scrnWidth*proportionW), 0, rectWidth, (int) (scrnHeight*0.85));
             }
             g2d.dispose();
 
