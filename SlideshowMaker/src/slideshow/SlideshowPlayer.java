@@ -128,6 +128,7 @@ public class SlideshowPlayer extends JFrame  {
         add(m_controlPanel);
         
         //Change appearance of JFrame
+        setSize(scrnWidth, scrnHeight);
         removeFocusFromAllObjects(this);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
