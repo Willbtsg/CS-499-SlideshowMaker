@@ -115,7 +115,7 @@ public class SlideshowPlayer extends JFrame  {
 
         m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBackground(Color.LIGHT_GRAY);
-        m_controlPanel.setBounds(0, scrnHeight-(scrnHeight/12), scrnWidth, scrnHeight/12);
+        m_controlPanel.setBounds(0, scrnHeight-(scrnHeight/8), scrnWidth, scrnHeight/12);
         m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
         if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
@@ -126,16 +126,14 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         add(m_controlPanel);
-
+        
         //Change appearance of JFrame
-        setSize(800, 500); //800 width and 500 height
-        setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        setUndecorated(true);
-        setVisible(true); //making the frame visible
-        setResizable(false); //disable maximize button
-        setFocusable(false);
         removeFocusFromAllObjects(this);
+        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false); //disable maximize button
+        setVisible(true); //making the frame visible
+        
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -174,7 +172,7 @@ public class SlideshowPlayer extends JFrame  {
         for (Component child : container.getComponents()) {
             if (child instanceof Container) {
                 removeFocusFromAllObjects((Container) child);
-            } else if (!(child instanceof JTextField)) {
+            } else{
                 child.setFocusable(false);
             }
         }
