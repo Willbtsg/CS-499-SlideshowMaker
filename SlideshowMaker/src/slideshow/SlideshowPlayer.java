@@ -34,6 +34,7 @@ public class SlideshowPlayer extends JFrame  {
      * long m_timeElapsed- stores amount of time the Slide has run during automated playback. Used to maintain proper timing after resuming
      */
     private static SlideshowPlayer instance;
+    private Dimension m_screenSize = Toolkit. getDefaultToolkit(). getScreenSize();
     private String m_pathPrefix;
     private JLabel m_imageLabel;
     private Slideshow m_Slideshow;
@@ -93,6 +94,9 @@ public class SlideshowPlayer extends JFrame  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        int scrnWidth = (int)m_screenSize.getWidth();
+        int scrnHeight = (int)m_screenSize.getHeight();
 
         setTitle("Slideshow Player");
         setLayout(null);
@@ -104,15 +108,14 @@ public class SlideshowPlayer extends JFrame  {
         m_pathPrefix = "images"; //set directory name
 
         m_imageLabel = new JLabel();
-        m_imageLabel.setBounds(150, 50, 500, 313);
+        m_imageLabel.setBounds(0, 0, scrnWidth, (int) (scrnHeight*0.85));
         add(m_imageLabel);
 
         m_Slideshow = SlideshowManager.getInstance().getSlideshow(); //construct Slideshow using the layout file
 
-        m_controlPanel = new JPanel();
-        m_controlPanel.setLayout(null);
+        m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBackground(Color.LIGHT_GRAY);
-        m_controlPanel.setBounds(0, 400, 784, 70);
+        m_controlPanel.setBounds(0, scrnHeight-(scrnHeight/12), scrnWidth, scrnHeight/12);
         m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
         if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
@@ -127,6 +130,8 @@ public class SlideshowPlayer extends JFrame  {
         //Change appearance of JFrame
         setSize(800, 500); //800 width and 500 height
         setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        setUndecorated(true);
         setVisible(true); //making the frame visible
         setResizable(false); //disable maximize button
         setFocusable(false);
@@ -266,6 +271,12 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setAutomatedControls()
     {
+    	// Set initial gridbag constraint parameters
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridy = 0;
+    	c.weightx = 0.5;
+    	c.weighty = 0.5;
+    	
         ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
         ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
         
@@ -279,23 +290,19 @@ public class SlideshowPlayer extends JFrame  {
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
-        m_nextSlide.setBounds(530, 20, 120, 20);
         m_nextSlide.setIcon(nextIcon);
-        m_controlPanel.add(m_nextSlide);
+    	c.gridx = 2;
+        m_controlPanel.add(m_nextSlide, c);
 
         m_nextSlide.addActionListener(event -> timedShowSlide(1, true));
 
         m_previousSlide = new JButton();
-        m_previousSlide.setBounds(150, 20, 120, 20);
         m_previousSlide.setIcon(prevIcon);
-        m_controlPanel.add(m_previousSlide);
+        c.gridx = 0;
+        m_controlPanel.add(m_previousSlide, c);
 
         m_previousSlide.addActionListener(event -> timedShowSlide(-1, true));
 
-        m_Pause = new JButton();
-        m_Pause.setBounds(350, 20, 100, 20);
-        m_controlPanel.add(m_Pause);
-        
         ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
         ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
         ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
@@ -308,6 +315,10 @@ public class SlideshowPlayer extends JFrame  {
         image = tempPauseIcon.getImage(); // transform it 
         newimg = image.getScaledInstance(15, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon pauseIcon = new ImageIcon(newimg); 
+        
+        m_Pause = new JButton();
+        c.gridx = 1;
+        m_controlPanel.add(m_Pause);
         
         //Set icon for pause button
         m_Pause.setIcon(pauseIcon);
@@ -342,6 +353,13 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setManualControls()
     {
+    	
+    	// Set initial gridbag constraint parameters
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridy = 0;
+    	c.weightx = 0.5;
+    	c.weighty = 0.5;
+    	
         ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
         ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
         
@@ -355,16 +373,16 @@ public class SlideshowPlayer extends JFrame  {
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
-        m_nextSlide.setBounds(500, 20, 120, 20);
         m_nextSlide.setIcon(nextIcon);
-        m_controlPanel.add(m_nextSlide);
+        c.gridx = 2;
+        m_controlPanel.add(m_nextSlide, c);
 
         m_nextSlide.addActionListener(event -> showSlide(1, false));
 
         m_previousSlide = new JButton();
-        m_previousSlide.setBounds(200, 20, 120, 20);
         m_previousSlide.setIcon(prevIcon);
-        m_controlPanel.add(m_previousSlide);
+        c.gridx = 0;
+        m_controlPanel.add(m_previousSlide, c);
 
         m_previousSlide.addActionListener(event -> showSlide(-1, false));
     }

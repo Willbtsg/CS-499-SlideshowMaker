@@ -125,10 +125,13 @@ public class Slide {
      */
     public void setImage(String name)
     {
+    	Dimension scrnSize = Toolkit. getDefaultToolkit().getScreenSize();
+    	int scrnWidth = (int) scrnSize.getWidth();
+    	int scrnHeight = (int) scrnSize.getHeight();
         try {
             BufferedImage orgImage = ImageIO.read(new File(name));
-            Image tempImage = orgImage.getScaledInstance(500, 313, Image.SCALE_SMOOTH);
-            m_image = new BufferedImage(500, 313, BufferedImage.TYPE_INT_ARGB);
+            Image tempImage = orgImage.getScaledInstance(scrnWidth,(int) (scrnHeight*0.85), Image.SCALE_SMOOTH);
+            m_image = new BufferedImage(scrnWidth,(int) (scrnHeight*0.85), BufferedImage.TYPE_INT_ARGB);
 
             if (m_image.getColorModel().hasAlpha()) //if an image has a transparent background, make the background white
             {
