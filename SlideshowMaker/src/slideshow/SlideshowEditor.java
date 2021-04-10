@@ -55,7 +55,7 @@ public class SlideshowEditor extends JFrame {
     public SlideshowEditor()
     {
         // INITIALIZING THE WINDOW
-
+    	
         try { //set theme for SlideshowEditor
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {

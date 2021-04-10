@@ -302,7 +302,6 @@ public class SlideshowPlayer extends JFrame  {
 
         m_previousSlide.addActionListener(event -> timedShowSlide(-1, true));
 
-        ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
         ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
         ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
         

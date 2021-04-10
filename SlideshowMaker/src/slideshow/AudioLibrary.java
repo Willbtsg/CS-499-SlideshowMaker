@@ -79,11 +79,11 @@ public class AudioLibrary extends JPanel {
             
             // Transform temp stop and play icons and store them in new variables
             Image image = tempPlayIcon.getImage(); // transform it 
-            Image newimg = image.getScaledInstance(12, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+            Image newimg = image.getScaledInstance(13, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
             ImageIcon playIcon = new ImageIcon(newimg); 
             
             image = tempStopIcon.getImage(); // transform it 
-            newimg = image.getScaledInstance(12, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+            newimg = image.getScaledInstance(13, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
             ImageIcon stopIcon = new ImageIcon(newimg); 
             
             if (dir.isDirectory()) //if directory is valid
