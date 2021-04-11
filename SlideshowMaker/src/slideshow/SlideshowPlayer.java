@@ -179,8 +179,6 @@ public class SlideshowPlayer extends JFrame  {
         }
     }
 
-
-
     /**
      * Retrieves the desired Slide (next or previous) from m_SlideList
      * @param indexShift- indicates whether to get next or previous slide
@@ -252,7 +250,8 @@ public class SlideshowPlayer extends JFrame  {
 
             m_Jukebox.pausePlayback(); //...stop Jukebox from playing...
 
-            JOptionPane.showMessageDialog(null, "This Slideshow is now over.\nThank you for using our program.", "Have a Nice Day!", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "<html><div style='text-align: center;'>This " +
+                    "Slideshow is now over.<br>Thank you for using our program.</div></html>", "Have a Nice Day!", JOptionPane.PLAIN_MESSAGE);
 
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); //...and exit SlideshowPlayer
 
