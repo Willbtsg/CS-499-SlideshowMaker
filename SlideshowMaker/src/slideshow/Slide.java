@@ -1,4 +1,5 @@
 package slideshow;
+
 import transitions.Transition;
 
 import transitions.TransitionLibrary;
@@ -8,7 +9,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 
@@ -129,8 +129,8 @@ public class Slide {
     {
     	// Get screen size width and height
     	Dimension scrnSize = Toolkit. getDefaultToolkit().getScreenSize();
-    	int scrnWidth = (int) scrnSize.getWidth();
-    	int scrnHeight = (int) scrnSize.getHeight();
+    	int scrnWidth = 1400;
+    	int scrnHeight = 800;
     	
         try {
         	// Read in original image

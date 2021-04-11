@@ -95,8 +95,8 @@ public class SlideshowPlayer extends JFrame  {
             e.printStackTrace();
         }
         
-        int scrnWidth = (int)m_screenSize.getWidth();
-        int scrnHeight = (int)m_screenSize.getHeight();
+        int scrnWidth = 1400;
+        int scrnHeight = 800;
 
         setTitle("Slideshow Player");
         setLayout(null);
@@ -131,7 +131,6 @@ public class SlideshowPlayer extends JFrame  {
         setSize(scrnWidth, scrnHeight);
         removeFocusFromAllObjects(this);
         setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false); //disable maximize button
         setVisible(true); //making the frame visible
         
