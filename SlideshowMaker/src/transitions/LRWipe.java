@@ -34,9 +34,9 @@ public class LRWipe extends Transition{
         int bX;		// Dimensions for newImage
         int imgWidth, imgHeight;
         int incX;					// X increment each time
-        int numIterations = 50;		// Number of iterations in the sweep
-        int timeInc;				// Milliseconds to pause each time
-        timeInc = (int) m_time / numIterations;
+        int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
+        int timeInc; // Milliseconds to pause each time
+        timeInc = (int) m_time / numIterations; //make each step last the same amount of time
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();

@@ -2,7 +2,6 @@ package transitions;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 
 public class CrossFade extends Transition {
 
@@ -30,26 +29,38 @@ public class CrossFade extends Transition {
         BufferedImage newImage_ARGB = new BufferedImage(newImage.getWidth(null), newImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         // Draw newImage into newImage_ARGB
         newImage_ARGB.getGraphics().drawImage(newImage, 0, 0, null);
-        // Set up the initial fade data
-        // Create a rescale filter op
-        float alphaInc = 0.20f;
-        float[] scales = { 1.0f, 1.0f, 1.0f, alphaInc};
-        float[] offsets = new float[4];
-        RescaleOp rop = new RescaleOp(scales, offsets, null);
+
+        int numIterations = (int) (m_time * 0.01) + 5; // Number of steps to the Transition scales based off length
+        int timeInc; // Milliseconds to pause each time
+        timeInc = (int) m_time / numIterations; //each step of the Transition lasts the same amount of time
+
+        float alphaInc = (float) 1 / numIterations; //alpha should adjust around the same amount each time
+
+        //Information and formula for alpha scaling comes from: https://javagraphics.blogspot.com/2008/06/crossfades-what-is-and-isnt-possible.html
+        AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1-(1-alphaInc)*(1-alphaInc));
+        gPan.setComposite(composite); //set alpha scale to be used when drawing the new Image
 
         // Draw image A -- appears we need to do this fade longer
         // Each time we redraw newImage_ARGB in imgLabel we add just a bit more
-        for(int i=0; i<15; i++)
+        for(int i=0; i<numIterations; i++)
         {
-            // Draw B over A. Note: Can't do the first draw directly into the screen panel
-            //	because that drawImage only works with BufferedImages as the destination.
-            gPan.drawImage(newImage_ARGB, rop, 0, 0); // Copy newImage_ARGB into panel
-            // Note: Can not pause here like we do in the other transitions because
-            //     cross dissolve takes longer than a simple blit draw
+            // Draw B over A
+            gPan.drawImage(newImage_ARGB, 0, 0, null);
+
+            try
+            {
+                Thread.sleep(timeInc);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
         }
 
-        // And one final draw to the panel to be sure it's all there
-        gPan.drawImage(newImage, 0,0, imgLabel);
+        //NOTE: we remove the original alpha composite because the max opacity we can get with this method is 97%
+        gPan.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1)); //set alpha to fully opaque
+
+        gPan.drawImage(newImage_ARGB, 0, 0, null); // finish drawing new image with full opacity
     }
 
 }

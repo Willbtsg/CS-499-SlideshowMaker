@@ -27,9 +27,9 @@ public class UpWipe extends Transition {
         int bY1, bY2;        // Dimensions for newImage
         int imgWidth, imgHeight;
         int incY;                    // Y increment each time
-        int numIterations = 50;        // Number of iterations in the sweep
-        int timeInc;                // Milliseconds to pause each time
-        timeInc = (int) m_time / numIterations;
+        int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
+        int timeInc; // Milliseconds to pause each time
+        timeInc = (int) m_time / numIterations; //make each step last the same amount of time
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();
