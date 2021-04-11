@@ -23,7 +23,7 @@ public class Timeline extends JPanel {
 
     /**
      * Timeline instance- instance of Timeline for Singleton
-     * JTabbedPane timelinePanes-
+     * JTabbedPane timelinePanes- JTabbedPane containing the separate panels used for the Slide and Audio timelines
      * ArrayList<JPanel> timelineSlides- contains slide data to be displayed in Timeline's "Slides" tab
      * ArrayList<JPanel> timelineAudio- contains sound data to be displayed in Timeline's "Audio" tab
      * JPanel slidePanel- JPanel used to display timelineSlides
@@ -34,8 +34,10 @@ public class Timeline extends JPanel {
      * ArrayList<String> soundList- list of sound filepaths to be used in a Slideshow
      * ArrayList<JPanel> slideDurationPanels- JPanels used for displaying slide interval data in Timeline items
      * ArrayList<JLabel> slideDurations- JLabels from Timeline items containing that item's set interval
-     * JPanel runtimeDisplay-
-     * int totalSlideTime- total time (in seconds) that the automated Slideshow will last
+     * ArrayList<JComboBox> transitionDurations- JComboBoxes from Timeline items containing Transition lengths
+     * JLabel runtimeLabel- label used to to display total audio and (if automated) slideshow runtimes
+     * double totalSlideTime- total time (in seconds) that the automated Slideshow will last
+     * int totalAudioTime- total time(in seconds) that the soundtrack for the Slideshow will last
      * double defaultDuration- default slide interval for Timeline items in an automated Slideshow
      * boolean automated- flag used to indicate whether the Slideshow being created will be automated or not
      */
@@ -565,7 +567,6 @@ public class Timeline extends JPanel {
         audioPanel.add(thisSound); //add new sound to GUI
         revalidate();
     }
-    
 
     /**
      * This AdjustmentListener monitors the most recently updated JScrollPane. When adding a new item causes the
@@ -610,26 +611,30 @@ public class Timeline extends JPanel {
         return itemLength;
     }
 
+    /**
+     * Displays the total Audio and (if applicable) Slideshow runtimes using the data put into the Timeline
+     */
     public void updateRuntimeLabel()
     {
         String runtimeOutput = "";
 
-        if (automated)
+        if (automated) //only calculate Slideshow runtime if the Slideshow is automated
         {
             double transitionRuntime = 0.0;
 
-            for (JComboBox transition : transitionDurations) {
+            for (JComboBox transition : transitionDurations) //calculate the length of all Transitions used in the Slideshow
+            {
                 if (transition.isEnabled()) {
                     transitionRuntime += (Double) transition.getSelectedItem();
                 }
             }
 
             runtimeOutput += "Slideshow Runtime: ";
-            runtimeOutput += calculateMinSecLength((int) (totalSlideTime + transitionRuntime));
+            runtimeOutput += calculateMinSecLength((int) (totalSlideTime + transitionRuntime)); //display the combined length of all Slides and Transitions
             runtimeOutput += "   |   ";
         }
 
-        runtimeOutput += "Audio Runtime: ";
+        runtimeOutput += "Audio Runtime: "; //regardless of automation status, display the total Audio runtime
         runtimeOutput += calculateMinSecLength(totalAudioTime);
 
         runtimeLabel.setText(runtimeOutput);
@@ -671,8 +676,9 @@ public class Timeline extends JPanel {
                         slideList.get(i).setTime(slideDuration);
                     }
                     slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
-                    slideshow.calculateLength();
+                    slideshow.setSlideLength(calculateMinSecLength((int) totalSlideTime));
                     slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
+                    slideshow.setSoundLength((calculateMinSecLength(totalAudioTime)));
                     SlideshowManager.writeDB(slideshow.toJSON()); //call SlideshowManager to write Slideshow's JSON data to file
                 }
                 catch (Exception e)
@@ -734,11 +740,16 @@ public class Timeline extends JPanel {
      */
     public void setDefaultSlideDuration(Double duration) { defaultSlideDuration = duration; }
 
-    public void setActivePane(int index)
-    {
-        timelinePanes.setSelectedIndex(index);
-    }
+    /**
+     * Changes the pane displayed by timelinePanes. Used to make sure Timeline matches the active library
+     * @param index- index of the pane to be displayed
+     */
+    public void setActivePane(int index) { timelinePanes.setSelectedIndex(index); }
 
+    /**
+     * Chanes the displayed library pane whenever the pane changes in Timeline.
+     * @param libraries- reference to JTabbedPane containing Image and Audio libraries
+     */
     public void enablePaneMatch(JTabbedPane libraries)
     {
         timelinePanes.addChangeListener(new ChangeListener() {
@@ -753,22 +764,22 @@ public class Timeline extends JPanel {
      */
     public void reset()
     {
-        slidePanel.removeAll();
-        slidePanel.setLayout(new GridLayout(2, 1));
-        timelineSlides.clear();
+        slidePanel.removeAll(); //clear the GUI component of the Slide timeline
+        slidePanel.setLayout(new GridLayout(2, 1)); //reset the layout to preserve sizing
+        timelineSlides.clear(); //remove all Slide timeline data stored in the backend
         slideDurationPanels.clear();
         slideDurations.clear();
         slideList.clear();
 
-        audioPanel.removeAll();
-        audioPanel.setLayout(new GridLayout(2, 1));
-        timelineAudio.clear();
+        audioPanel.removeAll(); //clear the GUI component of the Audio timeline
+        audioPanel.setLayout(new GridLayout(2, 1)); //reset the layout to preserve sizing
+        timelineAudio.clear(); //remove all Audio timeline data stored in the backend
         soundList.clear();
 
-        totalSlideTime = 0.0;
+        totalSlideTime = 0.0; //reset the Slideshow and Audio runtimes
         totalAudioTime = 0;
 
-        repaint();
+        repaint(); //update the GUI to display a blank Timeline
         revalidate();
     }
 

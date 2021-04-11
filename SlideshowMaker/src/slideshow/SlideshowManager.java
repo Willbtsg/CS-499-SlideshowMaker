@@ -26,7 +26,6 @@ public class SlideshowManager {
      * String DBName- contains complete filepath for slideshow layout file
      * String workingDir- contains filepath to chosen slideshow directory
      */
-
     private static SlideshowManager instance;
     private static String DBNAME;
     private static String workingDir;
@@ -114,12 +113,13 @@ public class SlideshowManager {
             }
 
             slideshow.setSoundList(soundList); //set Slideshow's m_SoundList
+            slideshow.setSoundLength((String) jsonObject.get("AudioLength"));
 
             slideshow.setAutomated((Boolean) jsonObject.get("Automated"));
 
             if (slideshow.getAutomated()) //if the Slideshow is automated (i.e. has a set runtime)...
             {
-                slideshow.calculateLength(); //...calculate the total runtime
+                slideshow.setSlideLength((String) jsonObject.get("SlideshowLength")); //...calculate the total runtime
             }
 
         } catch (ParseException | IOException e) {

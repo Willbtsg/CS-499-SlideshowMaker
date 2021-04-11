@@ -15,14 +15,14 @@ public class Slideshow {
      * Boolean m_automated- indicates whether or not this Slideshow is to be viewed with automated or manual playback
      * ArrayList<Slide> m_SlideList- collection of Slides to be displayed
      * ArrayList<String> m_SoundList- contains names of audio files to be played by Jukebox
-     * long m_SlideshowLength- contains sum of Slide and Transition timing (i.e. runtime for automated Slideshow)
-     * long m_AudioLength- contains sum of sound file runtimes
+     * long m_SlideshowLength- contains String displaying the sum of Slide and Transition timing (i.e. runtime for automated Slideshow)
+     * long m_AudioLength- contains String displaying the sum of sound file runtimes
      */
     private Boolean m_automated;
     private ArrayList<Slide> m_SlideList;
     private ArrayList<String> m_SoundList;
-    private long m_slideshowLength;
-    private long m_AudioLength;
+    private String m_slideshowLength;
+    private String m_AudioLength;
 
     /**
      * Converts Slideshow to JSONObject. Used when writing Slideshow information to layout file
@@ -84,11 +84,31 @@ public class Slideshow {
      */
     public Boolean getAutomated() { return m_automated; }
 
+
+    /**
+     * Sets Slideshow length in MIN:SEC format
+     * @param slideLength
+     */
+    public void setSlideLength(String slideLength) { m_slideshowLength = slideLength; }
+
     /**
      * Returns combined length of Slides and their forward Transitions
      * @return
      */
-    public long getLength() { return m_slideshowLength; }
+    public String getLength() { return m_slideshowLength; }
+
+
+    /**
+     * Set total audio runtime in MIN:SEC format
+     * @param soundLength
+     */
+    public void setSoundLength(String soundLength) { m_AudioLength = soundLength; }
+
+    /**
+     * Returns total audio runtime in MIN:SEC format
+     * @return
+     */
+    public String getSoundLength() { return m_AudioLength; }
 
     /**
      * Calculates sum of Slides' display times and Transition lengths and saves as m_SlideshowLength (i.e. total runtime)
@@ -107,7 +127,7 @@ public class Slideshow {
             }
         }
 
-        m_slideshowLength = tempLength;
+        //m_slideshowLength = tempLength;
     }
 
     /**
@@ -147,4 +167,5 @@ public class Slideshow {
      * @param sound- filename of new sound for this Slideshow
      */
     public void addSound(String sound) { m_SoundList.add(sound); }
+
 }
