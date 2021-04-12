@@ -63,38 +63,38 @@ public class SlideshowPlayer extends JFrame  {
      */
     private SlideshowPlayer()
     {
-//        String directory = SlideshowManager.getDirectory();
-//        File dir = new File(directory);
-//        String[] ext = new String[]{"json"};
-//        FilenameFilter jsonFilter = new FilenameFilter() {
-//            @Override
-//            public boolean accept(File dir, String name) {
-//                for (String ex : ext) {
-//                    if (name.endsWith("." + ex))
-//                        return true;
-//                }
-//                return false;
-//            }
-//        };
-//
-//        ArrayList<String> slideshowOptions = new ArrayList<>();
-//        for (File file : dir.listFiles(jsonFilter))
-//            slideshowOptions.add(file.getName());
-//        String[] slideshowOptionsStr = new String[slideshowOptions.size()];
-//        for (int i = 0; i < slideshowOptions.size(); i++)
-//            slideshowOptionsStr[i] = slideshowOptions.get(i);
-//
-//        String slideshowChoice = (String) JOptionPane.showInputDialog(null, "Select a slideshow from your directory:", "Slideshow Selection",
-//                    JOptionPane.PLAIN_MESSAGE, null, slideshowOptionsStr, slideshowOptionsStr[0]);
-//
-//        String slideshowPath = directory + "\\" + slideshowChoice;
-
         try { //set theme for SlideshowPlayer
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
+        String directory = SlideshowManager.getDirectory();
+        File dir = new File(directory);
+        String[] ext = new String[]{"json"};
+        FilenameFilter jsonFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                for (String ex : ext) {
+                    if (name.endsWith("." + ex))
+                        return true;
+                }
+                return false;
+            }
+        };
+
+        ArrayList<String> slideshowOptions = new ArrayList<>();
+        for (File file : dir.listFiles(jsonFilter))
+            slideshowOptions.add(file.getName());
+        String[] slideshowOptionsStr = new String[slideshowOptions.size()];
+        for (int i = 0; i < slideshowOptions.size(); i++)
+            slideshowOptionsStr[i] = slideshowOptions.get(i);
+
+        String slideshowChoice = (String) JOptionPane.showInputDialog(null, "Select a slideshow from your directory:", "Slideshow Selection",
+                    JOptionPane.PLAIN_MESSAGE, null, slideshowOptionsStr, slideshowOptionsStr[0]);
+
+        String slideshowPath = directory + "\\" + slideshowChoice;
+
         int scrnWidth = 1400;
         int scrnHeight = 800;
 
@@ -111,7 +111,7 @@ public class SlideshowPlayer extends JFrame  {
         m_imageLabel.setBounds(0, 0, scrnWidth, (int) (scrnHeight*0.85));
         add(m_imageLabel);
 
-        m_Slideshow = SlideshowManager.getInstance().getSlideshow(); //construct Slideshow using the layout file
+        m_Slideshow = SlideshowManager.getInstance().getSlideshow(slideshowPath); //construct Slideshow using the layout file
 
         m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBackground(Color.LIGHT_GRAY);

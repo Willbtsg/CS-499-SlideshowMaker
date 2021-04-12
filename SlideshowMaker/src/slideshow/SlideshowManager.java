@@ -80,10 +80,9 @@ public class SlideshowManager {
      * @return A Slideshow object containing all Slide information
      *
      */
-    public static Slideshow getSlideshow()
+    public static Slideshow getSlideshow(String slideshowPath)
     {
-        // TODO: This will need to be user-set
-        DBNAME = "images/test.json";
+        DBNAME = slideshowPath;
 
         JSONParser parser = new JSONParser();
         ArrayList<Slide> slideList = new ArrayList<Slide>();
