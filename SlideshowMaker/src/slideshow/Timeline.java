@@ -539,6 +539,8 @@ public class Timeline extends JPanel {
 
         JLabel thumbnail = new JLabel("", SwingConstants.CENTER);
         ImageIcon img = new ImageIcon("images\\audioicon.png");
+        // TODO: Uncomment below for JAR
+        // ImageIcon img = = new ImageIcon(getClass().getClassLoader().getResource("audioicon.png"));
         double proportion = 200.0/img.getIconWidth();
         double db_newHeight = proportion*img.getIconHeight();
         int newHeight = (int)Math.round(db_newHeight);
