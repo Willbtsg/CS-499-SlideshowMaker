@@ -24,6 +24,13 @@ public class Slideshow {
     private String m_slideshowLength;
     private String m_AudioLength;
 
+    public Slideshow()
+    {
+        m_automated = false;
+        m_SlideList = new ArrayList();
+        m_SoundList = new ArrayList();
+    }
+
     /**
      * Converts Slideshow to JSONObject. Used when writing Slideshow information to layout file
      * @return obj- JSONObject for DBWizard/SlideshowManager to use when writing JSON file
@@ -83,7 +90,6 @@ public class Slideshow {
      * @return
      */
     public Boolean getAutomated() { return m_automated; }
-
 
     /**
      * Sets Slideshow length in MIN:SEC format

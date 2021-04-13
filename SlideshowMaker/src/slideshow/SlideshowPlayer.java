@@ -112,12 +112,11 @@ public class SlideshowPlayer extends JFrame  {
         add(m_imageLabel);
 
         m_controlPanel = new JPanel(new GridBagLayout());
-        m_controlPanel.setBackground(Color.LIGHT_GRAY);
         m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.09));
-        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 
         add(m_controlPanel);
 
+        m_Slideshow = new Slideshow();
         m_Jukebox = Jukebox.getInstance();
         startJukebox = false;
 
@@ -149,51 +148,67 @@ public class SlideshowPlayer extends JFrame  {
         }
     }
 
-
     public void initializeSlideshow()
     {
-        m_Jukebox.stopPlayback();
-
-        m_slideshowPath = SlideshowManager.selectSlideshow(this);
-        m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
-
-        if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
+        m_Jukebox.pausePlayback();
+        
+        if (m_Slideshow.getAutomated())
         {
-            setAutomatedControls(); //...if it is, configure the controls for automated playback
+            m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
+            m_timeElapsed = System.currentTimeMillis() - m_slideStart; //calculate amount of time Slide has been active
+            m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
+        }
+
+        String tempPath = SlideshowManager.selectSlideshow(this);
+
+        if (tempPath != null)
+        {
+            m_slideshowPath = tempPath;
+
+            m_Jukebox.stopPlayback();
+            m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
+
+            if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
+            {
+                setAutomatedControls(); //...if it is, configure the controls for automated playback
+            } else {
+                setManualControls(); //...if it isn't, configure the controls for manual playback
+            }
+
+            m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
+            songSize = m_Jukebox.getSoundListSize();
+
+            m_currentSlideIndex = -1; //initialize index
+            showSlide(1, false);
+
+            if (m_Slideshow.getAutomated()) //creates Timer to keep automated Slideshow going
+            {
+                ActionListener taskPerformer = new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+
+                        timedShowSlide(1, false); //when Timer goes off, load new Slide and start Timer again
+
+                    }
+                };
+
+                m_automationTimer = new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer);
+                m_automationTimer.start(); //start a Timer that lasts the amount of time Slide should display
+                m_slideStart = System.currentTimeMillis();
+                m_paused = false;
+            }
+
+            startJukebox = true;
+
         } else {
-            setManualControls(); //...if it isn't, configure the controls for manual playback
+
+            if (m_Slideshow.getAutomated())
+            {
+                m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
+                m_automationTimer.start();
+            }
+
+            m_Jukebox.resumePlayback();
         }
-
-        m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
-        songSize = m_Jukebox.getSoundListSize();
-
-        // Start drawing
-        Graphics2D g2d = (Graphics2D) m_imageLabel.getGraphics();
-        g2d.setColor(Color.BLACK); // Set color to black
-
-        // Fill background with black square to cover whole boundary
-        g2d.fillRect(0, 0, 1400, 680);
-
-        m_currentSlideIndex = -1; //initialize index
-        showSlide(1, false);
-
-        if (m_Slideshow.getAutomated()) //creates Timer to keep automated Slideshow going
-        {
-            ActionListener taskPerformer = new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-
-                    timedShowSlide(1, false); //when Timer goes off, load new Slide and start Timer again
-
-                }
-            };
-
-            m_automationTimer = new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer);
-            m_automationTimer.start(); //start a Timer that lasts the amount of time Slide should display
-            m_slideStart = System.currentTimeMillis();
-            m_paused = false;
-        }
-
-        startJukebox = true;
 
     }
 
