@@ -38,7 +38,7 @@ public class Timeline extends JPanel {
      * JLabel runtimeLabel- label used to to display total audio and (if automated) slideshow runtimes
      * double totalSlideTime- total time (in seconds) that the automated Slideshow will last
      * int totalAudioTime- total time(in seconds) that the soundtrack for the Slideshow will last
-     * double defaultDuration- default slide interval for Timeline items in an automated Slideshow
+     * double defaultSlideDuration- default slide interval for Timeline items in an automated Slideshow
      * boolean automated- flag used to indicate whether the Slideshow being created will be automated or not
      */
     private static Timeline instance;
@@ -696,6 +696,7 @@ public class Timeline extends JPanel {
                 }
                 slideshow.setSlideList(slideList); //add Timeline's Slides to the Slideshow
                 slideshow.setSoundList(soundList); //add Timeline's audio information to the Slideshow
+                slideshow.setSoundLength((calculateMinSecLength(totalAudioTime)));
                 SlideshowManager.writeDB(slideshow.toJSON()); //call SlideshowManager to write Slideshow's JSON data to file
             }
         }

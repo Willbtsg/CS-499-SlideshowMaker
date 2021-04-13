@@ -69,7 +69,11 @@ public class SlideshowPlayer extends JFrame  {
             e.printStackTrace();
         }
 
-        String slideshowPath = SlideshowManager.selectSlideshow();
+        ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        Image icon = windowIcon.getImage();
+        setIconImage(icon);
+
+        String slideshowPath = SlideshowManager.selectSlideshow(this);
 
         int scrnWidth = 1400;
         int scrnHeight = 800;
@@ -95,10 +99,6 @@ public class SlideshowPlayer extends JFrame  {
             }
         });
         fileMenu.add(closeProgram);
-
-        ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
-        Image icon = windowIcon.getImage();
-        setIconImage(icon);
 
         m_pathPrefix = "images"; //set directory name
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class SlideshowManager {
 
     /**
-     * static DBWizard instance- contains instance of DBWizard for Singleton implementation
+     * static SlideshowManager instance- contains instance of DBWizard for Singleton implementation
      * String DBName- contains complete filepath for slideshow layout file
      * String workingDir- contains filepath to chosen slideshow directory
      */
@@ -74,8 +74,9 @@ public class SlideshowManager {
 
     /**
      * Creates a Slideshow object using Slide and sound info from a json file
-     * @return A Slideshow object containing all Slide information
      *
+     * @param slideshowPath- filepath to json containing information needed for constructing the user-selected Slideshow
+     * @return A Slideshow object containing all Slide information
      */
     public static Slideshow getSlideshow(String slideshowPath)
     {
@@ -127,13 +128,14 @@ public class SlideshowManager {
     /**
      * This function pops up a file explorer which the user will use to select a directory to work with.
      *
-     * @return Returns the user-selected file path as a string
+     * @param parent- reference to JFrame that called the Manager to keep window icons consistent
+     * @return Returns the user-selected filepath as a String
      */
-    public static String getDirectory()
+    public static String getDirectory(JFrame parent)
     {
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int open = fileChooser.showOpenDialog(null);
+        int open = fileChooser.showOpenDialog(parent);
 
         if (open == JFileChooser.APPROVE_OPTION)
         {
@@ -145,9 +147,15 @@ public class SlideshowManager {
             return null;
     }
 
-    public static String selectSlideshow()
+    /**
+     * This function shows the user the Slideshow files available in their selected directory
+     *
+     * @param parent- reference to JFrame that called the Manager to keep window icons consistent
+     * @return- user-selected filepath as a String
+     */
+    public static String selectSlideshow(JFrame parent)
     {
-        String directory = SlideshowManager.getDirectory();
+        String directory = SlideshowManager.getDirectory(parent);
         File dir = new File(directory);
         String[] ext = new String[]{"json"};
         FilenameFilter jsonFilter = new FilenameFilter() {
