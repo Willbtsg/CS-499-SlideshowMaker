@@ -156,6 +156,10 @@ public class SlideshowManager {
     public static String selectSlideshow(JFrame parent)
     {
         String directory = SlideshowManager.getDirectory(parent);
+
+        if (directory == null)
+            return null;
+
         File dir = new File(directory);
         String[] ext = new String[]{"json"};
         FilenameFilter jsonFilter = new FilenameFilter() {
