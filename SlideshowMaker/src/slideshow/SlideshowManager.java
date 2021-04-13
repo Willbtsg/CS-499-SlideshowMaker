@@ -6,10 +6,7 @@ import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -146,6 +143,36 @@ public class SlideshowManager {
         }
         else
             return null;
+    }
+
+    public static String selectSlideshow()
+    {
+        String directory = SlideshowManager.getDirectory();
+        File dir = new File(directory);
+        String[] ext = new String[]{"json"};
+        FilenameFilter jsonFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                for (String ex : ext) {
+                    if (name.endsWith("." + ex))
+                        return true;
+                }
+                return false;
+            }
+        };
+
+        ArrayList<String> slideshowOptions = new ArrayList<>();
+        for (File file : dir.listFiles(jsonFilter))
+            slideshowOptions.add(file.getName());
+        String[] slideshowOptionsStr = new String[slideshowOptions.size()];
+        for (int i = 0; i < slideshowOptions.size(); i++)
+            slideshowOptionsStr[i] = slideshowOptions.get(i).replace(".json", "");
+
+        String slideshowChoice = (String) JOptionPane.showInputDialog(null, "Select a slideshow from your directory:", "Slideshow Selection",
+                JOptionPane.PLAIN_MESSAGE, null, slideshowOptionsStr, slideshowOptionsStr[0]);
+
+        String slideshowPath = directory + "\\" + slideshowChoice + ".json";
+        return slideshowPath;
     }
 
     /**
