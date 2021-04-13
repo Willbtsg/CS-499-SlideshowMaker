@@ -22,6 +22,7 @@ public class SlideshowPlayer extends JFrame  {
      * static SlideshowPlayer instance- keeps track of SlideshowPlayer instance for Singleton implementation
      * String m_pathPrefix- keeps track of which folder to find the images in
      * JLabel m_imageLabel- label where slide images are displayed
+     * JLabel m_slideCount- label where slide count is displayed
      * ArrayList<Slide> m_SlideList- contains Slide objects with information necessary for slideshow
      * int m_currentSlideIndex- indicates with Slide in the list is being displayed
      * JPanel m_controlPanel- contains user controls for playback
@@ -38,6 +39,7 @@ public class SlideshowPlayer extends JFrame  {
     private Dimension m_screenSize = Toolkit. getDefaultToolkit(). getScreenSize();
     private String m_slideshowPath;
     private JLabel m_imageLabel;
+    private JLabel m_slideCount;
     private Slideshow m_Slideshow;
     private int m_currentSlideIndex;
     private JPanel m_controlPanel;
@@ -273,9 +275,9 @@ public class SlideshowPlayer extends JFrame  {
 
             return false;
         }
-
+        updateSlideCount();
         return true;
-
+        
     }
 
     /**
@@ -310,7 +312,15 @@ public class SlideshowPlayer extends JFrame  {
             m_slideStart = System.currentTimeMillis();
             m_automationTimer.start();
         }
-
+        updateSlideCount();
+    }
+    
+    
+    /**
+     * Update the slide count label
+     */
+    private void updateSlideCount() {
+    	m_slideCount.setText((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
     }
 
     /**
@@ -338,14 +348,14 @@ public class SlideshowPlayer extends JFrame  {
         
         m_nextSlide = new JButton();
         m_nextSlide.setIcon(nextIcon);
-    	c.gridx = 2;
+    	c.gridx = 3;
         m_controlPanel.add(m_nextSlide, c);
 
         m_nextSlide.addActionListener(event -> timedShowSlide(1, true));
 
         m_previousSlide = new JButton();
         m_previousSlide.setIcon(prevIcon);
-        c.gridx = 0;
+        c.gridx = 1;
         m_controlPanel.add(m_previousSlide, c);
 
         m_previousSlide.addActionListener(event -> timedShowSlide(-1, true));
@@ -363,8 +373,8 @@ public class SlideshowPlayer extends JFrame  {
         ImageIcon pauseIcon = new ImageIcon(newimg); 
         
         m_Pause = new JButton();
-        c.gridx = 1;
-        m_controlPanel.add(m_Pause);
+        c.gridx = 2;
+        m_controlPanel.add(m_Pause, c);
         
         //Set icon for pause button
         m_Pause.setIcon(pauseIcon);
@@ -392,6 +402,16 @@ public class SlideshowPlayer extends JFrame  {
                 }
             }
         });
+        
+        // Initialize the slidecount label
+        c.gridx = 0;
+        m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+        m_controlPanel.add(m_slideCount, c);
+        
+        //Create empty label to get the spacing right
+        c.gridx = 4;
+        JLabel spaceFill = new JLabel("");
+        m_controlPanel.add(spaceFill, c);
     }
 
     /**
@@ -427,10 +447,21 @@ public class SlideshowPlayer extends JFrame  {
 
         m_previousSlide = new JButton();
         m_previousSlide.setIcon(prevIcon);
-        c.gridx = 0;
+        c.gridx = 1;
         m_controlPanel.add(m_previousSlide, c);
 
         m_previousSlide.addActionListener(event -> showSlide(-1, false));
+        
+        
+        // Initialize the slidecount label
+        c.gridx = 0;
+        m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+        m_controlPanel.add(m_slideCount, c);
+        
+        //Create empty label to get the spacing right
+        c.gridx = 3;
+        JLabel spaceFill = new JLabel("");
+        m_controlPanel.add(spaceFill, c);
     }
 
     /**
