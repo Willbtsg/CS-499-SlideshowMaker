@@ -328,11 +328,11 @@ public class SlideshowPlayer extends JFrame  {
 
         // Transform temp pause and play icons and store them in new variables
         Image image = tempNextIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        Image newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon nextIcon = new ImageIcon(newimg); 
         
         image = tempPrevIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
