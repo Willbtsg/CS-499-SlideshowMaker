@@ -32,8 +32,8 @@ public class SlideshowEditor extends JFrame {
      * double slideInterval- if the Slideshow is automated, this indicates how long each Slide is shown
      * JFrame settingsFrame- frame that pops up when user wishes to adjust automation settings
      * boolean settingsPresent- indicates whether or not settings frame is already loaded, prevents duplicates
-     * String directory-
-     * JTabbedPane libraries-
+     * String directory- filepath to the directory being used by the Editor
+     * JTabbedPane libraries- contains the Image and Audio libraries used to construct the Slideshow
      */
     private static SlideshowEditor instance;
     private static ImageLibrary m_ImageLibrary;
@@ -286,6 +286,9 @@ public class SlideshowEditor extends JFrame {
         settingsFrame.setVisible(true);
     }
 
+    /**
+     * This function allows the user to select the directory they would like to use when constructing their Slideshow
+     */
     private void changeDirectory()
     {
         directory = SlideshowManager.getDirectory(this); //use SlideshowManager to select a directory
@@ -322,6 +325,7 @@ public class SlideshowEditor extends JFrame {
             loading.dispose();
         }
     }
+
     /**
      * This function returns the instance of SlideshowPlayer. If no instance exists, then one is created.
      *
