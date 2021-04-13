@@ -114,8 +114,8 @@ public class SlideshowPlayer extends JFrame  {
         add(m_imageLabel);
 
         m_controlPanel = new JPanel(new GridBagLayout());
-        m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.08));
-        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth, (int)(scrnHeight*0.08));
+        m_controlPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.BLACK));
 
         add(m_controlPanel);
 
@@ -142,7 +142,7 @@ public class SlideshowPlayer extends JFrame  {
         while (true)
         {
             if (startJukebox)
-            { 
+            { 	
             	int temp = m_Jukebox.playAll();
                 if (songSize > 0 && temp > 0)
                 {
@@ -415,6 +415,9 @@ public class SlideshowPlayer extends JFrame  {
         //Create empty label to get the spacing right
         c.gridx = 4;
         JLabel spaceFill = new JLabel("");
+        spaceFill.setMinimumSize(new Dimension(50, 15));
+        spaceFill.setPreferredSize(new Dimension(50, 15));
+        spaceFill.setMaximumSize(new Dimension(50, 15));
         m_controlPanel.add(spaceFill, c);
     }
 
@@ -465,6 +468,9 @@ public class SlideshowPlayer extends JFrame  {
         //Create empty label to get the spacing right
         c.gridx = 3;
         JLabel spaceFill = new JLabel("");
+        spaceFill.setMinimumSize(new Dimension(50, 15));
+        spaceFill.setPreferredSize(new Dimension(50, 15));
+        spaceFill.setMaximumSize(new Dimension(50, 15));
         m_controlPanel.add(spaceFill, c);
     }
 
