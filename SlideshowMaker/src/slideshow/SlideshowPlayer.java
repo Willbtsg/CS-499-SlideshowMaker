@@ -110,8 +110,8 @@ public class SlideshowPlayer extends JFrame  {
 
         m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBackground(Color.LIGHT_GRAY);
-        m_controlPanel.setBounds(0, scrnHeight-(scrnHeight/8), scrnWidth, scrnHeight/12);
-        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+        m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.09));
+        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
         if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
         {
@@ -269,16 +269,16 @@ public class SlideshowPlayer extends JFrame  {
     	c.weightx = 0.5;
     	c.weighty = 0.5;
     	
-        ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
-        ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+        ImageIcon tempNextIcon = new ImageIcon("images\\skipforwardicon.png");
+        ImageIcon tempPrevIcon = new ImageIcon("images\\skipbackicon.png");
         
         // Transform temp pause and play icons and store them in new variables
         Image image = tempNextIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        Image newimg = image.getScaledInstance(15, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon nextIcon = new ImageIcon(newimg); 
         
         image = tempPrevIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        newimg = image.getScaledInstance(15, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
