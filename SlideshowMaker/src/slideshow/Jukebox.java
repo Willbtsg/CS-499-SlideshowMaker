@@ -29,7 +29,8 @@ public class Jukebox {
     private AudioInputStream audioStream;
     private Boolean paused;
     private long soundPosition;
-    Boolean lastSong;
+    private Boolean lastSong;
+    private Boolean enMediaRes;
 
     /**
      * Constructor for Jukebox object. Initializes m_soundList
@@ -37,6 +38,7 @@ public class Jukebox {
     private Jukebox()
     {
         m_soundList = new ArrayList<>();
+        enMediaRes = false;
     }
 
     /**
@@ -49,7 +51,7 @@ public class Jukebox {
      * Used to retrieve m_soundList for display or for writing to layout file
      * @return m_soundList- list of filepaths for sounds the Jukebox can play
      */
-    public ArrayList<String> getSoundList() { return m_soundList; }
+    public int getSoundListSize() { return m_soundList.size(); }
 
     /**
      * Sets entire m_soundList at once
@@ -135,6 +137,7 @@ public class Jukebox {
 
             try {
                 currentClip.start(); //begin audio playback
+                paused = false;
                 listener.waitUntilDone(); //set AudioListener to monitor when playback is complete
             } finally {
                 currentClip.close(); //when playback is complete, close the clip
@@ -151,11 +154,13 @@ public class Jukebox {
      * Used by SlideshowPlayer to play all sounds.
      * Playback ceases when all sounds have been played (or when the application is closed).
      */
-    public void playAll()
+    public int playAll()
     {
         int songIndex = -1; //set starting index to iterate through songs
         int tempIndex; //temporary index to check for IndexOutOfBounds exception
+        int songsPlayed = 0;
         lastSong = false; //flag to indicate when there are no more sound files to play
+        enMediaRes = true;
 
 
         while (!lastSong) //as long as there is more music to played after the current sound...
@@ -166,10 +171,15 @@ public class Jukebox {
                 if (tempIndex >= m_soundList.size()) { //...if tempIndex is invalid...
                     lastSong = true; //...indicate that playback is complete
                 } else {
+                    songsPlayed++;
                     currentClip = playSound(m_soundList.get(++songIndex)); //Otherwise, play the next sound
                 }
             }
         }
+
+        enMediaRes = false;
+
+        return songsPlayed;
 
     }
 
@@ -199,6 +209,15 @@ public class Jukebox {
         if (currentClip != null) { //if a sound was playing before the Jukebox was paused...
             currentClip.setMicrosecondPosition(soundPosition); //...set the sound to its previous timestamp...
             currentClip.start(); //...and resume playback
+        }
+    }
+
+    public void stopPlayback()
+    {
+        if (enMediaRes)
+        {
+            lastSong = true;
+            currentClip.stop();
         }
     }
 

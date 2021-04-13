@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class SlideshowPlayer extends JFrame  {
      */
     private static SlideshowPlayer instance;
     private Dimension m_screenSize = Toolkit. getDefaultToolkit(). getScreenSize();
-    private String m_pathPrefix;
+    private String m_slideshowPath;
     private JLabel m_imageLabel;
     private Slideshow m_Slideshow;
     private int m_currentSlideIndex;
@@ -48,6 +49,8 @@ public class SlideshowPlayer extends JFrame  {
     private Boolean m_paused;
     private long m_slideStart;
     private long m_timeElapsed;
+    private Boolean startJukebox;
+    private int songSize;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -61,8 +64,7 @@ public class SlideshowPlayer extends JFrame  {
      * Constructor function used to initialize the SlideshowPlayer JFrame
      * Creates all necessary GUI components and calls functions used to create Slides
      */
-    private SlideshowPlayer()
-    {
+    private SlideshowPlayer() {
         try { //set theme for SlideshowPlayer
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -73,7 +75,7 @@ public class SlideshowPlayer extends JFrame  {
         Image icon = windowIcon.getImage();
         setIconImage(icon);
 
-        String slideshowPath = SlideshowManager.selectSlideshow(this);
+        //String slideshowPath = SlideshowManager.selectSlideshow(this);
 
         int scrnWidth = 1400;
         int scrnHeight = 800;
@@ -88,7 +90,12 @@ public class SlideshowPlayer extends JFrame  {
         topMenu.add(fileMenu);
 
         JMenuItem openShow = new JMenuItem("Open Slideshow"); //allow user to set directory for Slideshow creation
-        //openShow.addActionListener(event -> SlideshowManager.selectSlideshow());
+        openShow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                initializeSlideshow();
+            }
+        });
         fileMenu.add(openShow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
@@ -100,18 +107,55 @@ public class SlideshowPlayer extends JFrame  {
         });
         fileMenu.add(closeProgram);
 
-        m_pathPrefix = "images"; //set directory name
-
         m_imageLabel = new JLabel();
-        m_imageLabel.setBounds(0, 0, scrnWidth, (int) (scrnHeight*0.85));
+        m_imageLabel.setBounds(0, 0, scrnWidth, (int) (scrnHeight * 0.85));
         add(m_imageLabel);
-
-        m_Slideshow = SlideshowManager.getInstance().getSlideshow(slideshowPath); //construct Slideshow using the layout file
 
         m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBackground(Color.LIGHT_GRAY);
         m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.09));
-        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+
+        add(m_controlPanel);
+
+        m_Jukebox = Jukebox.getInstance();
+        startJukebox = false;
+
+        //Change appearance of JFrame
+        setSize(scrnWidth, scrnHeight);
+        removeFocusFromAllObjects(this);
+        setLocationRelativeTo(null);
+        setResizable(false); //disable maximize button
+        setVisible(true); //making the frame visible
+
+        addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent arg0)
+            {
+                //m_Jukebox.stopPlayback();
+                System.exit(0);
+            }
+        });
+
+        while (true)
+        {
+            if (startJukebox)
+            {
+                if (songSize > 0 && m_Jukebox.playAll() > 0)
+                {
+                    startJukebox = false;
+                }
+            }
+        }
+    }
+
+
+    public void initializeSlideshow()
+    {
+        m_Jukebox.stopPlayback();
+
+        m_slideshowPath = SlideshowManager.selectSlideshow(this);
+        m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
 
         if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
         {
@@ -120,21 +164,15 @@ public class SlideshowPlayer extends JFrame  {
             setManualControls(); //...if it isn't, configure the controls for manual playback
         }
 
-        add(m_controlPanel);
-        
-        //Change appearance of JFrame
-        setSize(scrnWidth, scrnHeight);
-        removeFocusFromAllObjects(this);
-        setLocationRelativeTo(null);
-        setResizable(false); //disable maximize button
-        setVisible(true); //making the frame visible
-        
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        m_Jukebox = Jukebox.getInstance();
         m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
+        songSize = m_Jukebox.getSoundListSize();
 
+        // Start drawing
+        Graphics2D g2d = (Graphics2D) m_imageLabel.getGraphics();
+        g2d.setColor(Color.BLACK); // Set color to black
+
+        // Fill background with black square to cover whole boundary
+        g2d.fillRect(0, 0, 1400, 680);
 
         m_currentSlideIndex = -1; //initialize index
         showSlide(1, false);
@@ -155,9 +193,10 @@ public class SlideshowPlayer extends JFrame  {
             m_paused = false;
         }
 
-        m_Jukebox.playAll();
+        startJukebox = true;
+
     }
-    
+
     /**
      * Removes focusable dotted line from all components
      * @param container - object with components to set focus for 
@@ -268,17 +307,17 @@ public class SlideshowPlayer extends JFrame  {
     	c.gridy = 0;
     	c.weightx = 0.5;
     	c.weighty = 0.5;
-    	
+
         ImageIcon tempNextIcon = new ImageIcon("images\\skipforwardicon.png");
         ImageIcon tempPrevIcon = new ImageIcon("images\\skipbackicon.png");
-        
+
         // Transform temp pause and play icons and store them in new variables
         Image image = tempNextIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(15, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon nextIcon = new ImageIcon(newimg); 
         
         image = tempPrevIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(15, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         ImageIcon prevIcon = new ImageIcon(newimg); 
         
         m_nextSlide = new JButton();
