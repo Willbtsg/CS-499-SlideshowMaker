@@ -83,8 +83,8 @@ public class SlideshowPlayer extends JFrame  {
         JMenu fileMenu = new JMenu("File");
         topMenu.add(fileMenu);
 
-        JMenuItem openShow = new JMenuItem("Set Directory"); //allow user to set directory for Slideshow creation
-        //newDirectory.addActionListener(event -> changeDirectory());
+        JMenuItem openShow = new JMenuItem("Open Slideshow"); //allow user to set directory for Slideshow creation
+        //openShow.addActionListener(event -> SlideshowManager.selectSlideshow());
         fileMenu.add(openShow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
