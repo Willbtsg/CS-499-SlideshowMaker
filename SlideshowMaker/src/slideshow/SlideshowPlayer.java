@@ -112,7 +112,8 @@ public class SlideshowPlayer extends JFrame  {
         add(m_imageLabel);
 
         m_controlPanel = new JPanel(new GridBagLayout());
-        m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.09));
+        m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth - 16, (int)(scrnHeight*0.08));
+        m_controlPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 
         add(m_controlPanel);
 
