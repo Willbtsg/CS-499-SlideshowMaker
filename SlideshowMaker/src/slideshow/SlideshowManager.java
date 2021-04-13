@@ -129,11 +129,11 @@ public class SlideshowManager {
      *
      * @return Returns the user-selected file path as a string
      */
-    public static String getDirectory()
+    public static String getDirectory(JFrame parent)
     {
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int open = fileChooser.showOpenDialog(null);
+        int open = fileChooser.showOpenDialog(parent);
 
         if (open == JFileChooser.APPROVE_OPTION)
         {
@@ -145,9 +145,9 @@ public class SlideshowManager {
             return null;
     }
 
-    public static String selectSlideshow()
+    public static String selectSlideshow(JFrame parent)
     {
-        String directory = SlideshowManager.getDirectory();
+        String directory = SlideshowManager.getDirectory(parent);
         File dir = new File(directory);
         String[] ext = new String[]{"json"};
         FilenameFilter jsonFilter = new FilenameFilter() {

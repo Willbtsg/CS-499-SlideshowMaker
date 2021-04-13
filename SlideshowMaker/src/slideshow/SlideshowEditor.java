@@ -288,7 +288,7 @@ public class SlideshowEditor extends JFrame {
 
     private void changeDirectory()
     {
-        directory = SlideshowManager.getDirectory(); //use SlideshowManager to select a directory
+        directory = SlideshowManager.getDirectory(this); //use SlideshowManager to select a directory
 
         if (directory != null) //if a valid directory was selected...
         {
