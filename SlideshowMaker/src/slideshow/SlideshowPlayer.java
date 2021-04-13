@@ -142,8 +142,9 @@ public class SlideshowPlayer extends JFrame  {
         while (true)
         {
             if (startJukebox)
-            {
-                if (songSize > 0 && m_Jukebox.playAll() > 0)
+            { 
+            	int temp = m_Jukebox.playAll();
+                if (songSize > 0 && temp > 0)
                 {
                     startJukebox = false;
                 }
@@ -177,6 +178,9 @@ public class SlideshowPlayer extends JFrame  {
             } else {
                 setManualControls(); //...if it isn't, configure the controls for manual playback
             }
+            m_slideCount.setMinimumSize(new Dimension(50, 15));
+            m_slideCount.setPreferredSize(new Dimension(50, 15));
+            m_slideCount.setMaximumSize(new Dimension(50, 15));
 
             m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
             songSize = m_Jukebox.getSoundListSize();
