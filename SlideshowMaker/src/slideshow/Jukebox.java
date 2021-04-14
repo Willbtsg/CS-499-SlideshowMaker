@@ -31,6 +31,8 @@ public class Jukebox {
     private long soundPosition;
     private Boolean lastSong;
     private Boolean enMediaRes;
+    private int songsPlayed;
+    private boolean playing;
 
     /**
      * Constructor for Jukebox object. Initializes m_soundList
@@ -137,7 +139,6 @@ public class Jukebox {
 
             try {
                 currentClip.start(); //begin audio playback
-                paused = false;
                 listener.waitUntilDone(); //set AudioListener to monitor when playback is complete
             } finally {
                 currentClip.close(); //when playback is complete, close the clip
@@ -153,33 +154,36 @@ public class Jukebox {
     /**
      * Used by SlideshowPlayer to play all sounds.
      * Playback ceases when all sounds have been played (or when the application is closed).
+     * By playing music in separate Threads, this allows Slide playback to continue uninterrupted
      */
-    public int playAll()
+    public void playAll()
     {
-        int songIndex = -1; //set starting index to iterate through songs
-        int tempIndex; //temporary index to check for IndexOutOfBounds exception
-        int songsPlayed = 0;
+        final int[] songIndex = {-1}; //set starting index to iterate through songs
+        final int[] tempIndex = new int[1]; //temporary index to check for IndexOutOfBounds exception
+        songsPlayed = 0;
         lastSong = false; //flag to indicate when there are no more sound files to play
-        enMediaRes = true;
+        enMediaRes = true; //flag to indicate whether or not the Jukebox is trying to play its soundtrack
 
+        new Thread(new Runnable() {
 
-        while (!lastSong) //as long as there is more music to played after the current sound...
-        {
-            if (currentClip == null) { //...if no sound is actively playing...
-                tempIndex = songIndex + 1; //...increment tempIndex...
+            @Override
+            public void run() {
+                while(!lastSong) //as long as there is more music to played after the current sound...
+                {
+                    if (!playing) { //...if no sound is actively playing...
+                        tempIndex[0] = songIndex[0] + 1; //...increment tempIndex...
 
-                if (tempIndex >= m_soundList.size()) { //...if tempIndex is invalid...
-                    lastSong = true; //...indicate that playback is complete
-                } else {
-                    songsPlayed++;
-                    currentClip = playSound(m_soundList.get(++songIndex)); //Otherwise, play the next sound
+                        if (tempIndex[0] >= m_soundList.size()) { //...if tempIndex is invalid...
+                            lastSong = true; //...indicate that playback is complete
+                        } else {
+                            currentClip = playSound(m_soundList.get(++songIndex[0])); //Otherwise, play the next sound
+                        }
+                    }
                 }
             }
-        }
+        }).start();
 
         enMediaRes = false;
-
-        return songsPlayed;
 
     }
 
@@ -212,6 +216,9 @@ public class Jukebox {
         }
     }
 
+    /**
+     * This function is used to short-circuit the playAll function if the user decides to end playback early
+     */
     public void stopPlayback()
     {
         if (enMediaRes)

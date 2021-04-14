@@ -20,7 +20,7 @@ public class SlideshowPlayer extends JFrame  {
 
     /**
      * static SlideshowPlayer instance- keeps track of SlideshowPlayer instance for Singleton implementation
-     * String m_pathPrefix- keeps track of which folder to find the images in
+     * String m_slideshowPath- keeps track of which folder to find the images in
      * JLabel m_imageLabel- label where slide images are displayed
      * JLabel m_slideCount- label where slide count is displayed
      * ArrayList<Slide> m_SlideList- contains Slide objects with information necessary for slideshow
@@ -36,7 +36,6 @@ public class SlideshowPlayer extends JFrame  {
      * long m_timeElapsed- stores amount of time the Slide has run during automated playback. Used to maintain proper timing after resuming
      */
     private static SlideshowPlayer instance;
-    private Dimension m_screenSize = Toolkit. getDefaultToolkit(). getScreenSize();
     private String m_slideshowPath;
     private JLabel m_imageLabel;
     private JLabel m_slideCount;
@@ -51,8 +50,6 @@ public class SlideshowPlayer extends JFrame  {
     private Boolean m_paused;
     private long m_slideStart;
     private long m_timeElapsed;
-    private Boolean startJukebox;
-    private int songSize;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -77,8 +74,6 @@ public class SlideshowPlayer extends JFrame  {
         Image icon = windowIcon.getImage();
         setIconImage(icon);
 
-        //String slideshowPath = SlideshowManager.selectSlideshow(this);
-
         int scrnWidth = 1400;
         int scrnHeight = 800;
 
@@ -92,12 +87,7 @@ public class SlideshowPlayer extends JFrame  {
         topMenu.add(fileMenu);
 
         JMenuItem openShow = new JMenuItem("Open Slideshow"); //allow user to set directory for Slideshow creation
-        openShow.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                initializeSlideshow();
-            }
-        });
+        openShow.addActionListener(event -> initializeSlideshow());
         fileMenu.add(openShow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
@@ -121,7 +111,6 @@ public class SlideshowPlayer extends JFrame  {
 
         m_Slideshow = new Slideshow();
         m_Jukebox = Jukebox.getInstance();
-        startJukebox = false;
 
         //Change appearance of JFrame
         setSize(scrnWidth, scrnHeight);
@@ -130,47 +119,34 @@ public class SlideshowPlayer extends JFrame  {
         setResizable(false); //disable maximize button
         setVisible(true); //making the frame visible
 
-        addWindowListener(new WindowAdapter()
-        {
-            public void windowClosing(WindowEvent arg0)
-            {
-                //m_Jukebox.stopPlayback();
-                System.exit(0);
-            }
-        });
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        while (true)
-        {
-            if (startJukebox)
-            { 	
-            	int temp = m_Jukebox.playAll();
-                if (songSize > 0 && temp > 0)
-                {
-                    startJukebox = false;
-                }
-            }
-        }
     }
 
+    /**
+     * This function is used to start the Slideshow whenever the user picks a new one. If the user doesn't pick a new show,
+     * it resumes any currently executing Slideshows
+     */
     public void initializeSlideshow()
     {
-        m_Jukebox.pausePlayback();
+        m_Jukebox.pausePlayback(); //pause any audio that may be playing
         
-        if (m_Slideshow.getAutomated())
+        if (m_Slideshow.getAutomated()) //if Slideshow is automated, pause the Slide timer as well
         {
             m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
             m_timeElapsed = System.currentTimeMillis() - m_slideStart; //calculate amount of time Slide has been active
             m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
         }
 
-        String tempPath = SlideshowManager.selectSlideshow(this);
+        String tempPath = SlideshowManager.selectSlideshow(this); //get the user's selection
 
-        if (tempPath != null)
+        if (tempPath != null) //if the user made a selection (as opposed to choosing to exit and resume the current Slideshow)
         {
-            m_slideshowPath = tempPath;
+            m_slideshowPath = tempPath; //set the new filepath
 
-            m_Jukebox.stopPlayback();
+            m_Jukebox.stopPlayback(); //completely stop the Jukebox
             m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
+
 
             if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
             {
@@ -183,7 +159,6 @@ public class SlideshowPlayer extends JFrame  {
             m_slideCount.setMaximumSize(new Dimension(50, 15));
 
             m_Jukebox.setSoundList(m_Slideshow.getSoundList()); //load Jukebox with sound data
-            songSize = m_Jukebox.getSoundListSize();
 
             m_currentSlideIndex = -1; //initialize index
             showSlide(1, false);
@@ -204,9 +179,9 @@ public class SlideshowPlayer extends JFrame  {
                 m_paused = false;
             }
 
-            startJukebox = true;
+            m_Jukebox.playAll(); //play the Jukebox with all its new music
 
-        } else {
+        } else { //if the user didn't pick a new Slideshow, resume the current one
 
             if (m_Slideshow.getAutomated())
             {
@@ -318,13 +293,12 @@ public class SlideshowPlayer extends JFrame  {
         }
         updateSlideCount();
     }
-    
-    
+
     /**
      * Update the slide count label
      */
     private void updateSlideCount() {
-    	m_slideCount.setText((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+    	m_slideCount.setText("Slide" + (m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
     }
 
     /**
@@ -458,8 +432,7 @@ public class SlideshowPlayer extends JFrame  {
         m_controlPanel.add(m_previousSlide, c);
 
         m_previousSlide.addActionListener(event -> showSlide(-1, false));
-        
-        
+
         // Initialize the slidecount label
         c.gridx = 0;
         m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
