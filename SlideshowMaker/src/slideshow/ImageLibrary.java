@@ -155,6 +155,13 @@ public class ImageLibrary extends JPanel {
         return instance;
     }
 
+    /**
+     * Resets library contents whenever a new directory is opened
+     * @param timeline- reference to Timeline object to add sounds to
+     * @param directory- reference to directory to pull image files from
+     *
+     * @return new instance of ImageLibrary
+     */
     public static ImageLibrary resetLibrary(Timeline timeline, String directory)
     {
         instance = null;

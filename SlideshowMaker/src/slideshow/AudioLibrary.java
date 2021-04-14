@@ -268,7 +268,6 @@ public class AudioLibrary extends JPanel {
         }
 
     }
-    
 
     /**
      * Used to open an audio clip in order to determine its length in seconds
@@ -321,6 +320,8 @@ public class AudioLibrary extends JPanel {
      * This function returns the instance of AudioLibrary. If no instance exists, then one is created.
      *
      * @param timeline- reference to Timeline object to add sounds to
+     * @param directory- reference to directory to pull audio files from
+     *
      * @return instance- pointer to instance of AudioLibrary to be used
      */
     public static AudioLibrary getInstance(Timeline timeline, String directory)
@@ -331,6 +332,13 @@ public class AudioLibrary extends JPanel {
         return instance;
     }
 
+    /**
+     * Resets library contents whenever a new directory is opened
+     * @param timeline- reference to Timeline object to add sounds to
+     * @param directory- reference to directory to pull audio files from
+     *
+     * @return new instance of AudioLibrary
+     */
     public static AudioLibrary resetLibrary(Timeline timeline, String directory)
     {
         instance = null;
