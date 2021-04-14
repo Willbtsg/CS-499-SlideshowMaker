@@ -30,6 +30,8 @@ public class AudioLibrary extends JPanel {
     private Clip currentClip;
     private JButton prevButton;
     private boolean isPlaying;
+    private boolean audioError;
+    private boolean showAudioErrorMsg;
     
     // Accesses the slideshow directory
     private File dir;
@@ -61,6 +63,8 @@ public class AudioLibrary extends JPanel {
             };
 
             isPlaying = false; //Set initial boolean for isPlaying to false
+            audioError = false;
+            showAudioErrorMsg = false;
 
             associatedTimeline = timeline; //set reference to destination Timeline
             setLayout(new GridBagLayout()); //set dynamic size to keep items in panel till size determined
@@ -95,12 +99,19 @@ public class AudioLibrary extends JPanel {
             {
                 for (File file : dir.listFiles(audioFilter)) //for every wav, aif, or aiff file in the directory...
                 {
+                    int tempLength = getAudioLength(file);
+                    if (audioError)
+                    {
+                        audioError = false;
+                        showAudioErrorMsg = true;
+                        continue;
+                    }
+
                     JPanel libraryItem = new JPanel(); //create a new JPanel to display sound info
                     libraryItem.setLayout(new BorderLayout());
                     JPanel buttonAndTitle = new JPanel();
                     buttonAndTitle.setLayout(new BorderLayout());
 
-                    int tempLength = getAudioLength((file));
                     String audioInfo = "<html>" + file.getName() + "<br>(" + calculateMinSecLength(tempLength) + ")</html>";
                     JLabel audioTitle = new JLabel("<html><div style='text-align: center;'>" + audioInfo + "</div></html>", SwingConstants.CENTER);
                     audioTitle.setBorder(new EmptyBorder(10,0,10,0));
@@ -266,7 +277,9 @@ public class AudioLibrary extends JPanel {
                 }
             }
         }
-
+        if (showAudioErrorMsg)
+            JOptionPane.showMessageDialog(null, "One or more of the WAV/AIFF audio files in this directory are compressed.\n" +
+                    "Compressed audio files are not supported and will not be made available in the \"Audio\" tab.");
     }
 
     /**
@@ -276,7 +289,6 @@ public class AudioLibrary extends JPanel {
      */
     public int getAudioLength(File soundFile)
     {
-
         int audioLength = 0; //default length of 0
 
         try {
@@ -286,9 +298,9 @@ public class AudioLibrary extends JPanel {
             audioLength = (int) tempClip.getMicrosecondLength(); //get length in microseconds
             audioLength /= Math.pow(10, 6); //convert to seconds
             tempClip.close(); //close audio data
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+        }
+        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            audioError = true;
         }
 
         return audioLength; //return length in seconds
