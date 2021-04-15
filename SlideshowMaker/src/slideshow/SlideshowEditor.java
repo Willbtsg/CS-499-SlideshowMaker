@@ -280,6 +280,8 @@ public class SlideshowEditor extends JFrame {
         });
 
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        // TODO: Uncomment below for JAR
+        //ImageIcon windowIcon = new ImageIcon(getClass().getClassLoader().getResource("SlideshowIcon.png"));
         Image icon = windowIcon.getImage();
         settingsFrame.setIconImage(icon);
         settingsFrame.setSize(new Dimension(290,140));

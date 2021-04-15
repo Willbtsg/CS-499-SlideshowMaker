@@ -50,6 +50,7 @@ public class SlideshowPlayer extends JFrame  {
     private Boolean m_paused;
     private long m_slideStart;
     private long m_timeElapsed;
+    private String currentShow;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -69,6 +70,8 @@ public class SlideshowPlayer extends JFrame  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        currentShow = "none";
 
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
         Image icon = windowIcon.getImage();
@@ -105,7 +108,7 @@ public class SlideshowPlayer extends JFrame  {
 
         m_controlPanel = new JPanel(new GridBagLayout());
         m_controlPanel.setBounds(0, (int) (scrnHeight*0.85), scrnWidth, (int)(scrnHeight*0.08));
-        m_controlPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.BLACK));
+        //m_controlPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Color.BLACK));
 
         add(m_controlPanel);
 
@@ -139,7 +142,8 @@ public class SlideshowPlayer extends JFrame  {
         {
             m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
             m_timeElapsed = System.currentTimeMillis() - m_slideStart; //calculate amount of time Slide has been active
-            m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
+            if (!m_paused)
+                m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
         }
 
         String tempPath = SlideshowManager.selectSlideshow(this); //get the user's selection
@@ -151,12 +155,31 @@ public class SlideshowPlayer extends JFrame  {
             m_Jukebox.stopPlayback(); //completely stop the Jukebox
             m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
 
+            if (currentShow.equals("manual"))
+            {
+                m_controlPanel.remove(m_nextSlide);
+                m_controlPanel.remove(m_previousSlide);
+                m_controlPanel.remove(m_slideCount);
+                m_controlPanel.repaint();
+                m_controlPanel.revalidate();
+            }
+            if (currentShow.equals("auto"))
+            {
+                m_controlPanel.remove(m_nextSlide);
+                m_controlPanel.remove(m_previousSlide);
+                m_controlPanel.remove(m_Pause);
+                m_controlPanel.remove(m_slideCount);
+                m_controlPanel.repaint();
+                m_controlPanel.revalidate();
+            }
 
             if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
             {
                 setAutomatedControls(); //...if it is, configure the controls for automated playback
+                currentShow = "auto";
             } else {
                 setManualControls(); //...if it isn't, configure the controls for manual playback
+                currentShow = "manual";
             }
             m_slideCount.setMinimumSize(new Dimension(50, 15));
             m_slideCount.setPreferredSize(new Dimension(50, 15));
@@ -187,15 +210,14 @@ public class SlideshowPlayer extends JFrame  {
 
         } else { //if the user didn't pick a new Slideshow, resume the current one
 
-            if (m_Slideshow.getAutomated())
+            if (m_Slideshow.getAutomated() && !m_paused)
             {
                 m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
                 m_automationTimer.start();
             }
-
-            m_Jukebox.resumePlayback();
+            if (!m_paused)
+                m_Jukebox.resumePlayback();
         }
-
     }
 
     /**
@@ -221,7 +243,6 @@ public class SlideshowPlayer extends JFrame  {
      */
     private Boolean showSlide(int indexShift, boolean skip)
     {
-
         int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
         boolean usedTransition = false; //flag to signal if a Transition was used
 
@@ -260,7 +281,6 @@ public class SlideshowPlayer extends JFrame  {
         }
         updateSlideCount();
         return true;
-        
     }
 
     /**
