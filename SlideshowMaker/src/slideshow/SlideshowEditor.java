@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -47,8 +48,7 @@ public class SlideshowEditor extends JFrame {
     private JTabbedPane libraries;
 
     public static void main(String[] args)
-    {	
-
+    {
         SlideshowEditor.getInstance();
     }
 
@@ -297,34 +297,42 @@ public class SlideshowEditor extends JFrame {
 
         if (directory != null) //if a valid directory was selected...
         {
-            JFrame loading = new JFrame("Loading...");
-            Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
-            loading.setIconImage(icon);
-            loading.setResizable(false);
-            loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            loading.setSize(new Dimension(250,30));
-            loading.setLocationRelativeTo(null);
-            loading.setVisible(true);
-            
-            timeline.reset();
-            timeline.setSlideDurationVisible(automated);
-            timeline.setDefaultSlideDuration(slideInterval);
+            File dir = new File(directory);
+            if (dir.isDirectory())
+            {
+                JFrame loading = new JFrame("Loading...");
+                Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+                loading.setIconImage(icon);
+                loading.setResizable(false);
+                loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                loading.setSize(new Dimension(250,30));
+                loading.setLocationRelativeTo(null);
+                loading.setVisible(true);
 
-            m_ImageLibrary = ImageLibrary.resetLibrary(timeline, directory); //...reset the libraries to purge the current contents...
-            JScrollPane spImages = new JScrollPane(m_ImageLibrary);
-            spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            spImages.getVerticalScrollBar().setUnitIncrement(20);
-            libraries.remove(0);
-            libraries.add("Images", spImages);
+                timeline.reset();
+                timeline.setSlideDurationVisible(automated);
+                timeline.setDefaultSlideDuration(slideInterval);
 
-            m_AudioLibrary = AudioLibrary.resetLibrary(timeline, directory);
-            JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
-            spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            spAudio.getVerticalScrollBar().setUnitIncrement(20);
-            libraries.remove(0);
-            libraries.add("Audio", spAudio);
+                m_ImageLibrary = ImageLibrary.resetLibrary(timeline, directory); //...reset the libraries to purge the current contents...
+                JScrollPane spImages = new JScrollPane(m_ImageLibrary);
+                spImages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                spImages.getVerticalScrollBar().setUnitIncrement(20);
+                libraries.remove(0);
+                libraries.add("Images", spImages);
 
-            loading.dispose();
+                m_AudioLibrary = AudioLibrary.resetLibrary(timeline, directory);
+                JScrollPane spAudio = new JScrollPane(m_AudioLibrary);
+                spAudio.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                spAudio.getVerticalScrollBar().setUnitIncrement(20);
+                libraries.remove(0);
+                libraries.add("Audio", spAudio);
+
+                loading.dispose();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "You didn't select a valid directory.");
+            }
         }
     }
 
