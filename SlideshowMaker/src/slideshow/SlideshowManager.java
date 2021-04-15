@@ -141,7 +141,14 @@ public class SlideshowManager {
         {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             workingDir = filePath;
-            return filePath;
+            File dir = new File(filePath);
+            if (dir.isDirectory())
+                return filePath;
+            else
+            {
+                JOptionPane.showMessageDialog(null, "You didn't select a valid directory.");
+                return null;
+            }
         }
         else
             return null;
