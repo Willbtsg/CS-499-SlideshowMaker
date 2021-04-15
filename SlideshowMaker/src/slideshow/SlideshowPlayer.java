@@ -275,15 +275,25 @@ public class SlideshowPlayer extends JFrame  {
             m_slideStart = System.currentTimeMillis();
             m_automationTimer.start(); //...start the Timer with the new Slide's delay
         }
-        else if (m_currentSlideIndex != 0){ //if the Slideshow is now over...
+        else if (m_currentSlideIndex != 0) //if the Slideshow is now over...
+        {
+            m_Jukebox.stopPlayback(); //...stop the Jukebox...
 
-            m_Jukebox.pausePlayback(); //...stop Jukebox from playing...
-
+            //...thank the user for using our program...
             JOptionPane.showMessageDialog(null, "<html><div style='text-align: center;'>This " +
                     "Slideshow is now over.<br>Thank you for using our program.</div></html>", "Have a Nice Day!", JOptionPane.PLAIN_MESSAGE);
 
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); //...and exit SlideshowPlayer
+            m_currentSlideIndex = -1; //reset the Slideshow to the beginning
+            m_Jukebox.playAll(); //...cue the music...
 
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            timedShowSlide(1, true); //...after giving the Jukebox a brief time to prepare, reset the Slides to the start...
+            m_Pause.doClick(); //...and pause the Slideshow at the beginning
         }
         else { //if hitting Previous Slide on first slide, restart the Slide's timer
             m_automationTimer.setInitialDelay(m_automationTimer.getDelay());
