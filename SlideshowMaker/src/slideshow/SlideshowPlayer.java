@@ -120,7 +120,6 @@ public class SlideshowPlayer extends JFrame  {
         setVisible(true); //making the frame visible
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
     }
 
     /**
@@ -298,7 +297,7 @@ public class SlideshowPlayer extends JFrame  {
      * Update the slide count label
      */
     private void updateSlideCount() {
-    	m_slideCount.setText("Slide" + (m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+    	m_slideCount.setText((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
     }
 
     /**
