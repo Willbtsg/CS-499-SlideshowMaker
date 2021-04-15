@@ -21,6 +21,8 @@ public class Jukebox {
      * AudioInputStream audioStream- used to read in sound file and prepare it for playback
      * Boolean paused- indicates whether or not the Jukebox is currently paused
      * long soundPosition- saves microsecond position of paused sound to ensure playback resumes at proper spot
+     * Boolean lastSong- flag to indicate whether or not the Jukebox should be done playing
+     * Boolean enMediaRes- flag to indicate whether or not the Jukebox is currently running a playback Thread
      */
     private static Jukebox instance;
     private ArrayList<String> m_soundList;
@@ -31,8 +33,6 @@ public class Jukebox {
     private long soundPosition;
     private Boolean lastSong;
     private Boolean enMediaRes;
-    private int songsPlayed;
-    private boolean playing;
 
     /**
      * Constructor for Jukebox object. Initializes m_soundList
@@ -160,30 +160,26 @@ public class Jukebox {
     {
         final int[] songIndex = {-1}; //set starting index to iterate through songs
         final int[] tempIndex = new int[1]; //temporary index to check for IndexOutOfBounds exception
-        songsPlayed = 0;
         lastSong = false; //flag to indicate when there are no more sound files to play
         enMediaRes = true; //flag to indicate whether or not the Jukebox is trying to play its soundtrack
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
+
                 while(!lastSong) //as long as there is more music to played after the current sound...
                 {
-                    if (!playing) { //...if no sound is actively playing...
-                        tempIndex[0] = songIndex[0] + 1; //...increment tempIndex...
+                    tempIndex[0] = songIndex[0] + 1;
 
-                        if (tempIndex[0] >= m_soundList.size()) { //...if tempIndex is invalid...
-                            lastSong = true; //...indicate that playback is complete
-                        } else {
-                            currentClip = playSound(m_soundList.get(++songIndex[0])); //Otherwise, play the next sound
-                        }
+                    if (tempIndex[0] >= m_soundList.size()) { //...if tempIndex is invalid...
+                        lastSong = true; //...indicate that playback is complete
+                        enMediaRes = false;
+                    } else {
+                        currentClip = playSound(m_soundList.get(++songIndex[0])); //Otherwise, play the next sound
                     }
                 }
             }
         }).start();
-
-        enMediaRes = false;
 
     }
 
