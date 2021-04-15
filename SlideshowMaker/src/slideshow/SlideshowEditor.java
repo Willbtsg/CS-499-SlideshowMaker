@@ -157,7 +157,7 @@ public class SlideshowEditor extends JFrame {
 
 
         String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow creator ever made.<br>To start creating a slideshow, " +
-                "use the \"File\" menu in the top left corner<br>and select the directory containing the images and audio you'd like to work with.<br>" +
+                "use the \"File\" menu in the top left corner<br>and select \"Set Directory\" and find the directory containing the images and audio you'd like to work with.<br>" +
                 "This will also be the directory you'll save your slideshow into.<br>Go ahead. Select one. (You know you want to.)</div></html>";
         JOptionPane.showMessageDialog(null, welcomeMsg, "Welcome to Slideshow Editor!", JOptionPane.INFORMATION_MESSAGE);
     }

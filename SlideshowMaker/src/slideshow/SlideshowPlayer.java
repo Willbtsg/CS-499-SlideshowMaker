@@ -120,6 +120,11 @@ public class SlideshowPlayer extends JFrame  {
         setVisible(true); //making the frame visible
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow player ever made.<br>To start playing a slideshow, " +
+                "use the \"File\" menu in the top left corner<br>and select \"Open Slideshow\" to find the directory containing the slideshow you'd like to play.<br>" +
+                "From there, you'll use the given dropdown box to select<br>which slideshow in that directory you'd like to play.<br>Go ahead. Select one. (You know you want to.)</div></html>";
+        JOptionPane.showMessageDialog(null, welcomeMsg, "Welcome to Slideshow Player!", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**

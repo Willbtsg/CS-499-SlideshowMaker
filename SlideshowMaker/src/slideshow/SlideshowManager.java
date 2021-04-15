@@ -183,6 +183,11 @@ public class SlideshowManager {
         ArrayList<String> slideshowOptions = new ArrayList<>();
         for (File file : dir.listFiles(jsonFilter))
             slideshowOptions.add(file.getName());
+        if (slideshowOptions.isEmpty())
+        {
+            JOptionPane.showMessageDialog(null, "No slideshows found in that directory.");
+            return null;
+        }
         String[] slideshowOptionsStr = new String[slideshowOptions.size()];
         for (int i = 0; i < slideshowOptions.size(); i++)
             slideshowOptionsStr[i] = slideshowOptions.get(i).replace(".json", "");
