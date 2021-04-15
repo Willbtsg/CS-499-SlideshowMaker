@@ -190,8 +190,12 @@ public class SlideshowManager {
         String slideshowChoice = (String) JOptionPane.showInputDialog(null, "Select a slideshow from your directory:", "Slideshow Selection",
                 JOptionPane.PLAIN_MESSAGE, null, slideshowOptionsStr, slideshowOptionsStr[0]);
 
-        String slideshowPath = directory + "\\" + slideshowChoice + ".json";
-        return slideshowPath;
+        if (slideshowChoice != null)
+        {
+            String slideshowPath = directory + "\\" + slideshowChoice + ".json";
+            return slideshowPath;
+        }
+        return null;
     }
 
     /**
