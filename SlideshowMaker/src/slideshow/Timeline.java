@@ -218,7 +218,8 @@ public class Timeline extends JPanel {
         transitionComboBoxes.setLayout(new BorderLayout());
 
         String transitionOptions[] = { "None", "Wipe Right", "Wipe Left", "Wipe Up", "Wipe Down", "Crossfade",
-                "Wipe Down & Right", "Wipe Up & Left", "Wipe Down & Left", "Wipe Up & Right" }; //array of Transitions to choose from
+                "Wipe Down & Right", "Wipe Up & Left", "Wipe Down & Left", "Wipe Up & Right",
+                "Horizontal Open", "Horizontal Close", "Vertical Open", "Vertical Close" }; //array of Transitions to choose from
 
         JComboBox<String> transSelect = new JComboBox<>(transitionOptions);
         transSelect.setPreferredSize(new Dimension(130, 20));
@@ -266,6 +267,18 @@ public class Timeline extends JPanel {
                         break;
                     case "Wipe Up & Right":
                         transition = "URWipe";
+                        break;
+                    case "Horizontal Open":
+                        transition = "HZOpen";
+                        break;
+                    case "Horizontal Close":
+                        transition = "HZClose";
+                        break;
+                    case "Vertical Open":
+                        transition = "VTOpen";
+                        break;
+                    case "Vertical Close":
+                        transition = "VTClose";
                         break;
                 }
 

@@ -52,18 +52,43 @@ public class TransitionLibrary {
             case "DRWipe" :
                 desiredTransitions.add(new DRWipe());
                 desiredTransitions.add(new ULWipe());
+                break;
 
             case "ULWipe" :
                 desiredTransitions.add(new ULWipe());
                 desiredTransitions.add(new DRWipe());
+                break;
 
             case "DLWipe" :
                 desiredTransitions.add(new DLWipe());
                 desiredTransitions.add(new URWipe());
+                break;
 
             case "URWipe" :
                 desiredTransitions.add(new URWipe());
                 desiredTransitions.add(new DLWipe());
+                break;
+
+            case "HZOpen" :
+                desiredTransitions.add(new HZOpen());
+                desiredTransitions.add(new HZClose());
+                break;
+
+            case "HZClose" :
+                desiredTransitions.add(new HZClose());
+                desiredTransitions.add(new HZOpen());
+                break;
+
+            case "VTOpen" :
+                desiredTransitions.add(new VTOpen());
+                desiredTransitions.add(new VTClose());
+                break;
+
+            case "VTClose" :
+                desiredTransitions.add(new VTClose());
+                desiredTransitions.add(new VTOpen());
+                break;
+
         }
 
         return desiredTransitions;

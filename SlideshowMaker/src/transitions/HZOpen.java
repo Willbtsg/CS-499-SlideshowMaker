@@ -3,24 +3,24 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Class name: DownWipe
+ * Class name: HZOpen
  *
- * This class extends the abstract class "Transition" and replaces the old image with the new one from top-to-bottom using
- * a Wipe transition
+ * This class extends the abstract class "Transition" and is used to transition between images in a manner similar to sliding
+ * doors opening horizontally
  */
 
-public class DownWipe extends Transition {
+public class HZOpen extends Transition{
 
     /**
-     * Public constructor for DownWipe. Sets m_type attribute from Transition abstract class to "DownWipe"
+     * Public constructor for HZOpen. Sets m_type attribute from Transition abstract class to "HZOpen"
      */
-    public DownWipe()
+    public HZOpen()
     {
-        m_type = "DownWipe";
+        m_type = "HZOpen";
     }
 
     /**
-     * Draws newImage in imgLabel using DownWipe effect
+     * Draws newImage in imgLabel using HZOpen effect
      *
      * NOTE: Function adapted from code written by Dr. Rick Coleman and provided by Dr. Harry Delugach
      *
@@ -32,26 +32,32 @@ public class DownWipe extends Transition {
         Graphics gPan = imgLabel.getGraphics();
 
         // Dimension holders
-        int bY;		// Dimension for newImage
-        int imgWidth, imgHeight;
-        int incY;					// Y increment each time
+        int bXL, bXR;		// Dimensions for newImage
+        int imgWidth, imgHeight, imgMiddle;
+        int incX; // X increment each time
         int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
         int timeInc; // Milliseconds to pause each time
         timeInc = (int) m_time / numIterations; //make each step last the same amount of time
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();
-        incY = imgHeight / numIterations;
+        imgMiddle = imgWidth / 2;
+        incX = imgWidth / (numIterations * 2);
 
         // Initialize the dimensions for section of newImage
-        bY = incY;
+        bXL = imgMiddle - incX;
+        bXR = imgMiddle + incX;
 
         // Draw image A
         for(int i=0; i<numIterations; i++)
         {
             // Draw part of B into A
-            gPan.drawImage(newImage, 0, 0, imgWidth, bY, 0, 0, imgWidth, bY, null); // Draw portion of newImage
-            bY += incY;  // Take a bigger section next time
+            gPan.drawImage(newImage, bXL, 0, imgMiddle, imgHeight, bXL, 0, imgMiddle, imgHeight,null); //Draw left portion of newImage in imgLabel
+            gPan.drawImage(newImage, imgMiddle, 0, bXR, imgHeight, imgMiddle, 0, bXR, imgHeight,null); //Draw right portion of newImage
+
+            bXL -= incX;  // Take a bigger section next time
+            bXR += incX;
+
             // Pause a bit
             try
             {
@@ -62,7 +68,7 @@ public class DownWipe extends Transition {
                 Thread.currentThread().interrupt();
             }
         }
+
         gPan.drawImage(newImage, 0,0, imgLabel);
     }
-
 }
