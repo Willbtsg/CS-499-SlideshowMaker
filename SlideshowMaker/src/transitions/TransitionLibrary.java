@@ -48,6 +48,14 @@ public class TransitionLibrary {
                 desiredTransitions.add(new CrossFade());
                 desiredTransitions.add(new CrossFade());
                 break;
+
+            case "DRWipe" :
+                desiredTransitions.add(new DRWipe());
+                desiredTransitions.add(new ULWipe());
+
+            case "ULWipe" :
+                desiredTransitions.add(new ULWipe());
+                desiredTransitions.add(new DRWipe());
         }
 
         return desiredTransitions;
