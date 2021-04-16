@@ -25,7 +25,7 @@ public class DownWipe extends Transition {
         Graphics gPan = imgLabel.getGraphics();
 
         // Dimension holders
-        int bY1, bY2;		// Dimensions for newImage
+        int bY;		// Dimension for newImage
         int imgWidth, imgHeight;
         int incY;					// Y increment each time
         int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
@@ -37,16 +37,14 @@ public class DownWipe extends Transition {
         incY = imgHeight / numIterations;		// Do 1/50 each time to start
 
         // Initialize the dimensions for section of newImage
-        bY1 = 0;
-        bY2 = incY;
+        bY = 0;
 
         // Draw image A
         for(int i=0; i<numIterations; i++)
         {
             // Draw part of B into A
-            gPan.drawImage(newImage, 0, bY1, imgWidth, bY2, 0, bY1, imgWidth, bY2, null); // Draw portion of newImage
-            bY1 = bY2;
-            bY2 += incY;  // Take a bigger section next time
+            gPan.drawImage(newImage, 0, 0, imgWidth, bY, 0, 0, imgWidth, bY, null); // Draw portion of newImage
+            bY += incY;  // Take a bigger section next time
             // Pause a bit
             try
             {

@@ -24,7 +24,7 @@ public class UpWipe extends Transition {
         Graphics gPan = imgLabel.getGraphics();
 
         // Dimension holders
-        int bY1, bY2;        // Dimensions for newImage
+        int bY;       // Dimensions for newImage
         int imgWidth, imgHeight;
         int incY;                    // Y increment each time
         int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
@@ -36,14 +36,12 @@ public class UpWipe extends Transition {
         incY = imgHeight / numIterations;        // Do 1/20 each time to start
 
         // Initialize the dimensions for section of newImage to draw
-        bY1 = imgHeight - incY;
-        bY2 = imgHeight;
+        bY = imgHeight - incY;
 
         for (int i = 0; i < numIterations; i++) {
             // Draw part of B into A
-            gPan.drawImage(newImage, 0, bY1, imgWidth, bY2, 0, bY1, imgWidth, bY2, null); // Draw portion of newImage in imgLabel
-            bY2 = bY1;
-            bY1 -= incY;  // Take a bigger section next time
+            gPan.drawImage(newImage, 0, bY, imgWidth, imgHeight, 0, bY, imgWidth, imgHeight, null); // Draw portion of newImage in imgLabel
+            bY -= incY;  // Take a bigger section next time
             // Pause a bit
             try {
                 Thread.sleep(timeInc);
