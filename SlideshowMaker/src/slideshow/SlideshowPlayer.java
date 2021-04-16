@@ -150,11 +150,26 @@ public class SlideshowPlayer extends JFrame  {
 
         if (tempPath != null) //if the user made a selection (as opposed to choosing to exit and resume the current Slideshow)
         {
-            m_slideshowPath = tempPath; //set the new filepath
+            Slideshow tempShow = m_Slideshow;
+            m_Slideshow = SlideshowManager.getSlideshow(tempPath); //construct Slideshow using the layout file
+            if (m_Slideshow == null)
+            {
+                JOptionPane.showMessageDialog(null, "Error constructing slideshow.\n" +
+                        "One or more of the image/audio files in this slideshow are missing.");
+                m_Slideshow = tempShow;
+                if (m_Slideshow.getAutomated() && !m_paused)
+                {
+                    m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
+                    m_automationTimer.start();
+                }
+                if (!m_paused)
+                    m_Jukebox.resumePlayback();
+                return;
+            }
 
+            m_slideshowPath = tempPath; //set the new filepath
             m_Jukebox.stopPlayback(); //completely stop the Jukebox
-            m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
-            
+
             // Reset control panel
             m_controlPanel.removeAll();
             m_controlPanel.revalidate();
@@ -163,10 +178,8 @@ public class SlideshowPlayer extends JFrame  {
             if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
             {
                 setAutomatedControls(); //...if it is, configure the controls for automated playback
-                currentShow = "auto";
             } else {
                 setManualControls(); //...if it isn't, configure the controls for manual playback
-                currentShow = "manual";
             }
             m_slideCount.setMinimumSize(new Dimension(50, 15));
             m_slideCount.setPreferredSize(new Dimension(50, 15));
@@ -421,7 +434,6 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setManualControls()
     {
-    	
     	// Set initial gridbag constraint parameters
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridy = 0;
@@ -466,6 +478,8 @@ public class SlideshowPlayer extends JFrame  {
         spaceFill.setPreferredSize(new Dimension(50, 15));
         spaceFill.setMaximumSize(new Dimension(50, 15));
         m_controlPanel.add(spaceFill, c);
+
+        m_paused = false;
     }
 
     /**

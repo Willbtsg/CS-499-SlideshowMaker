@@ -4,6 +4,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
@@ -98,6 +100,11 @@ public class SlideshowManager {
             for (Object j : tempSlides) {
                 slideList.add(new Slide((JSONObject) j)); //convert JSON data into Slide objects
             }
+            for (Slide slide : slideList)
+            {
+                if (slide.getImage() == null)
+                    return null;
+            }
 
             slideshow.setSlideList(slideList); //set Slideshow's m_SlideList
 
@@ -106,6 +113,11 @@ public class SlideshowManager {
                 for (Object j : tempSounds) {
                     JSONObject tempJ = (JSONObject) j;
                     soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
+                }
+                for (String sound : soundList)
+                {
+                    File testFile = new File(sound);
+                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(testFile);
                 }
             }
 
@@ -119,8 +131,8 @@ public class SlideshowManager {
                 slideshow.setSlideLength((String) jsonObject.get("SlideshowLength")); //...calculate the total runtime
             }
 
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
         return slideshow;
     }
