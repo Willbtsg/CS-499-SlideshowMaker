@@ -154,25 +154,12 @@ public class SlideshowPlayer extends JFrame  {
 
             m_Jukebox.stopPlayback(); //completely stop the Jukebox
             m_Slideshow = SlideshowManager.getSlideshow(m_slideshowPath); //construct Slideshow using the layout file
-
-            if (currentShow.equals("manual"))
-            {
-                m_controlPanel.remove(m_nextSlide);
-                m_controlPanel.remove(m_previousSlide);
-                m_controlPanel.remove(m_slideCount);
-                m_controlPanel.repaint();
-                m_controlPanel.revalidate();
-            }
-            if (currentShow.equals("auto"))
-            {
-                m_controlPanel.remove(m_nextSlide);
-                m_controlPanel.remove(m_previousSlide);
-                m_controlPanel.remove(m_Pause);
-                m_controlPanel.remove(m_slideCount);
-                m_controlPanel.repaint();
-                m_controlPanel.revalidate();
-            }
-
+            
+            // Reset control panel
+            m_controlPanel.removeAll();
+            m_controlPanel.revalidate();
+           	m_controlPanel.repaint();
+            
             if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
             {
                 setAutomatedControls(); //...if it is, configure the controls for automated playback
