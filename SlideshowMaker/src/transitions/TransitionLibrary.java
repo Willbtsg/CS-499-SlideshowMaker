@@ -56,6 +56,14 @@ public class TransitionLibrary {
             case "ULWipe" :
                 desiredTransitions.add(new ULWipe());
                 desiredTransitions.add(new DRWipe());
+
+            case "DLWipe" :
+                desiredTransitions.add(new DLWipe());
+                desiredTransitions.add(new URWipe());
+
+            case "URWipe" :
+                desiredTransitions.add(new URWipe());
+                desiredTransitions.add(new DLWipe());
         }
 
         return desiredTransitions;
