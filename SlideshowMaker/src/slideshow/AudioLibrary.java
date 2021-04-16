@@ -327,6 +327,19 @@ public class AudioLibrary extends JPanel {
 
         return audioLength;
     }
+    
+    /**
+     * This function resets the audio for next directory to be opened
+     */
+	public void resetAudio() {
+		if(isPlaying) {
+			currentClip.stop();
+			currentClip.close();
+		}
+		else if (currentClip != null) {
+			currentClip.close();
+		}
+	}
 
     /**
      * This function returns the instance of AudioLibrary. If no instance exists, then one is created.
