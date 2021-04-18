@@ -44,8 +44,8 @@ public class VTClose extends Transition{
         incY = imgHeight / (numIterations * 2);
 
         //the next three variables are used to correct the pixel offset created by truncation when calculating increment size
-        boolean fixCheck; //flag to see if its time to make the correction
-        boolean fixed = false; //flag to say whether or not the correction has been made
+        boolean fixCheck; //flag to see if it's time to make the correction
+        boolean fixed = (imgHeight / numIterations) % 2 == 0; //sets flag to indicate if correction is necessary
         int pixelsReplaced = 0; //keeps track of progress to determine when to make the correction
 
         // Initialize the dimensions for section of newImage
@@ -58,7 +58,7 @@ public class VTClose extends Transition{
             gPan.drawImage(newImage, 0, 0, imgWidth, bYT, 0, 0, imgWidth, bYT, null); //Draw top portion of newImage in imgLabel
             gPan.drawImage(newImage, 0, bYB, imgWidth, imgHeight, 0, bYB, imgWidth, imgHeight, null); //Draw bottom portion of newImage
 
-            if (!fixed) //if the increment has not been adjusted
+            if (!fixed) //if the increment needs to be adjusted
             {
                 pixelsReplaced += (incY * 2); //calculate Transition progress
 

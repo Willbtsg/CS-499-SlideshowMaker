@@ -45,8 +45,8 @@ public class HZOpen extends Transition{
         incX = imgWidth / (numIterations * 2);
 
         //the next three variables are used to correct the pixel offset created by truncation when calculating increment size
-        boolean fixCheck; //flag to see if its time to make the correction
-        boolean fixed = false; //flag to say whether or not the correction has been made
+        boolean fixCheck; //flag to see if it's time to make the correction
+        boolean fixed = (imgWidth / numIterations) % 2 == 0; //sets flag to indicate if correction is necessary
         int pixelsReplaced = 0; //keeps track of progress to determine when to make the correction
 
         // Initialize the dimensions for section of newImage
@@ -59,7 +59,7 @@ public class HZOpen extends Transition{
             // Draw part of B into A
             gPan.drawImage(newImage, bXL, 0, bXR, imgHeight, bXL, 0, bXR, imgHeight,null); //Draw larger portion of newImage in imgLabel
 
-            if (!fixed) //if the increment has not been adjusted
+            if (!fixed) //if the increment needs to be adjusted
             {
                 pixelsReplaced += (incX * 2); //calculate Transition progress
 

@@ -44,8 +44,8 @@ public class HZClose extends Transition{
         incX = imgWidth / (numIterations * 2);
 
         //the next three variables are used to correct the pixel offset created by truncation when calculating increment size
-        boolean fixCheck; //flag to see if its time to make the correction
-        boolean fixed = false; //flag to say whether or not the correction has been made
+        boolean fixCheck; //flag to see if it's time to make the correction
+        boolean fixed = (imgWidth / numIterations) % 2 == 0; //sets flag to indicate if correction is necessary
         int pixelsReplaced = 0; //keeps track of progress to determine when to make the correction
 
         // Initialize the dimensions for section of newImage
@@ -58,7 +58,7 @@ public class HZClose extends Transition{
             gPan.drawImage(newImage, 0, 0, bXL, imgHeight, 0, 0, bXL, imgHeight, null); //Draw left portion of newImage in imgLabel
             gPan.drawImage(newImage, bXR, 0, imgWidth, imgHeight, bXR, 0, imgWidth, imgHeight, null); //Draw right portion of newImage
 
-            if (!fixed) //if the increment has not been adjusted
+            if (!fixed) //if the increment needs to be adjusted
             {
                 pixelsReplaced += (incX * 2); //calculate Transition progress
 
