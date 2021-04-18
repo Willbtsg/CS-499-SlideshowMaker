@@ -2,6 +2,13 @@ package transitions;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class name: UpWipe
+ *
+ * This class extends the abstract class "Transition" and replaces the old image with the new one from bottom-to-top using
+ * a Wipe transition
+ */
+
 public class UpWipe extends Transition {
 
     /**
@@ -33,7 +40,7 @@ public class UpWipe extends Transition {
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();
-        incY = imgHeight / numIterations;        // Do 1/20 each time to start
+        incY = imgHeight / numIterations;
 
         // Initialize the dimensions for section of newImage to draw
         bY = imgHeight - incY;

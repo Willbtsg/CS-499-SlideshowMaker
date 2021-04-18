@@ -52,8 +52,7 @@ public class HZOpen extends Transition{
         for(int i=0; i<numIterations; i++)
         {
             // Draw part of B into A
-            gPan.drawImage(newImage, bXL, 0, imgMiddle, imgHeight, bXL, 0, imgMiddle, imgHeight,null); //Draw left portion of newImage in imgLabel
-            gPan.drawImage(newImage, imgMiddle, 0, bXR, imgHeight, imgMiddle, 0, bXR, imgHeight,null); //Draw right portion of newImage
+            gPan.drawImage(newImage, bXL, 0, bXR, imgHeight, bXL, 0, bXR, imgHeight,null); //Draw larger portion of newImage in imgLabel
 
             bXL -= incX;  // Take a bigger section next time
             bXR += incX;

@@ -52,8 +52,7 @@ public class VTOpen extends Transition {
         for(int i=0; i<numIterations; i++)
         {
             // Draw part of B into A
-            gPan.drawImage(newImage, 0, bYT, imgWidth, imgMiddle, 0, bYT, imgWidth, imgMiddle,null); //Draw top portion of newImage in imgLabel
-            gPan.drawImage(newImage, 0, imgMiddle, imgWidth, bYB, 0, imgMiddle, imgWidth, bYB,null); //Draw bottom portion of newImage
+            gPan.drawImage(newImage, 0, bYT, imgWidth, bYB, 0, bYT, imgWidth, bYB,null); //Draw larger portion of newImage in imgLabel
 
             bYT -= incY;  // Take a bigger section next time
             bYB += incY;
