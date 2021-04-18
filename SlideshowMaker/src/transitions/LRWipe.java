@@ -33,23 +33,32 @@ public class LRWipe extends Transition{
         // Dimension holders
         int bX;		// Dimensions for newImage
         int imgWidth, imgHeight;
-        int incX;					// X increment each time
+        int incX; // X increment each time
         int numIterations = (int) (m_time * 0.05); // Number of steps in the Transition
         int timeInc; // Milliseconds to pause each time
         timeInc = (int) m_time / numIterations; //make each step last the same amount of time
 
         imgWidth = imgLabel.getWidth();
         imgHeight = imgLabel.getHeight();
-        incX = imgWidth / numIterations;		// Do 1/20 each time to start
+        incX = imgWidth / numIterations;
+
+        int fixX = numIterations - (imgWidth % numIterations);
+        //since dividing dimensions by numIterations may have a truncated result...
+        //...this is used to adjust the increment at certain point to ensure the Transition
+        //...affects the entire image
 
         // Initialize the dimensions for section of newImage
         bX = incX;
 
         // Draw image A
-        for(int i=0; i<numIterations; i++)
+        for(int i=1; i<=numIterations; i++)
         {
             // Draw part of B into A
             gPan.drawImage(newImage, 0, 0, bX, imgHeight, 0, 0, bX, imgHeight,null); // Draw portion of newImage in imgLabel
+
+            if (i == fixX)
+                incX += 1;
+
             bX += incX;  // Take a bigger section next time
             // Pause a bit
             try

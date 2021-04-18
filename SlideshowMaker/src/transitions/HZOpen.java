@@ -44,17 +44,38 @@ public class HZOpen extends Transition{
         imgMiddle = imgWidth / 2;
         incX = imgWidth / (numIterations * 2);
 
+        //the next three variables are used to correct the pixel offset created by truncation when calculating increment size
+        boolean fixCheck; //flag to see if its time to make the correction
+        boolean fixed = false; //flag to say whether or not the correction has been made
+        int pixelsReplaced = 0; //keeps track of progress to determine when to make the correction
+
         // Initialize the dimensions for section of newImage
         bXL = imgMiddle - incX;
         bXR = imgMiddle + incX;
 
         // Draw image A
-        for(int i=0; i<numIterations; i++)
+        for(int i=1; i<=numIterations; i++)
         {
             // Draw part of B into A
             gPan.drawImage(newImage, bXL, 0, bXR, imgHeight, bXL, 0, bXR, imgHeight,null); //Draw larger portion of newImage in imgLabel
 
-            bXL -= incX;  // Take a bigger section next time
+            if (!fixed) //if the increment has not been adjusted
+            {
+                pixelsReplaced += (incX * 2); //calculate Transition progress
+
+                // The following line calculates the number of pixels still unchanged and divides them by the number of steps remaining...
+                // ...in order to see how big the remaining pieces of the Wipe would be if they were of equal size.
+                // If this number is divisible by 2, add 1 to the increment to correct the truncation error and ensure the Wipe displays the entire image
+                fixCheck = (((imgHeight - pixelsReplaced) / (numIterations - i)) % 2) == 0;
+
+                if (fixCheck)
+                {
+                    incX += 1;
+                    fixed = true; //set the flag so these checks aren't done more than necessary
+                }
+            }
+
+            bXL -= incX;  // update the boundaries of the Wipe
             bXR += incX;
 
             // Pause a bit

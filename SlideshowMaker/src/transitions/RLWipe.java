@@ -42,13 +42,22 @@ public class RLWipe extends Transition{
         imgHeight = imgLabel.getHeight();
         incX = imgWidth / numIterations;		// Do 1/numIterations each time
 
+        int fixX = numIterations - (imgWidth % numIterations);
+        //since dividing dimensions by numIterations may have a truncated result...
+        //...this is used to adjust the increment at certain point to ensure the Transition
+        //...affects the entire image
+
         // Initialize the dimensions for section of newImage
         bX = imgWidth - incX;
 
-        for(int i=0; i<numIterations; i++)
+        for(int i=1; i<=numIterations; i++)
         {
             // Draw part of newImage within imgLabel
             gPan.drawImage(newImage, bX, 0, imgWidth, imgHeight, bX, 0, imgWidth, imgHeight, null); // Draw portion of newImage
+
+            if (i == fixX)
+                incX += 1;
+
             bX -= incX;  // Move another section to the left of the previous section
             // Pause a bit so we can actually see the transition
             try

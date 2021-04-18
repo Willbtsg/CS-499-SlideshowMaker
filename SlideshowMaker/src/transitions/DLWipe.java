@@ -46,17 +46,27 @@ public class DLWipe extends Transition {
         incX = imgWidth / numIterations;
         incY = imgHeight / numIterations;		// Do 1/50 each time to start
 
-        // Initialize the dimensions for section of newImage
-        bY = incY;
+        int fixX = numIterations - (imgWidth % numIterations);
+        int fixY = numIterations - (imgHeight % numIterations);
+        //since dividing dimensions by numIterations may have a truncated result...
+        //...these are used to adjust the increments at certain point to ensure the Transition
+        //...affects the entire image
 
         // Initialize the dimensions for section of newImage
         bX = imgWidth - incX;
+        bY = incY;
 
         // Draw image A
-        for(int i=0; i<numIterations; i++)
+        for(int i=1; i<=numIterations; i++)
         {
             // Draw part of B into A
             gPan.drawImage(newImage, bX, 0, imgWidth, bY, bX, 0, imgWidth, bY, null); // Draw portion of newImage in imgLabel
+
+            if (i == fixX)
+                incX += 1;
+            if (i == fixY)
+                incY += 1;
+
             bX -= incX;  // Take a bigger section next time
             bY += incY;
             // Pause a bit
