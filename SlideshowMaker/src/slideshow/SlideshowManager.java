@@ -94,6 +94,14 @@ public class SlideshowManager {
             //
             //Read JSON file
             JSONObject jsonObject = (JSONObject) obj;
+            
+            try {
+                slideshow.setProgenitor((String) jsonObject.get("Progenitor")); //verify that the Slideshow file came from the Editor
+            } catch (Exception e) {
+                slideshow.setProgenitor("False God"); //used to make Player display specific error message
+                return slideshow;
+            }
+
             JSONArray tempSlides = (JSONArray) jsonObject.get("SlideList");
             JSONArray tempSounds = (JSONArray) jsonObject.get("SoundList");
 
@@ -113,11 +121,6 @@ public class SlideshowManager {
                 for (Object j : tempSounds) {
                     JSONObject tempJ = (JSONObject) j;
                     soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
-                }
-                for (String sound : soundList)
-                {
-                    File testFile = new File(sound);
-                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(testFile);
                 }
             }
 
