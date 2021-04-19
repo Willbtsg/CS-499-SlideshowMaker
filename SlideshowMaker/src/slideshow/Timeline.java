@@ -343,7 +343,7 @@ public class Timeline extends JPanel {
             }
         });
 
-        JButton deleteButton = new JButton("Delete"); //create button to remove slide from Timeline
+        JButton deleteButton = new JButton("Remove"); //create button to remove slide from Timeline
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
@@ -501,7 +501,7 @@ public class Timeline extends JPanel {
             }
         });
 
-        JButton deleteButton = new JButton("Delete"); //create button to remove audio from Timeline
+        JButton deleteButton = new JButton("Remove"); //create button to remove audio from Timeline
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
