@@ -64,6 +64,8 @@ public class Slideshow {
         obj.put("SoundList", soundList);
         obj.put("AudioLength", m_AudioLength);
 
+        obj.put("Progenitor", "SlideshowEditor"); //used to indicate that the json file was created by Slideshow Editor
+
         return obj;
     }
 
