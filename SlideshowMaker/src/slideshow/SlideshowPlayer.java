@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -150,10 +151,20 @@ public class SlideshowPlayer extends JFrame  {
 
         if (tempPath != null) //if the user made a selection (as opposed to choosing to exit and resume the current Slideshow)
         {
+            JFrame loading = new JFrame("Loading...");
+            Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+            loading.setIconImage(icon);
+            loading.setResizable(false);
+            loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            loading.setSize(new Dimension(250,30));
+            loading.setLocationRelativeTo(null);
+            loading.setVisible(true);
+
             Slideshow tempShow = m_Slideshow;
             m_Slideshow = SlideshowManager.getSlideshow(tempPath); //construct Slideshow using the layout file
             if (m_Slideshow == null)
             {
+                loading.dispose();
                 JOptionPane.showMessageDialog(null, "Error constructing slideshow.\n" +
                         "One or more of the image/audio files in this slideshow are missing.");
                 m_Slideshow = tempShow;
@@ -207,6 +218,8 @@ public class SlideshowPlayer extends JFrame  {
             }
 
             m_Jukebox.playAll(); //play the Jukebox with all its new music
+
+            loading.dispose();
 
         } else { //if the user didn't pick a new Slideshow, resume the current one
 
