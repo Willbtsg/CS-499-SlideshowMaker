@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -152,11 +153,21 @@ public class SlideshowPlayer extends JFrame  {
 
         if (tempPath != null) //if the user made a selection (as opposed to choosing to exit and resume the current Slideshow)
         {
+            JFrame loading = new JFrame("Loading...");
+            Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
+            loading.setIconImage(icon);
+            loading.setResizable(false);
+            loading.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            loading.setSize(new Dimension(250,30));
+            loading.setLocationRelativeTo(null);
+            loading.setVisible(true);
+
             Slideshow tempShow = m_Slideshow;
             m_Slideshow = SlideshowManager.getSlideshow(tempPath); //construct Slideshow using the layout file
 
             if (m_Slideshow == null) //if the data in the Slideshow file was unusable, say so
             {
+                loading.dispose();
                 String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
                         "The data in this file has been corrupted or references an image/audio file<br>" +
                         "that no longer exists.</div></html>";
@@ -173,8 +184,9 @@ public class SlideshowPlayer extends JFrame  {
                     m_Jukebox.resumePlayback();
                 return;
             }
-            else if (!m_Slideshow.getProgenitor().equals("SlideshowEditor")) //used to display error if file doesn't contain Slideshow data
+            else if (m_Slideshow.getProgenitor() == null) //used to display error if file doesn't contain Slideshow data
             {
+                loading.dispose();
                 String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
                         "The file you selected was not created by the Slideshow Editor.</div></html>";
 
@@ -189,6 +201,27 @@ public class SlideshowPlayer extends JFrame  {
                 if (!m_paused)
                     m_Jukebox.resumePlayback();
                 return;
+            }
+            else if (m_Slideshow.getProgenitor() != null)
+            {
+                if (!m_Slideshow.getProgenitor().equals("SlideshowEditor"))
+                {
+                    loading.dispose();
+                    String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
+                            "The file you selected was not created by the Slideshow Editor.</div></html>";
+
+                    JOptionPane.showMessageDialog(null, errorMessage, "Error Loading Slideshow", JOptionPane.ERROR_MESSAGE);
+
+                    m_Slideshow = tempShow;
+                    if (m_Slideshow.getAutomated() && !m_paused)
+                    {
+                        m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
+                        m_automationTimer.start();
+                    }
+                    if (!m_paused)
+                        m_Jukebox.resumePlayback();
+                    return;
+                }
             }
 
             m_slideshowPath = tempPath; //set the new filepath
@@ -231,6 +264,7 @@ public class SlideshowPlayer extends JFrame  {
             }
 
             m_Jukebox.playAll(); //play the Jukebox with all its new music
+            loading.dispose();
 
         } else { //if the user didn't pick a new Slideshow, resume the current one
 
