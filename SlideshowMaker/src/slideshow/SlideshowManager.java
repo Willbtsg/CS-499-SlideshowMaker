@@ -94,6 +94,14 @@ public class SlideshowManager {
             //
             //Read JSON file
             JSONObject jsonObject = (JSONObject) obj;
+            
+            try {
+                slideshow.setProgenitor((String) jsonObject.get("Progenitor")); //verify that the Slideshow file came from the Editor
+            } catch (Exception e) {
+                slideshow.setProgenitor("False God"); //used to make Player display specific error message
+                return slideshow;
+            }
+
             JSONArray tempSlides = (JSONArray) jsonObject.get("SlideList");
             JSONArray tempSounds = (JSONArray) jsonObject.get("SoundList");
 
@@ -124,12 +132,6 @@ public class SlideshowManager {
             if (slideshow.getAutomated()) //if the Slideshow is automated (i.e. has a set runtime)...
             {
                 slideshow.setSlideLength((String) jsonObject.get("SlideshowLength")); //...calculate the total runtime
-            }
-
-            try {
-                slideshow.setProgenitor((String) jsonObject.get("Progenitor")); //verify that the Slideshow file came from the Editor
-            } catch (Exception e) {
-                slideshow.setProgenitor("False God"); //used to make Player display specific error message
             }
 
         } catch (Exception e) {
