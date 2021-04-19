@@ -23,12 +23,14 @@ public class Slideshow {
     private ArrayList<String> m_SoundList;
     private String m_slideshowLength;
     private String m_AudioLength;
+    private String m_Progenitor;
 
     public Slideshow()
     {
         m_automated = false;
         m_SlideList = new ArrayList();
         m_SoundList = new ArrayList();
+        m_Progenitor = new String();
     }
 
     /**
@@ -175,5 +177,15 @@ public class Slideshow {
      * @param sound- filename of new sound for this Slideshow
      */
     public void addSound(String sound) { m_SoundList.add(sound); }
+
+    public void setProgenitor(String progenitor)
+    {
+        m_Progenitor = progenitor;
+    }
+
+    public String getProgenitor()
+    {
+        return m_Progenitor;
+    }
 
 }

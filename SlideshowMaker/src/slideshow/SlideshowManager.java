@@ -114,11 +114,6 @@ public class SlideshowManager {
                     JSONObject tempJ = (JSONObject) j;
                     soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
                 }
-                for (String sound : soundList)
-                {
-                    File testFile = new File(sound);
-                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(testFile);
-                }
             }
 
             slideshow.setSoundList(soundList); //set Slideshow's m_SoundList
@@ -129,6 +124,12 @@ public class SlideshowManager {
             if (slideshow.getAutomated()) //if the Slideshow is automated (i.e. has a set runtime)...
             {
                 slideshow.setSlideLength((String) jsonObject.get("SlideshowLength")); //...calculate the total runtime
+            }
+
+            try {
+                slideshow.setProgenitor((String) jsonObject.get("Progenitor")); //verify that the Slideshow file came from the Editor
+            } catch (Exception e) {
+                slideshow.setProgenitor("False God"); //used to make Player display specific error message
             }
 
         } catch (Exception e) {

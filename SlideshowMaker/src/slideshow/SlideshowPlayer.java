@@ -124,6 +124,8 @@ public class SlideshowPlayer extends JFrame  {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        m_paused = false;
+
         String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow player ever made.<br>To start playing a slideshow, " +
                 "use the \"File\" menu in the top left corner<br>and select \"Open Slideshow\" to find the directory containing the slideshow you'd like to play.<br>" +
                 "From there, you'll use the given dropdown box to select<br>which slideshow in that directory you'd like to play.<br>Go ahead. Select one. (You know you want to.)</div></html>";
@@ -152,10 +154,32 @@ public class SlideshowPlayer extends JFrame  {
         {
             Slideshow tempShow = m_Slideshow;
             m_Slideshow = SlideshowManager.getSlideshow(tempPath); //construct Slideshow using the layout file
-            if (m_Slideshow == null)
+
+            if (m_Slideshow == null) //if the data in the Slideshow file was unusable, say so
             {
-                JOptionPane.showMessageDialog(null, "Error constructing slideshow.\n" +
-                        "One or more of the image/audio files in this slideshow are missing.");
+                String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
+                        "The data in this file has been corrupted or references an image/audio file<br>" +
+                        "that no longer exists.</div></html>";
+
+                JOptionPane.showMessageDialog(null, errorMessage, "Error Loading Slideshow", JOptionPane.ERROR_MESSAGE);
+
+                m_Slideshow = tempShow;
+                if (m_Slideshow.getAutomated() && !m_paused)
+                {
+                    m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
+                    m_automationTimer.start();
+                }
+                if (!m_paused)
+                    m_Jukebox.resumePlayback();
+                return;
+            }
+            else if (!m_Slideshow.getProgenitor().equals("SlideshowEditor")) //used to display error if file doesn't contain Slideshow data
+            {
+                String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
+                        "The file you selected was not created by the Slideshow Editor.</div></html>";
+
+                JOptionPane.showMessageDialog(null, errorMessage, "Error Loading Slideshow", JOptionPane.ERROR_MESSAGE);
+
                 m_Slideshow = tempShow;
                 if (m_Slideshow.getAutomated() && !m_paused)
                 {
