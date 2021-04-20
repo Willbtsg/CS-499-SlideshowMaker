@@ -52,6 +52,7 @@ public class SlideshowPlayer extends JFrame  {
     private long m_slideStart;
     private long m_timeElapsed;
     private String currentShow;
+    private boolean hasBeenPlayed;
 
     /**
      * Main function is used to create the JFrame when SlideshowPlayer is run as an independent application
@@ -73,6 +74,7 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         currentShow = "none";
+        hasBeenPlayed = false;
 
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
         Image icon = windowIcon.getImage();
@@ -224,6 +226,7 @@ public class SlideshowPlayer extends JFrame  {
                 }
             }
 
+            hasBeenPlayed = false;
             m_slideshowPath = tempPath; //set the new filepath
             m_Jukebox.stopPlayback(); //completely stop the Jukebox
 
@@ -247,23 +250,6 @@ public class SlideshowPlayer extends JFrame  {
             m_currentSlideIndex = -1; //initialize index
             showSlide(1, false);
 
-            if (m_Slideshow.getAutomated()) //creates Timer to keep automated Slideshow going
-            {
-                ActionListener taskPerformer = new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-
-                        timedShowSlide(1, false); //when Timer goes off, load new Slide and start Timer again
-
-                    }
-                };
-
-                m_automationTimer = new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer);
-                m_automationTimer.start(); //start a Timer that lasts the amount of time Slide should display
-                m_slideStart = System.currentTimeMillis();
-                m_paused = false;
-            }
-
-            m_Jukebox.playAll(); //play the Jukebox with all its new music
             loading.dispose();
 
         } else { //if the user didn't pick a new Slideshow, resume the current one
@@ -447,17 +433,38 @@ public class SlideshowPlayer extends JFrame  {
         m_controlPanel.add(m_Pause, c);
         
         //Set icon for pause button
-        m_Pause.setIcon(pauseIcon);
+        m_Pause.setIcon(playIcon);
 
         m_Pause.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 if (m_paused) //if the Slideshow is already paused, resume it and the Jukebox
                 {
-                    m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
-                    m_automationTimer.start();
-                    m_Jukebox.resumePlayback();
-                    m_Pause.setIcon(pauseIcon);
-                    m_paused = false;
+                    if (!hasBeenPlayed)
+                    {
+                        ActionListener taskPerformer = new ActionListener() {
+                            public void actionPerformed(ActionEvent evt) {
+
+                                timedShowSlide(1, false); //when Timer goes off, load new Slide and start Timer again
+
+                            }
+                        };
+
+                        m_automationTimer = new Timer((int) m_Slideshow.getSlide(m_currentSlideIndex).getTime(), taskPerformer);
+                        m_automationTimer.start(); //start a Timer that lasts the amount of time Slide should display
+                        m_slideStart = System.currentTimeMillis();
+                        m_paused = false;
+                        hasBeenPlayed = true;
+                        m_Pause.setIcon(pauseIcon);
+                        m_Jukebox.playAll(); //play the Jukebox with all its new music
+                    }
+                    else
+                    {
+                        m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
+                        m_automationTimer.start();
+                        m_Jukebox.resumePlayback();
+                        m_Pause.setIcon(pauseIcon);
+                        m_paused = false;
+                    }
                 }
                 else { //otherwise, pause the Slideshow and the Jukebox
 
@@ -485,6 +492,8 @@ public class SlideshowPlayer extends JFrame  {
         spaceFill.setPreferredSize(new Dimension(50, 15));
         spaceFill.setMaximumSize(new Dimension(50, 15));
         m_controlPanel.add(spaceFill, c);
+
+        m_paused = true;
     }
 
     /**
@@ -542,15 +551,24 @@ public class SlideshowPlayer extends JFrame  {
             m_controlPanel.add(m_Pause, c);
 
             //Set icon for pause button
-            m_Pause.setIcon(pauseIcon);
+            m_Pause.setIcon(playIcon);
 
             m_Pause.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     if (m_paused) //if the Jukebox is already paused, resume it
                     {
-                        m_Jukebox.resumePlayback();
-                        m_Pause.setIcon(pauseIcon);
-                        m_paused = false;
+                        if (!hasBeenPlayed)
+                        {
+                            m_paused = false;
+                            hasBeenPlayed = true;
+                            m_Pause.setIcon(pauseIcon);
+                            m_Jukebox.playAll(); //play the Jukebox with all its new music
+                        }
+                        else {
+                            m_Jukebox.resumePlayback();
+                            m_Pause.setIcon(pauseIcon);
+                            m_paused = false;
+                        }
                     }
                     else { //otherwise, pause the Jukebox
 
@@ -621,7 +639,7 @@ public class SlideshowPlayer extends JFrame  {
             m_controlPanel.add(spaceFill, c);
         }
 
-        m_paused = false;
+        m_paused = true;
     }
 
     /**
