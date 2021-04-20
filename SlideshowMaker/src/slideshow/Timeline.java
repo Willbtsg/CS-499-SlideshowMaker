@@ -59,6 +59,8 @@ public class Timeline extends JPanel {
     private JPanel runtimeGraph;
     private JScrollPane runtimeScroll;
     private JTabbedPane runtime;
+    private JPanel slideTimes;
+    private JPanel audioTimes;
     private double totalSlideTime = 0.0;
     private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
@@ -116,7 +118,14 @@ public class Timeline extends JPanel {
         add(items, BorderLayout.WEST);
 
         runtimeGraph = new JPanel();
-        runtimeGraph.setLayout(new GridBagLayout());
+        runtimeGraph.setLayout(new GridLayout(0,2));
+
+        slideTimes = new JPanel();
+        audioTimes = new JPanel();
+        slideTimes.setLayout(new GridBagLayout());
+        audioTimes.setLayout(new GridBagLayout());
+        runtimeGraph.add(slideTimes);
+        runtimeGraph.add(audioTimes);
 
         runtimeScroll = new JScrollPane(runtimeGraph);
         runtimeScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -125,8 +134,6 @@ public class Timeline extends JPanel {
 
         runtime = new JTabbedPane();
         runtime.add("Timing", runtimeScroll);
-        //runtime.setVisible(false);
-        //add(runtime, BorderLayout.EAST);
     }
 
     /**
@@ -467,6 +474,32 @@ public class Timeline extends JPanel {
         
         slidePanel.add(thisSlideDisplay);
         revalidate(); //update GUI after adding new component
+
+        if (automated)
+        {
+            try {
+                addSlideTiming(timelineSlides.size(), Double.parseDouble(slideDurations.get(slideDurations.size()-1).getText()));
+            } catch (Exception e) {
+                addSlideTiming(timelineSlides.size(), defaultSlideDuration);
+            }
+        }
+    }
+
+    public void addSlideTiming(int slideNum, double slideLength)
+    {
+        JPanel slideTiming = new JPanel();
+        JLabel lblSlideTiming = new JLabel(String.valueOf(slideNum), SwingConstants.CENTER);
+        int timingHeight = (int)(slideLength * 20);
+        lblSlideTiming.setMinimumSize(new Dimension(25, timingHeight));
+        lblSlideTiming.setPreferredSize(new Dimension(25, timingHeight));
+        lblSlideTiming.setMaximumSize(new Dimension(25, timingHeight));
+        slideTiming.add(lblSlideTiming);
+        slideTiming.setBorder(BorderFactory.createTitledBorder(""));
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = slideNum;
+        c.gridx = 0;
+        slideTimes.add(slideTiming, c);
     }
 
     /**
@@ -640,6 +673,11 @@ public class Timeline extends JPanel {
         }
     }
 
+    /**
+     * Adds/removes the timing panel to/from the Editor GUI.
+     *
+     * @param visible If true, add panel, else, remove panel
+     */
     public void setTimingVisible(boolean visible)
     {
         if (visible)

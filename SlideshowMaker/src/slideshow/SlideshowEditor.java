@@ -226,6 +226,7 @@ public class SlideshowEditor extends JFrame {
 	                    timeline.setSlideDurationVisible(automated);
 	                    timeline.setTimingVisible(automated);
 	                    pack();
+	                    setLocationRelativeTo(null);
 	                    settingsPresent = false;
 	                    settingsFrame.dispose();
                     }
@@ -235,6 +236,7 @@ public class SlideshowEditor extends JFrame {
                     	timeline.setSlideDurationVisible(automated);
                         timeline.setTimingVisible(automated);
                         pack();
+                        setLocationRelativeTo(null);
                     	settingsFrame.dispose();
                     }
                 } catch (Exception ex) {
