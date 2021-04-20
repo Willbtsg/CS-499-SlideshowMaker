@@ -142,7 +142,7 @@ public class SlideshowPlayer extends JFrame  {
     public void initializeSlideshow()
     {
         m_Jukebox.pausePlayback(); //pause any audio that may be playing
-        
+
         if (m_Slideshow.getAutomated()) //if Slideshow is automated, pause the Slide timer as well
         {
             m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
@@ -186,7 +186,7 @@ public class SlideshowPlayer extends JFrame  {
                     m_Jukebox.resumePlayback();
                 return;
             }
-            else if (m_Slideshow.getProgenitor() == null) //used to display error if file doesn't contain Slideshow data
+            else if (!m_Slideshow.getProgenitor().equals("SlideshowEditor"))
             {
                 loading.dispose();
                 String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
@@ -204,27 +204,6 @@ public class SlideshowPlayer extends JFrame  {
                     m_Jukebox.resumePlayback();
                 return;
             }
-            else if (m_Slideshow.getProgenitor() != null)
-            {
-                if (!m_Slideshow.getProgenitor().equals("SlideshowEditor"))
-                {
-                    loading.dispose();
-                    String errorMessage = "<html><div style='text-align: center;'>Error constructing slideshow.<br>" +
-                            "The file you selected was not created by the Slideshow Editor.</div></html>";
-
-                    JOptionPane.showMessageDialog(null, errorMessage, "Error Loading Slideshow", JOptionPane.ERROR_MESSAGE);
-
-                    m_Slideshow = tempShow;
-                    if (m_Slideshow.getAutomated() && !m_paused)
-                    {
-                        m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
-                        m_automationTimer.start();
-                    }
-                    if (!m_paused)
-                        m_Jukebox.resumePlayback();
-                    return;
-                }
-            }
 
             hasBeenPlayed = false;
             m_slideshowPath = tempPath; //set the new filepath
@@ -233,8 +212,8 @@ public class SlideshowPlayer extends JFrame  {
             // Reset control panel
             m_controlPanel.removeAll();
             m_controlPanel.revalidate();
-           	m_controlPanel.repaint();
-            
+            m_controlPanel.repaint();
+
             if (m_Slideshow.getAutomated()) //see if Slideshow is set for automated playback...
             {
                 setAutomatedControls(); //...if it is, configure the controls for automated playback
@@ -266,7 +245,7 @@ public class SlideshowPlayer extends JFrame  {
 
     /**
      * Removes focusable dotted line from all components
-     * @param container - object with components to set focus for 
+     * @param container - object with components to set focus for
      */
     public void removeFocusFromAllObjects(Container container) {
         container.setFocusable(false);
@@ -376,7 +355,7 @@ public class SlideshowPlayer extends JFrame  {
      * Update the slide count label
      */
     private void updateSlideCount() {
-    	m_slideCount.setText((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+        m_slideCount.setText((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
     }
 
     /**
@@ -384,27 +363,27 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setAutomatedControls()
     {
-    	// Set initial gridbag constraint parameters
-    	GridBagConstraints c = new GridBagConstraints();
-    	c.gridy = 0;
-    	c.weightx = 0.5;
-    	c.weighty = 0.5;
+        // Set initial gridbag constraint parameters
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = 0;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
 
         ImageIcon tempNextIcon = new ImageIcon("images\\skipforwardicon.png");
         ImageIcon tempPrevIcon = new ImageIcon("images\\skipbackicon.png");
 
         // Transform temp pause and play icons and store them in new variables
-        Image image = tempNextIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon nextIcon = new ImageIcon(newimg); 
-        
-        image = tempPrevIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon prevIcon = new ImageIcon(newimg); 
-        
+        Image image = tempNextIcon.getImage(); // transform it
+        Image newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        ImageIcon nextIcon = new ImageIcon(newimg);
+
+        image = tempPrevIcon.getImage(); // transform it
+        newimg = image.getScaledInstance(16, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        ImageIcon prevIcon = new ImageIcon(newimg);
+
         m_nextSlide = new JButton();
         m_nextSlide.setIcon(nextIcon);
-    	c.gridx = 3;
+        c.gridx = 3;
         m_controlPanel.add(m_nextSlide, c);
 
         m_nextSlide.addActionListener(event -> timedShowSlide(1, true));
@@ -418,20 +397,20 @@ public class SlideshowPlayer extends JFrame  {
 
         ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
         ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
-        
+
         // Transform temp pause and play icons and store them in new variables
-        image = tempPlayIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon playIcon = new ImageIcon(newimg); 
-        
-        image = tempPauseIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon pauseIcon = new ImageIcon(newimg); 
-        
+        image = tempPlayIcon.getImage(); // transform it
+        newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        ImageIcon playIcon = new ImageIcon(newimg);
+
+        image = tempPauseIcon.getImage(); // transform it
+        newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        ImageIcon pauseIcon = new ImageIcon(newimg);
+
         m_Pause = new JButton();
         c.gridx = 2;
         m_controlPanel.add(m_Pause, c);
-        
+
         //Set icon for pause button
         m_Pause.setIcon(playIcon);
 
@@ -479,12 +458,12 @@ public class SlideshowPlayer extends JFrame  {
                 }
             }
         });
-        
+
         // Initialize the slidecount label
         c.gridx = 0;
         m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
         m_controlPanel.add(m_slideCount, c);
-        
+
         //Create empty label to get the spacing right
         c.gridx = 4;
         JLabel spaceFill = new JLabel("");
@@ -592,7 +571,7 @@ public class SlideshowPlayer extends JFrame  {
             spaceFill.setMaximumSize(new Dimension(50, 15));
             m_controlPanel.add(spaceFill, c);
         }
-    	else {
+        else {
             // Set initial gridbag constraint parameters
             GridBagConstraints c = new GridBagConstraints();
             c.gridy = 0;
