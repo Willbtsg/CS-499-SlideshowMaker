@@ -3,6 +3,7 @@ package slideshow;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -55,6 +56,11 @@ public class Timeline extends JPanel {
     private ArrayList<JLabel> slideDurations;
     private ArrayList<JComboBox> transitionDurations;
     private JLabel runtimeLabel;
+    private JPanel runtimeGraph;
+    private JScrollPane runtimeScroll;
+    private JTabbedPane runtime;
+    private JPanel slideTimes;
+    private JPanel audioTimes;
     private double totalSlideTime = 0.0;
     private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
@@ -68,7 +74,10 @@ public class Timeline extends JPanel {
     {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Timeline"));
-        setSize(320, 750);
+        setSize(420, 750);
+
+        JPanel items = new JPanel();
+        items.setLayout(new BorderLayout());
 
         timelinePanes = new JTabbedPane();
         timelineSlides = new ArrayList<JPanel>(); //create list of objects to display Slide data
@@ -99,12 +108,35 @@ public class Timeline extends JPanel {
         audioScroll.setPreferredSize(new Dimension(320, 720));
         timelinePanes.add("Audio", audioScroll);
 
-        add(timelinePanes, BorderLayout.NORTH);
+        items.add(timelinePanes, BorderLayout.NORTH);
 
         runtimeLabel = new JLabel();
         updateRuntimeLabel();
 
-        add(runtimeLabel, BorderLayout.SOUTH);
+        items.add(runtimeLabel, BorderLayout.SOUTH);
+
+        add(items, BorderLayout.WEST);
+
+        runtimeGraph = new JPanel();
+        runtimeGraph.setLayout(new BorderLayout());
+
+        JPanel timingWrapper = new JPanel();
+        timingWrapper.setLayout(new BorderLayout());
+        slideTimes = new JPanel();
+        audioTimes = new JPanel();
+        slideTimes.setLayout(new GridBagLayout());
+        audioTimes.setLayout(new GridBagLayout());
+        timingWrapper.add(slideTimes, BorderLayout.WEST);
+        timingWrapper.add(audioTimes, BorderLayout.EAST);
+        runtimeGraph.add(timingWrapper, BorderLayout.NORTH);
+
+        runtimeScroll = new JScrollPane(runtimeGraph);
+        runtimeScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        runtimeScroll.getVerticalScrollBar().setUnitIncrement(20);
+        runtimeScroll.setPreferredSize(new Dimension(100, 720));
+
+        runtime = new JTabbedPane();
+        runtime.add("Timing", runtimeScroll);
     }
 
     /**
@@ -445,6 +477,32 @@ public class Timeline extends JPanel {
         
         slidePanel.add(thisSlideDisplay);
         revalidate(); //update GUI after adding new component
+
+        if (automated)
+        {
+            try {
+                addSlideTiming(timelineSlides.size(), Double.parseDouble(slideDurations.get(slideDurations.size()-1).getText()));
+            } catch (Exception e) {
+                addSlideTiming(timelineSlides.size(), defaultSlideDuration);
+            }
+        }
+    }
+
+    public void addSlideTiming(int slideNum, double slideLength)
+    {
+        JPanel slideTiming = new JPanel();
+        JLabel lblSlideTiming = new JLabel(String.valueOf(slideNum), SwingConstants.CENTER);
+        int timingHeight = (int)(slideLength * 20);
+        lblSlideTiming.setMinimumSize(new Dimension(25, timingHeight));
+        lblSlideTiming.setPreferredSize(new Dimension(25, timingHeight));
+        lblSlideTiming.setMaximumSize(new Dimension(25, timingHeight));
+        slideTiming.add(lblSlideTiming);
+        slideTiming.setBorder(BorderFactory.createTitledBorder(""));
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = slideNum;
+        c.gridx = 0;
+        slideTimes.add(slideTiming, c);
     }
 
     /**
@@ -616,6 +674,19 @@ public class Timeline extends JPanel {
             adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
             parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
         }
+    }
+
+    /**
+     * Adds/removes the timing panel to/from the Editor GUI.
+     *
+     * @param visible If true, add panel, else, remove panel
+     */
+    public void setTimingVisible(boolean visible)
+    {
+        if (visible)
+            add(runtime, BorderLayout.EAST);
+        else
+            remove(runtime);
     }
 
     /**
