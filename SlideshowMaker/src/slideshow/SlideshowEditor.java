@@ -148,7 +148,7 @@ public class SlideshowEditor extends JFrame {
         //ImageIcon windowIcon = new ImageIcon(getClass().getClassLoader().getResource("SlideshowIcon.png"));
         Image icon = windowIcon.getImage();
         setIconImage(icon);
-        setSize(new Dimension(1400, 800));
+        setSize(new Dimension(1500, 800));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -224,6 +224,8 @@ public class SlideshowEditor extends JFrame {
                     else if(slideInterval > 0) {
 	                    timeline.setDefaultSlideDuration(slideInterval);
 	                    timeline.setSlideDurationVisible(automated);
+	                    timeline.setTimingVisible(automated);
+	                    pack();
 	                    settingsPresent = false;
 	                    settingsFrame.dispose();
                     }
@@ -231,6 +233,8 @@ public class SlideshowEditor extends JFrame {
                     	automated = false;
                     	settingsPresent = false;
                     	timeline.setSlideDurationVisible(automated);
+                        timeline.setTimingVisible(automated);
+                        pack();
                     	settingsFrame.dispose();
                     }
                 } catch (Exception ex) {

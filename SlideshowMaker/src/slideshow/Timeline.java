@@ -3,6 +3,7 @@ package slideshow;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -55,6 +56,9 @@ public class Timeline extends JPanel {
     private ArrayList<JLabel> slideDurations;
     private ArrayList<JComboBox> transitionDurations;
     private JLabel runtimeLabel;
+    private JPanel runtimeGraph;
+    private JScrollPane runtimeScroll;
+    private JTabbedPane runtime;
     private double totalSlideTime = 0.0;
     private int totalAudioTime = 0;
     private Double defaultSlideDuration = 3.0;
@@ -68,7 +72,10 @@ public class Timeline extends JPanel {
     {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Timeline"));
-        setSize(320, 750);
+        setSize(420, 750);
+
+        JPanel items = new JPanel();
+        items.setLayout(new BorderLayout());
 
         timelinePanes = new JTabbedPane();
         timelineSlides = new ArrayList<JPanel>(); //create list of objects to display Slide data
@@ -99,12 +106,27 @@ public class Timeline extends JPanel {
         audioScroll.setPreferredSize(new Dimension(320, 720));
         timelinePanes.add("Audio", audioScroll);
 
-        add(timelinePanes, BorderLayout.NORTH);
+        items.add(timelinePanes, BorderLayout.NORTH);
 
         runtimeLabel = new JLabel();
         updateRuntimeLabel();
 
-        add(runtimeLabel, BorderLayout.SOUTH);
+        items.add(runtimeLabel, BorderLayout.SOUTH);
+
+        add(items, BorderLayout.WEST);
+
+        runtimeGraph = new JPanel();
+        runtimeGraph.setLayout(new GridBagLayout());
+
+        runtimeScroll = new JScrollPane(runtimeGraph);
+        runtimeScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        runtimeScroll.getVerticalScrollBar().setUnitIncrement(20);
+        runtimeScroll.setPreferredSize(new Dimension(100, 720));
+
+        runtime = new JTabbedPane();
+        runtime.add("Timing", runtimeScroll);
+        //runtime.setVisible(false);
+        //add(runtime, BorderLayout.EAST);
     }
 
     /**
@@ -616,6 +638,14 @@ public class Timeline extends JPanel {
             adjustable.setValue(adjustable.getMaximum()); //...set scroll position to bottom of bar...
             parent.removeAdjustmentListener(this); //...and remove this listener now that its task is complete
         }
+    }
+
+    public void setTimingVisible(boolean visible)
+    {
+        if (visible)
+            add(runtime, BorderLayout.EAST);
+        else
+            remove(runtime);
     }
 
     /**
