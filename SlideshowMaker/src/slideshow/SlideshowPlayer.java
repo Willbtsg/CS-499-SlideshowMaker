@@ -492,50 +492,134 @@ public class SlideshowPlayer extends JFrame  {
      */
     private void setManualControls()
     {
-    	// Set initial gridbag constraint parameters
-    	GridBagConstraints c = new GridBagConstraints();
-    	c.gridy = 0;
-    	c.weightx = 0.5;
-    	c.weighty = 0.5;
-    	
-        ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
-        ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
-        
-        // Transform temp pause and play icons and store them in new variables
-        Image image = tempNextIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon nextIcon = new ImageIcon(newimg); 
-        
-        image = tempPrevIcon.getImage(); // transform it 
-        newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-        ImageIcon prevIcon = new ImageIcon(newimg); 
-        
-        m_nextSlide = new JButton();
-        m_nextSlide.setIcon(nextIcon);
-        c.gridx = 2;
-        m_controlPanel.add(m_nextSlide, c);
+        if (m_Slideshow.getSoundList().size() > 0)
+        {
+            // Set initial gridbag constraint parameters
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridy = 0;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
 
-        m_nextSlide.addActionListener(event -> showSlide(1, false));
+            ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
+            ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
 
-        m_previousSlide = new JButton();
-        m_previousSlide.setIcon(prevIcon);
-        c.gridx = 1;
-        m_controlPanel.add(m_previousSlide, c);
+            // Transform temp pause and play icons and store them in new variables
+            Image image = tempNextIcon.getImage(); // transform it
+            Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon nextIcon = new ImageIcon(newimg);
 
-        m_previousSlide.addActionListener(event -> showSlide(-1, false));
+            image = tempPrevIcon.getImage(); // transform it
+            newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon prevIcon = new ImageIcon(newimg);
 
-        // Initialize the slidecount label
-        c.gridx = 0;
-        m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
-        m_controlPanel.add(m_slideCount, c);
-        
-        //Create empty label to get the spacing right
-        c.gridx = 3;
-        JLabel spaceFill = new JLabel("");
-        spaceFill.setMinimumSize(new Dimension(50, 15));
-        spaceFill.setPreferredSize(new Dimension(50, 15));
-        spaceFill.setMaximumSize(new Dimension(50, 15));
-        m_controlPanel.add(spaceFill, c);
+            m_nextSlide = new JButton();
+            m_nextSlide.setIcon(nextIcon);
+            c.gridx = 3;
+            m_controlPanel.add(m_nextSlide, c);
+
+            m_nextSlide.addActionListener(event -> showSlide(1, false));
+
+            m_previousSlide = new JButton();
+            m_previousSlide.setIcon(prevIcon);
+            c.gridx = 1;
+            m_controlPanel.add(m_previousSlide, c);
+
+            m_previousSlide.addActionListener(event -> showSlide(-1, false));
+
+            ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
+            ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
+
+            image = tempPlayIcon.getImage(); // transform it
+            newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon playIcon = new ImageIcon(newimg);
+
+            image = tempPauseIcon.getImage(); // transform it
+            newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon pauseIcon = new ImageIcon(newimg);
+
+            m_Pause = new JButton("Music");
+            c.gridx = 2;
+            m_controlPanel.add(m_Pause, c);
+
+            //Set icon for pause button
+            m_Pause.setIcon(pauseIcon);
+
+            m_Pause.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (m_paused) //if the Jukebox is already paused, resume it
+                    {
+                        m_Jukebox.resumePlayback();
+                        m_Pause.setIcon(pauseIcon);
+                        m_paused = false;
+                    }
+                    else { //otherwise, pause the Jukebox
+
+                        m_Jukebox.pausePlayback();
+                        m_Pause.setIcon(playIcon);
+                        m_paused = true;
+                    }
+                }
+            });
+
+            // Initialize the slidecount label
+            c.gridx = 0;
+            m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+            m_controlPanel.add(m_slideCount, c);
+
+            //Create empty label to get the spacing right
+            c.gridx = 4;
+            JLabel spaceFill = new JLabel("");
+            spaceFill.setMinimumSize(new Dimension(50, 15));
+            spaceFill.setPreferredSize(new Dimension(50, 15));
+            spaceFill.setMaximumSize(new Dimension(50, 15));
+            m_controlPanel.add(spaceFill, c);
+        }
+    	else {
+            // Set initial gridbag constraint parameters
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridy = 0;
+            c.weightx = 0.5;
+            c.weighty = 0.5;
+
+            ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
+            ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+
+            // Transform temp pause and play icons and store them in new variables
+            Image image = tempNextIcon.getImage(); // transform it
+            Image newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon nextIcon = new ImageIcon(newimg);
+
+            image = tempPrevIcon.getImage(); // transform it
+            newimg = image.getScaledInstance(24, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+            ImageIcon prevIcon = new ImageIcon(newimg);
+
+            m_nextSlide = new JButton();
+            m_nextSlide.setIcon(nextIcon);
+            c.gridx = 2;
+            m_controlPanel.add(m_nextSlide, c);
+
+            m_nextSlide.addActionListener(event -> showSlide(1, false));
+
+            m_previousSlide = new JButton();
+            m_previousSlide.setIcon(prevIcon);
+            c.gridx = 1;
+            m_controlPanel.add(m_previousSlide, c);
+
+            m_previousSlide.addActionListener(event -> showSlide(-1, false));
+
+            // Initialize the slidecount label
+            c.gridx = 0;
+            m_slideCount = new JLabel((m_currentSlideIndex + 1) + " of " + m_Slideshow.getSlideList().size());
+            m_controlPanel.add(m_slideCount, c);
+
+            //Create empty label to get the spacing right
+            c.gridx = 3;
+            JLabel spaceFill = new JLabel("");
+            spaceFill.setMinimumSize(new Dimension(50, 15));
+            spaceFill.setPreferredSize(new Dimension(50, 15));
+            spaceFill.setMaximumSize(new Dimension(50, 15));
+            m_controlPanel.add(spaceFill, c);
+        }
 
         m_paused = false;
     }
