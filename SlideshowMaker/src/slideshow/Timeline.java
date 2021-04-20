@@ -118,14 +118,17 @@ public class Timeline extends JPanel {
         add(items, BorderLayout.WEST);
 
         runtimeGraph = new JPanel();
-        runtimeGraph.setLayout(new GridLayout(0,2));
+        runtimeGraph.setLayout(new BorderLayout());
 
+        JPanel timingWrapper = new JPanel();
+        timingWrapper.setLayout(new BorderLayout());
         slideTimes = new JPanel();
         audioTimes = new JPanel();
         slideTimes.setLayout(new GridBagLayout());
         audioTimes.setLayout(new GridBagLayout());
-        runtimeGraph.add(slideTimes);
-        runtimeGraph.add(audioTimes);
+        timingWrapper.add(slideTimes, BorderLayout.WEST);
+        timingWrapper.add(audioTimes, BorderLayout.EAST);
+        runtimeGraph.add(timingWrapper, BorderLayout.NORTH);
 
         runtimeScroll = new JScrollPane(runtimeGraph);
         runtimeScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
