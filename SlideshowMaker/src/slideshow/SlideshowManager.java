@@ -30,6 +30,15 @@ public class SlideshowManager {
     private static String workingDir;
 
     /**
+     * Private constructor used to enforce Singleton implementation
+     */
+    private SlideshowManager()
+    {
+        DBNAME = "";
+        workingDir = "";
+    }
+
+    /**
      * Writes the list of slides out to the master database.
      * This function will be moved to the editor once it has been written
      * @param obj- JSONObject containing data to be written to the database.
