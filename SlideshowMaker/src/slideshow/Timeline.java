@@ -59,6 +59,8 @@ public class Timeline extends JPanel {
     private JPanel runtimeGraph;
     private JScrollPane runtimeScroll;
     private JTabbedPane runtime;
+    private ArrayList<JPanel> slideTimings;
+    private ArrayList<JLabel> lblSlideTimings;
     private JPanel slideTimes;
     private JPanel audioTimes;
     private double totalSlideTime = 0.0;
@@ -87,6 +89,9 @@ public class Timeline extends JPanel {
 
         slideList = new ArrayList();
         soundList = new ArrayList();
+
+        slideTimings = new ArrayList<>();
+        lblSlideTimings = new ArrayList<>();
 
         slideDurationPanels = new ArrayList<JPanel>();
         slideDurations = new ArrayList<JLabel>();
@@ -213,6 +218,7 @@ public class Timeline extends JPanel {
                         totalSlideTime -= Double.parseDouble(durationLabel.getText());
                         totalSlideTime += Double.parseDouble(newValue);
                         durationLabel.setText(newValue);
+                        changeSlideTiming(slideList.indexOf(thisSlide), Double.parseDouble(newValue));
                         updateRuntimeLabel();
                     }
                 }
@@ -380,6 +386,7 @@ public class Timeline extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int removeIndex = timelineSlides.indexOf(thisSlideDisplay);
                 slidePanel.remove(thisSlideDisplay); //remove slide from display
                 timelineSlides.remove(thisSlideDisplay); //remove slide from Timeline database
                 slideDurationPanels.remove(slideDuration);
@@ -394,6 +401,7 @@ public class Timeline extends JPanel {
                         totalSlideTime -= defaultSlideDuration;
                     }
                     updateRuntimeLabel();
+                    removeSlideTiming(removeIndex);
                 }
 
                 if (timelineSlides.size() == 1) {
@@ -492,17 +500,40 @@ public class Timeline extends JPanel {
     {
         JPanel slideTiming = new JPanel();
         JLabel lblSlideTiming = new JLabel(String.valueOf(slideNum), SwingConstants.CENTER);
-        int timingHeight = (int)(slideLength * 20);
+        int timingHeight = (int)(slideLength * 10);
         lblSlideTiming.setMinimumSize(new Dimension(25, timingHeight));
         lblSlideTiming.setPreferredSize(new Dimension(25, timingHeight));
         lblSlideTiming.setMaximumSize(new Dimension(25, timingHeight));
         slideTiming.add(lblSlideTiming);
         slideTiming.setBorder(BorderFactory.createTitledBorder(""));
 
+        slideTimings.add(slideTiming);
+        lblSlideTimings.add(lblSlideTiming);
+
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = slideNum;
         c.gridx = 0;
         slideTimes.add(slideTiming, c);
+    }
+
+    public void removeSlideTiming(int slideNum)
+    {
+        lblSlideTimings.remove(slideNum);
+        slideTimings.remove(slideNum);
+        slideTimes.remove(slideNum);
+
+        for (int i = 0; i < lblSlideTimings.size(); i++)
+            lblSlideTimings.get(i).setText(String.valueOf(i+1));
+    }
+
+    public void changeSlideTiming(int slideNum, double slideLength)
+    {
+        int timingHeight = (int)(slideLength * 10);
+        lblSlideTimings.get(slideNum).setMinimumSize(new Dimension(25, timingHeight));
+        lblSlideTimings.get(slideNum).setPreferredSize(new Dimension(25, timingHeight));
+        lblSlideTimings.get(slideNum).setMaximumSize(new Dimension(25, timingHeight));
+        lblSlideTimings.get(slideNum).repaint();
+        lblSlideTimings.get(slideNum).revalidate();
     }
 
     /**
