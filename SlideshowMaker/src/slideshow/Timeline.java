@@ -134,8 +134,8 @@ public class Timeline extends JPanel {
         timingWrapper.setLayout(new GridLayout(0,2));
         slideTimes = new JPanel();
         audioTimes = new JPanel();
-        slideTimes.setLayout(new GridBagLayout());
-        audioTimes.setLayout(new GridBagLayout());
+        slideTimes.setLayout(new BoxLayout(slideTimes, BoxLayout.Y_AXIS));
+        audioTimes.setLayout(new BoxLayout(audioTimes, BoxLayout.Y_AXIS));
         timingWrapper.add(slideTimes);
         timingWrapper.add(audioTimes);
         runtimeGraph.add(timingWrapper, BorderLayout.NORTH);
@@ -508,20 +508,19 @@ public class Timeline extends JPanel {
     {
         JPanel slideTiming = new JPanel();
         JLabel lblSlideTiming = new JLabel(String.valueOf(slideNum), SwingConstants.CENTER);
+        lblSlideTiming.setVerticalAlignment(SwingConstants.CENTER);
         int timingHeight = (int)(slideLength * 10);
-        lblSlideTiming.setMinimumSize(new Dimension(25, timingHeight));
-        lblSlideTiming.setPreferredSize(new Dimension(25, timingHeight));
-        lblSlideTiming.setMaximumSize(new Dimension(25, timingHeight));
+        slideTiming.setMinimumSize(new Dimension(40, timingHeight));
+        slideTiming.setPreferredSize(new Dimension(40, timingHeight));
+        slideTiming.setMaximumSize(new Dimension(40, timingHeight));
         slideTiming.add(lblSlideTiming);
         slideTiming.setBorder(BorderFactory.createTitledBorder(""));
 
         slideTimings.add(slideTiming);
         lblSlideTimings.add(lblSlideTiming);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = slideNum;
-        c.gridx = 0;
-        slideTimes.add(slideTiming, c);
+        slideTiming.setAlignmentY(TOP_ALIGNMENT);
+        slideTimes.add(slideTiming);
     }
 
     public void removeSlideTiming(int slideNum)
@@ -537,11 +536,11 @@ public class Timeline extends JPanel {
     public void changeSlideTiming(int slideNum, double slideLength)
     {
         int timingHeight = (int)(slideLength * 10);
-        lblSlideTimings.get(slideNum).setMinimumSize(new Dimension(25, timingHeight));
-        lblSlideTimings.get(slideNum).setPreferredSize(new Dimension(25, timingHeight));
-        lblSlideTimings.get(slideNum).setMaximumSize(new Dimension(25, timingHeight));
-        lblSlideTimings.get(slideNum).repaint();
-        lblSlideTimings.get(slideNum).revalidate();
+        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, timingHeight));
+        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, timingHeight));
+        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, timingHeight));
+        slideTimings.get(slideNum).repaint();
+        slideTimings.get(slideNum).revalidate();
     }
 
     public void moveSlideTimingUp(int slideNum)
@@ -557,15 +556,8 @@ public class Timeline extends JPanel {
         slideTimings.remove(slideNum);
         slideTimings.add(slideNum-1, pnlTemp);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = 0;
-        c.gridx = 0;
-
         for (int i = 0; i < slideTimings.size(); i++)
-        {
-            slideTimes.add(slideTimings.get(i), c);
-            c.gridy++;
-        }
+            slideTimes.add(slideTimings.get(i));
 
         for (int i = 0; i < lblSlideTimings.size(); i++)
             lblSlideTimings.get(i).setText(String.valueOf(i+1));
@@ -584,15 +576,8 @@ public class Timeline extends JPanel {
         slideTimings.remove(slideNum);
         slideTimings.add(slideNum+1, pnlTemp);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = 0;
-        c.gridx = 0;
-
         for (int i = 0; i < slideTimings.size(); i++)
-        {
-            slideTimes.add(slideTimings.get(i), c);
-            c.gridy++;
-        }
+            slideTimes.add(slideTimings.get(i));
 
         for (int i = 0; i < lblSlideTimings.size(); i++)
             lblSlideTimings.get(i).setText(String.valueOf(i+1));
@@ -762,20 +747,19 @@ public class Timeline extends JPanel {
     {
         JPanel audioTiming = new JPanel();
         JLabel lblAudioTiming = new JLabel(String.valueOf(audioNum), SwingConstants.CENTER);
+        lblAudioTiming.setVerticalAlignment(SwingConstants.CENTER);
         int timingHeight = (int)(audioLength * 10);
-        lblAudioTiming.setMinimumSize(new Dimension(25, timingHeight));
-        lblAudioTiming.setPreferredSize(new Dimension(25, timingHeight));
-        lblAudioTiming.setMaximumSize(new Dimension(25, timingHeight));
-        audioTiming.add(lblAudioTiming);
+        audioTiming.setMinimumSize(new Dimension(40, timingHeight));
+        audioTiming.setPreferredSize(new Dimension(40, timingHeight));
+        audioTiming.setMaximumSize(new Dimension(40, timingHeight));
+        audioTiming.add(lblAudioTiming, SwingConstants.CENTER);
         audioTiming.setBorder(BorderFactory.createTitledBorder(""));
 
         audioTimings.add(audioTiming);
         lblAudioTimings.add(lblAudioTiming);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = audioNum;
-        c.gridx = 0;
-        audioTimes.add(audioTiming, c);
+        audioTiming.setAlignmentY(TOP_ALIGNMENT);
+        audioTimes.add(audioTiming);
     }
 
     public void removeAudioTiming(int audioNum)
@@ -801,15 +785,9 @@ public class Timeline extends JPanel {
         audioTimings.remove(audioNum);
         audioTimings.add(audioNum-1, pnlTemp);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = 0;
-        c.gridx = 0;
 
         for (int i = 0; i < audioTimings.size(); i++)
-        {
-            audioTimes.add(audioTimings.get(i), c);
-            c.gridy++;
-        }
+            audioTimes.add(audioTimings.get(i));
 
         for (int i = 0; i < lblAudioTimings.size(); i++)
             lblAudioTimings.get(i).setText(String.valueOf(i+1));
@@ -828,15 +806,8 @@ public class Timeline extends JPanel {
         audioTimings.remove(audioNum);
         audioTimings.add(audioNum+1, pnlTemp);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridy = 0;
-        c.gridx = 0;
-
         for (int i = 0; i < audioTimings.size(); i++)
-        {
-            audioTimes.add(audioTimings.get(i), c);
-            c.gridy++;
-        }
+            audioTimes.add(audioTimings.get(i));
 
         for (int i = 0; i < lblAudioTimings.size(); i++)
             lblAudioTimings.get(i).setText(String.valueOf(i+1));
