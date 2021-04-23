@@ -195,6 +195,7 @@ public class Timeline extends JPanel {
 
                 totalSlideTime += defaultSlideDuration;
                 durationLabel.setText(String.valueOf(defaultSlideDuration));
+                changeSlideTiming(slideList.indexOf(thisSlide), defaultSlideDuration);
 
                 if (defaultDuration.isSelected()) {
                     durationAdjust.setVisible(false);
@@ -360,6 +361,7 @@ public class Timeline extends JPanel {
                 int currentItemIndex = timelineSlides.indexOf(thisSlideDisplay); //get index of selected Slide
                 if (currentItemIndex > 0) //if the Slide can be moved up
                 {
+                    moveSlideTimingUp(currentItemIndex);
                     for (int i = 0; i < timelineSlides.size(); i++) {
                         slidePanel.remove(timelineSlides.get(i)); //clear the display
                     }
@@ -427,6 +429,7 @@ public class Timeline extends JPanel {
                 int currentItemIndex = timelineSlides.indexOf(thisSlideDisplay);
 
                 if (currentItemIndex < timelineSlides.size() - 1) {
+                    moveSlideTimingDown(currentItemIndex);
                     for (int i = 0; i < timelineSlides.size(); i++) {
                         slidePanel.remove(timelineSlides.get(i)); //clear GUI
                     }
@@ -534,6 +537,60 @@ public class Timeline extends JPanel {
         lblSlideTimings.get(slideNum).setMaximumSize(new Dimension(25, timingHeight));
         lblSlideTimings.get(slideNum).repaint();
         lblSlideTimings.get(slideNum).revalidate();
+    }
+
+    public void moveSlideTimingUp(int slideNum)
+    {
+        for (int i = 0; i < slideTimings.size(); i++)
+            slideTimes.remove(slideTimings.get(i));
+
+        JLabel lblTemp = lblSlideTimings.get(slideNum);
+        lblSlideTimings.remove(slideNum);
+        lblSlideTimings.add(slideNum-1, lblTemp);
+
+        JPanel pnlTemp = slideTimings.get(slideNum);
+        slideTimings.remove(slideNum);
+        slideTimings.add(slideNum-1, pnlTemp);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = 0;
+        c.gridx = 0;
+
+        for (int i = 0; i < slideTimings.size(); i++)
+        {
+            slideTimes.add(slideTimings.get(i), c);
+            c.gridy++;
+        }
+
+        for (int i = 0; i < lblSlideTimings.size(); i++)
+            lblSlideTimings.get(i).setText(String.valueOf(i+1));
+    }
+
+    public void moveSlideTimingDown(int slideNum)
+    {
+        for (int i = 0; i < slideTimings.size(); i++)
+            slideTimes.remove(slideTimings.get(i));
+
+        JLabel lblTemp = lblSlideTimings.get(slideNum);
+        lblSlideTimings.remove(slideNum);
+        lblSlideTimings.add(slideNum+1, lblTemp);
+
+        JPanel pnlTemp = slideTimings.get(slideNum);
+        slideTimings.remove(slideNum);
+        slideTimings.add(slideNum+1, pnlTemp);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = 0;
+        c.gridx = 0;
+
+        for (int i = 0; i < slideTimings.size(); i++)
+        {
+            slideTimes.add(slideTimings.get(i), c);
+            c.gridy++;
+        }
+
+        for (int i = 0; i < lblSlideTimings.size(); i++)
+            lblSlideTimings.get(i).setText(String.valueOf(i+1));
     }
 
     /**
