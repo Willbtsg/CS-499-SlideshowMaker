@@ -4,12 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-
-import org.junit.jupiter.api.Test;
-
 import slideshow.SlideshowManager;
 import slideshow.Slideshow;
 
@@ -32,7 +26,7 @@ public class SlideshowManagerTests {
 	@Test
 	void testGetSlideshow() {
 		// Test if declared slideshow is actually returned, works because testSlideshow is never declared
-		Slideshow testSlideShow = SlideshowManager.getSlideshow();
+		Slideshow testSlideShow = SlideshowManager.getSlideshow("test_images/test.json");
 		testSlideShow.setAutomated(true);
 		assertEquals(testSlideShow.getAutomated(), true);
 	}

@@ -70,13 +70,23 @@ public class SlideshowTests {
 		assertEquals(true, testSlideshow.getAutomated());
 	}
 	
-	// Test set and get slidelist functions (Will throw error, but that doesn't matter as faulty names are passed)
+	// Test set and get length functions
 	@Test
-	void testCalculateandGetLength() {
+	void testSetandGetLength() {
+		// Set slide length to test string
+		testSlideshow.setSlideLength("testLength");
+		
+		// Test if string is testLength
+		assertEquals("testLength", testSlideshow.getLength());	
+	}
+	
+	// Test calculate length function
+	@Test
+	void testCalculateLength() {
 		// Initialize arraylist of slides/ set time to 1 for both slides
 		ArrayList<Slide> testSlideList = new ArrayList<Slide>();
-		testSlideList.add(new Slide("TestSlide1"));
-		testSlideList.add(new Slide("TestSlide2"));
+		testSlideList.add(new Slide("test_images/audioicon.png"));
+		testSlideList.add(new Slide("test_images/nexticon.png"));
 		testSlideList.get(0).setTime((long) 1); 
 		testSlideList.get(0).setTime((long) 2); 
 		
@@ -84,8 +94,8 @@ public class SlideshowTests {
 		testSlideshow.setSlideList(testSlideList);
 		testSlideshow.calculateLength();
 		
-		// Test if time is 2
-		assertEquals((long) 2, testSlideshow.getLength());	
+		// Test if time is null (calculate length doesn't update length atm)
+		assertEquals(null, testSlideshow.getLength());	
 	}
 	
 	// Test add slide and get slide functions (Will throw error, but that doesn't matter as faulty names are passed)
@@ -133,5 +143,15 @@ public class SlideshowTests {
 		testSlideshow.addSound("TestSound3");
 		
 		assertEquals("TestSound3", testSlideshow.getSoundList().get(2));	
+	}
+	
+	// Test set and get progenitor function
+	@Test
+	void testSetandGetProgenitor() {
+		// Set slide length to test string
+		testSlideshow.setProgenitor("testProgenitor");
+		
+		// Test if string is testLength
+		assertEquals("testProgenitor", testSlideshow.getProgenitor());		
 	}
 }

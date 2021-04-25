@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import transitions.LRWipe;
 
-
 /**
  * Class name: LRWipeTests
  *
