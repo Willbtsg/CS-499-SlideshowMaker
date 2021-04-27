@@ -54,6 +54,7 @@ public class Timeline extends JPanel {
     private ArrayList<String> soundList;
     private ArrayList<JPanel> slideDurationPanels;
     private ArrayList<JLabel> slideDurations;
+    private ArrayList<JCheckBox> defaultDurationChecks;
     private ArrayList<JComboBox> transitionDurations;
     private JLabel runtimeLabel;
     private JPanel runtimeGraph;
@@ -100,6 +101,7 @@ public class Timeline extends JPanel {
 
         slideDurationPanels = new ArrayList<JPanel>();
         slideDurations = new ArrayList<JLabel>();
+        defaultDurationChecks = new ArrayList<>();
         transitionDurations = new ArrayList();
 
         GridLayout grid = new GridLayout(2,1); //layout to be used for Slide and Audio tabs
@@ -174,6 +176,7 @@ public class Timeline extends JPanel {
         JCheckBox defaultDuration = new JCheckBox("Use Default Slide Duration");
         defaultDuration.setSelected(true);
         slideDuration.add(defaultDuration, BorderLayout.NORTH);
+        defaultDurationChecks.add(defaultDuration);
 
         JPanel durationAdjust = new JPanel();
         durationAdjust.setLayout(new BorderLayout());
@@ -554,7 +557,8 @@ public class Timeline extends JPanel {
         int timingHeight = (int)(slideLength * 10);
         for (int i = 0 ; i < slideTimings.size(); i++)
         {
-            if (slideTimings.get(i).getHeight() == (int)(defaultSlideDuration * 10))
+            //if (slideTimings.get(i).getHeight() == (int)(defaultSlideDuration * 10))
+            if (defaultDurationChecks.get(i).isSelected())
             {
                 slideTimings.get(i).setMinimumSize(new Dimension(40, timingHeight));
                 slideTimings.get(i).setPreferredSize(new Dimension(40, timingHeight));
