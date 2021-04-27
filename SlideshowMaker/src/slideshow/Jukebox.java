@@ -54,7 +54,12 @@ public class Jukebox {
      * @return m_soundList- list of filepaths for sounds the Jukebox can play
      */
     public int getSoundListSize() { return m_soundList.size(); }
-
+    
+    /**
+     * Gets m_soundList variable
+     */
+    public ArrayList<String> getSoundList(){ return m_soundList; }
+ 
     /**
      * Sets entire m_soundList at once
      * @param soundList- new list of filepaths to be stored within Jukebox

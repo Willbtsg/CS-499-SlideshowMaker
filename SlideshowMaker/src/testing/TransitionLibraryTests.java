@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import transitions.Transition;
 import transitions.TransitionLibrary;
 
-
 /**
  * Class name: TransitionLibraryTests
  *

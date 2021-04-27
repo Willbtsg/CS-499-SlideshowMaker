@@ -6,8 +6,6 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import slideshow.Slide;
-import transitions.LRWipe;
-import transitions.RLWipe;
 
 /**
  * Class name: SlideTests
@@ -16,26 +14,32 @@ import transitions.RLWipe;
  */
 public class SlideTests {
 	// Instantiate an object to perform test methods on
-	private Slide testSlide = new Slide("images/download.png");
+	private Slide testSlide = new Slide("test_images/audioicon.png");
 	
 	// Test toJSON and JSONObject constructor function
 	@Test
 	void testToJSON() {
+		// Create JSON object and add imgTime to it
 		JSONObject testJSON = testSlide.toJSON();
 		testJSON.put("imgTime", (long) 20);
+		
+		// Call constructor that uses testJSON file to reset slide
 		testSlide = new Slide(testJSON);
-		assertEquals("images/download.png", testSlide.getName());
+		
+		// test if name is correct and that the time was added
+		assertEquals("test_images/audioicon.png", testSlide.getName());
 		assertEquals((long) 20, testSlide.getTime());
 	}
 	
 	// Test set image functions
 	@Test
 	void testSetandGetImage() {
-		// Slide(String name) function calls setimage function
-		Slide newSlide = new Slide("images/audioicon.png");
+		// Slide(String name) function calls setImage function
+		Slide newSlide = new Slide("test_images/audioicon.png");
 		
-		assertEquals("images/audioicon.png", newSlide.getName());	
+		assertEquals("test_images/audioicon.png", newSlide.getName());	// Check that name is correct
 		
+		// If image was actually set to a value image object will not be null 
 		if(newSlide.getImage() != null) {
 			// Test passed
 			assertEquals(1, 1);
@@ -48,7 +52,7 @@ public class SlideTests {
 	// Test get name function
 	@Test
 	void testGetName() {
-		assertEquals("images/download.png", testSlide.getName());
+		assertEquals("test_images/audioicon.png", testSlide.getName());
 	}
 	
 	// Test set and get time functions
