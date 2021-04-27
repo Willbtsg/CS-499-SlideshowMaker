@@ -329,9 +329,17 @@ public class Timeline extends JPanel {
                 thisSlide.setTransitions(transition); //set Transition information in Slide object
 
                 if (transSelect.getSelectedItem() != "None") //only have timing dropdown enabled if a transition is in use
+                {
                     transLength.setEnabled(true);
+                    Double transitionLength = (Double) transLength.getSelectedItem();
+                    addTransToSlideTiming(slideList.indexOf(thisSlide), transitionLength);
+                }
                 else
+                {
                     transLength.setEnabled(false);
+                    Double transitionLength = (Double) transLength.getSelectedItem();
+                    subTransFromSlidingTiming(slideList.indexOf(thisSlide), transitionLength);
+                }
 
                 Double transitionLength = (Double) transLength.getSelectedItem(); //make sure Transition timing is saved when switching
                 transitionLength *= 1000;
@@ -539,6 +547,32 @@ public class Timeline extends JPanel {
         slideTimings.get(slideNum).setMinimumSize(new Dimension(40, timingHeight));
         slideTimings.get(slideNum).setPreferredSize(new Dimension(40, timingHeight));
         slideTimings.get(slideNum).setMaximumSize(new Dimension(40, timingHeight));
+        slideTimings.get(slideNum).repaint();
+        slideTimings.get(slideNum).revalidate();
+    }
+
+    public void addTransToSlideTiming(int slideNum, double transLength)
+    {
+        int prevHeight = slideTimings.get(slideNum).getHeight();
+        int transHeight = (int)(transLength * 10);
+        int newHeight = prevHeight + transHeight;
+
+        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).repaint();
+        slideTimings.get(slideNum).revalidate();
+    }
+
+    public void subTransFromSlidingTiming(int slideNum, double transLength)
+    {
+        int prevHeight = slideTimings.get(slideNum).getHeight();
+        int transHeight = (int)(transLength * 10);
+        int newHeight = prevHeight - transHeight;
+
+        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
         slideTimings.get(slideNum).repaint();
         slideTimings.get(slideNum).revalidate();
     }
