@@ -417,7 +417,6 @@ public class Timeline extends JPanel {
                         totalSlideTime -= defaultSlideDuration;
                     }
                     updateRuntimeLabel();
-                    removeSlideTiming(removeIndex);
                 }
 
                 if (timelineSlides.size() == 1) {
@@ -430,6 +429,7 @@ public class Timeline extends JPanel {
                     timelineSlides.get(i).setBorder(BorderFactory.createTitledBorder(String.valueOf(i + 1)));
                     slidePanel.add(timelineSlides.get(i)); //add all slides back in the new order
                 }
+                removeSlideTiming(removeIndex);
                 repaint(); //update display to reflect changes
                 revalidate();
             }
@@ -503,13 +503,10 @@ public class Timeline extends JPanel {
         slidePanel.add(thisSlideDisplay);
         revalidate(); //update GUI after adding new component
 
-        if (automated)
-        {
-            try {
-                addSlideTiming(timelineSlides.size(), Double.parseDouble(slideDurations.get(slideDurations.size()-1).getText()));
-            } catch (Exception e) {
-                addSlideTiming(timelineSlides.size(), defaultSlideDuration);
-            }
+        try {
+            addSlideTiming(timelineSlides.size(), Double.parseDouble(slideDurations.get(slideDurations.size()-1).getText()));
+        } catch (Exception e) {
+            addSlideTiming(timelineSlides.size(), defaultSlideDuration);
         }
     }
 
@@ -552,6 +549,22 @@ public class Timeline extends JPanel {
         slideTimings.get(slideNum).revalidate();
     }
 
+    public void updateSlideTimingsToDefault(double slideLength)
+    {
+        int timingHeight = (int)(slideLength * 10);
+        for (int i = 0 ; i < slideTimings.size(); i++)
+        {
+            if (slideTimings.get(i).getHeight() == (int)(defaultSlideDuration * 10))
+            {
+                slideTimings.get(i).setMinimumSize(new Dimension(40, timingHeight));
+                slideTimings.get(i).setPreferredSize(new Dimension(40, timingHeight));
+                slideTimings.get(i).setMaximumSize(new Dimension(40, timingHeight));
+                slideTimings.get(i).repaint();
+                slideTimings.get(i).revalidate();
+            }
+        }
+    }
+
     public void addTransToSlideTiming(int slideNum, double transLength)
     {
         int prevHeight = slideTimings.get(slideNum).getHeight();
@@ -582,15 +595,9 @@ public class Timeline extends JPanel {
     {
         int prevHeight = slideTimings.get(slideNum).getHeight();
         int oldTransHeight = (int)(oldTransLength * 10);;
-        System.out.println("The old transition height is " + oldTransHeight);
         int newHeight =  prevHeight - oldTransHeight;
-        System.out.println("The new overall height (before adding the new trans) is " + newHeight);
         int newTransHeight = (int)(newTransLength * 10);
-        System.out.println("The new transition height is " + newTransHeight);
         newHeight = newHeight + newTransHeight;
-        System.out.println("The new overall height is " + newHeight);
-
-        System.out.println("Changing slide " + slideNum + " from " + prevHeight + " to " + newHeight);
 
         slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
         slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
@@ -703,8 +710,7 @@ public class Timeline extends JPanel {
                 audioPanel.remove(thisSound); //remove sound from GUI
                 timelineAudio.remove(thisSound); //remove sound from backend GUI list
                 totalAudioTime -= soundLength;
-                if (automated)
-                    removeAudioTiming(audioIndex);
+                removeAudioTiming(audioIndex);
                 updateRuntimeLabel();
 
                 if (timelineAudio.size() == 1)
@@ -792,10 +798,8 @@ public class Timeline extends JPanel {
 
         audioPanel.add(thisSound); //add new sound to GUI
 
-        if (automated)
-        {
-            addAudioTiming(timelineAudio.size(), soundLength);
-        }
+        addAudioTiming(timelineAudio.size(), soundLength);
+
         revalidate();
     }
 
