@@ -354,6 +354,7 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Double transitionLength = (Double) transLength.getSelectedItem();
+                changeTransTiming(slideList.indexOf(thisSlide), thisSlide.getTransTime()/1000, transitionLength);
                 transitionLength *= 1000;
                 long transitionLengthMs = transitionLength.longValue();
                 thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
@@ -569,6 +570,27 @@ public class Timeline extends JPanel {
         int prevHeight = slideTimings.get(slideNum).getHeight();
         int transHeight = (int)(transLength * 10);
         int newHeight = prevHeight - transHeight;
+
+        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).repaint();
+        slideTimings.get(slideNum).revalidate();
+    }
+
+    public void changeTransTiming(int slideNum, double oldTransLength, double newTransLength)
+    {
+        int prevHeight = slideTimings.get(slideNum).getHeight();
+        int oldTransHeight = (int)(oldTransLength * 10);;
+        System.out.println("The old transition height is " + oldTransHeight);
+        int newHeight =  prevHeight - oldTransHeight;
+        System.out.println("The new overall height (before adding the new trans) is " + newHeight);
+        int newTransHeight = (int)(newTransLength * 10);
+        System.out.println("The new transition height is " + newTransHeight);
+        newHeight = newHeight + newTransHeight;
+        System.out.println("The new overall height is " + newHeight);
+
+        System.out.println("Changing slide " + slideNum + " from " + prevHeight + " to " + newHeight);
 
         slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
         slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
