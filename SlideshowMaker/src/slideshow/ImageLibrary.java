@@ -31,7 +31,6 @@ public class ImageLibrary extends JPanel {
     private File dir;
 
     // An array of the image types our app supports
-    // TODO: Accept only jpg and jpeg
     private String[] extensions = new String[]{ "jpg", "jpeg", "jfif", "png" };
 
     /////////////
