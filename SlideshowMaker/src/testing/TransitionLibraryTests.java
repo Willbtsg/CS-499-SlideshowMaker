@@ -53,5 +53,45 @@ public class TransitionLibraryTests {
 		testTransitionList = testLibrary.retrieveTransitions("CrossFade");
 		assertEquals(testTransitionList.get(0).getType(), "CrossFade");
 		assertEquals(testTransitionList.get(1).getType(), "CrossFade");
+		
+		// Test drwipe addition
+		testTransitionList = testLibrary.retrieveTransitions("DRWipe");
+		assertEquals(testTransitionList.get(0).getType(), "DRWipe");
+		assertEquals(testTransitionList.get(1).getType(), "ULWipe");
+		
+		// Test ulwipe addition
+		testTransitionList = testLibrary.retrieveTransitions("ULWipe");
+		assertEquals(testTransitionList.get(0).getType(), "ULWipe");
+		assertEquals(testTransitionList.get(1).getType(), "DRWipe");
+		
+		// Test dlwipe addition
+		testTransitionList = testLibrary.retrieveTransitions("DLWipe");
+		assertEquals(testTransitionList.get(0).getType(), "DLWipe");
+		assertEquals(testTransitionList.get(1).getType(), "URWipe");
+		
+		// Test urwipe addition
+		testTransitionList = testLibrary.retrieveTransitions("URWipe");
+		assertEquals(testTransitionList.get(0).getType(), "URWipe");
+		assertEquals(testTransitionList.get(1).getType(), "DLWipe");
+		
+		// Test hzopen addition
+		testTransitionList = testLibrary.retrieveTransitions("HZOpen");
+		assertEquals(testTransitionList.get(0).getType(), "HZOpen");
+		assertEquals(testTransitionList.get(1).getType(), "HZClose");
+		
+		// Test hzclose addition
+		testTransitionList = testLibrary.retrieveTransitions("HZClose");
+		assertEquals(testTransitionList.get(0).getType(), "HZClose");
+		assertEquals(testTransitionList.get(1).getType(), "HZOpen");
+		
+		// Test vtopen addition
+		testTransitionList = testLibrary.retrieveTransitions("VTOpen");
+		assertEquals(testTransitionList.get(0).getType(), "VTOpen");
+		assertEquals(testTransitionList.get(1).getType(), "VTClose");
+		
+		// Test vtclose addition
+		testTransitionList = testLibrary.retrieveTransitions("VTClose");
+		assertEquals(testTransitionList.get(0).getType(), "VTClose");
+		assertEquals(testTransitionList.get(1).getType(), "VTOpen");
 	}
 }
