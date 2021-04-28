@@ -3,6 +3,9 @@ package slideshow;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
@@ -121,16 +124,19 @@ public class SlideshowManager {
             for (Slide slide : slideList)
             {
                 if (slide.getImage() == null)
-                    return null;
+                    return null; //if image is null, the layout file is unusable
             }
 
             slideshow.setSlideList(slideList); //set Slideshow's m_SlideList
 
             if (tempSounds != null)
             {
+                String tempSound;
                 for (Object j : tempSounds) {
                     JSONObject tempJ = (JSONObject) j;
-                    soundList.add((String) tempJ.get("name")); //convert JSON data to String of sound's filename
+                    tempSound = (String) tempJ.get("name"); //convert JSON data to String of sound's filename
+                    AudioSystem.getAudioInputStream(new File(tempSound)); //if sound file cannot be read in, layout file is unusable
+                    soundList.add(tempSound);
                 }
             }
 
