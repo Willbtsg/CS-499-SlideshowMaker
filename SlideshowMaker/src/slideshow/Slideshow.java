@@ -1,4 +1,5 @@
 package slideshow;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import java.util.ArrayList;
@@ -15,8 +16,9 @@ public class Slideshow {
      * Boolean m_automated- indicates whether or not this Slideshow is to be viewed with automated or manual playback
      * ArrayList<Slide> m_SlideList- collection of Slides to be displayed
      * ArrayList<String> m_SoundList- contains names of audio files to be played by Jukebox
-     * long m_SlideshowLength- contains String displaying the sum of Slide and Transition timing (i.e. runtime for automated Slideshow)
+     * long m_slideshowLength- contains String displaying the sum of Slide and Transition timing (i.e. runtime for automated Slideshow)
      * long m_AudioLength- contains String displaying the sum of sound file runtimes
+     * String m_Progenitor- tag used to indicate if the Slideshow layout file was created by SlideshowEditor
      */
     private Boolean m_automated;
     private ArrayList<Slide> m_SlideList;
@@ -25,6 +27,9 @@ public class Slideshow {
     private String m_AudioLength;
     private String m_Progenitor;
 
+    /**
+     * Constructor for Slideshow. No functionality other than initializing variables
+     */
     public Slideshow()
     {
         m_automated = false;
@@ -97,48 +102,15 @@ public class Slideshow {
 
     /**
      * Sets Slideshow length in MIN:SEC format
-     * @param slideLength
+     * @param slideLength- String showing Slideshow runtime in MIN:SEC format
      */
     public void setSlideLength(String slideLength) { m_slideshowLength = slideLength; }
 
     /**
-     * Returns combined length of Slides and their forward Transitions
-     * @return
-     */
-    public String getLength() { return m_slideshowLength; }
-
-
-    /**
      * Set total audio runtime in MIN:SEC format
-     * @param soundLength
+     * @param soundLength- String showing audio runtime in MIN:SEC format
      */
     public void setSoundLength(String soundLength) { m_AudioLength = soundLength; }
-
-    /**
-     * Returns total audio runtime in MIN:SEC format
-     * @return
-     */
-    public String getSoundLength() { return m_AudioLength; }
-
-    /**
-     * Calculates sum of Slides' display times and Transition lengths and saves as m_SlideshowLength (i.e. total runtime)
-     */
-    public void calculateLength()
-    {
-        int tempLength = 0;
-
-        for (Slide s : m_SlideList)
-        {
-            tempLength += s.getTime();
-
-            if (s.hasTransitions())
-            {
-                tempLength += s.getTransTime();
-            }
-        }
-
-        //m_slideshowLength = tempLength;
-    }
 
     /**
      * Retrieves Slide object to be displayed
@@ -146,19 +118,6 @@ public class Slideshow {
      * @return
      */
     public Slide getSlide(int index) { return m_SlideList.get(index); }
-
-    /**
-     * Adds a new Slide to the end of m_SlideList
-     * @param newSlide- new Slide to be added to end of m_SlideList
-     */
-    public void addSlide(Slide newSlide) { m_SlideList.add(newSlide); }
-
-    /**
-     * Adds a new Slide to a specific position in m_SlideList
-     * @param newSlide- new Slide to be added
-     * @param index- position for new Slide to be added at
-     */
-    public void addSlide(Slide newSlide, int index) { m_SlideList.add(index, newSlide); }
 
     /**
      * Retrieves list of sounds used with this Slideshow (used to fill Jukebox)
@@ -173,16 +132,18 @@ public class Slideshow {
     public void setSoundList(ArrayList soundList) { m_SoundList = soundList; }
 
     /**
-     * Adds a new filename to m_SoundList
-     * @param sound- filename of new sound for this Slideshow
+     * Sets String to indicate if the Slideshow information comes from a file created by SlideshowEditor
+     * @param progenitor- String containing information about what program created the Slideshow layout file
      */
-    public void addSound(String sound) { m_SoundList.add(sound); }
-
     public void setProgenitor(String progenitor)
     {
         m_Progenitor = progenitor;
     }
 
+    /**
+     * Retrieves String that indicates whether the layout file was created by Slideshow editor
+     * @return
+     */
     public String getProgenitor()
     {
         return m_Progenitor;

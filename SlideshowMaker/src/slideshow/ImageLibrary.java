@@ -38,6 +38,13 @@ public class ImageLibrary extends JPanel {
     // METHODS //
     /////////////
 
+    /**
+     * Constructor for ImageLibrary. If a directory has been selected, this constructor reads in the image data and creates
+     * JPanels to display them in.
+     *
+     * @param timeline- Timeline object to send data to when adding images to Slideshow
+     * @param directory- directory to use when retrieving image data
+     */
     private ImageLibrary(Timeline timeline, String directory)
     {
         if (directory != null)

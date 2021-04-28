@@ -3,7 +3,6 @@ package slideshow;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -75,6 +74,9 @@ public class Timeline extends JPanel {
     // METHODS //
     /////////////
 
+    /**
+     * Constructor for Timeline. Creates scrollpanes used to display Slideshow information
+     */
     private Timeline()
     {
         setLayout(new BorderLayout());

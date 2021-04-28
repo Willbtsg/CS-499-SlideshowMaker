@@ -44,6 +44,13 @@ public class AudioLibrary extends JPanel {
     // METHODS //
     /////////////
 
+    /**
+     * Constructor for AudioLibrary. If a directory has been selected, this constructor reads in the audio data and creates
+     * JPanels to display them in.
+     *
+     * @param timeline- Timeline object to send data to when adding audio to Slideshow
+     * @param directory- directory to use when retrieving audio data
+     */
     private AudioLibrary(Timeline timeline, String directory)
     {
         if (directory != null)
