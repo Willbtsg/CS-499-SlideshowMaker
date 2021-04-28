@@ -1,13 +1,11 @@
 package slideshow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Class name: SlideshowPlayer
@@ -93,9 +91,10 @@ public class SlideshowPlayer extends JFrame  {
         JMenu fileMenu = new JMenu("File");
         topMenu.add(fileMenu);
 
-
         JMenuItem openShow = new JMenuItem("Open Slideshow"); //allow user to set directory for Slideshow creation
         openShow.addActionListener(event -> initializeSlideshow());
+        openShow.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK)); //add keyboard shortcut Ctrl + O
         fileMenu.add(openShow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
@@ -132,6 +131,7 @@ public class SlideshowPlayer extends JFrame  {
         m_automated = false;
         m_transitionRunning = false;
         m_pauseQueued = false;
+        m_currentSlideIndex = -1;
 
         String welcomeMsg = "<html><div style='text-align: center;'>Welcome to the greatest slideshow player ever made.<br>To start playing a slideshow, " +
                 "use the \"File\" menu in the top left corner<br>and select \"Open Slideshow\" to find the directory containing the slideshow you'd like to play.<br>" +
@@ -145,14 +145,14 @@ public class SlideshowPlayer extends JFrame  {
      */
     public void initializeSlideshow()
     {
-        m_Jukebox.pausePlayback(); //pause any audio that may be playing
+        boolean needToResume = false; //flag used to indicate if a automated Slideshow will need to be resumed if file selection is aborted
 
-        if (m_automated) //if Slideshow is automated, pause the Slide timer as well
+        if (m_automated && !m_paused) //if Slideshow is automated, pause everything
         {
-            m_automationTimer.stop(); //stop Slide timer and update delay so it doesn't reset when resumed
-            m_timeElapsed = System.currentTimeMillis() - m_slideStart; //calculate amount of time Slide has been active
-            if (!m_paused)
-                m_automationTimer.setInitialDelay((int) (m_Slideshow.getSlide(m_currentSlideIndex).getTime() - m_timeElapsed));
+            m_Pause.doClick();
+            needToResume = true;
+        } else {
+            m_Jukebox.pausePlayback(); //if the Slideshow is manual, just pause the music
         }
 
         String tempPath = SlideshowManager.selectSlideshow(this); //get the user's selection
@@ -236,17 +236,17 @@ public class SlideshowPlayer extends JFrame  {
 
             loading.dispose();
 
-        } else { //if the user didn't pick a new Slideshow, resume the current one
+        } else if (m_currentSlideIndex != -1) { //if the user didn't pick a new Slideshow, resume the current one
 
             m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(m_currentSlideIndex).getImage()));
 
-            if (m_automated && !m_paused)
+            if (needToResume) //if an automated Slideshow was paused to pull up the file menu, resume playback
             {
-                m_slideStart = System.currentTimeMillis() - m_timeElapsed; //offset Timer start to account for Pause
-                m_automationTimer.start();
-            }
-            if (!m_paused)
+                m_Pause.doClick();
+            } else if (!m_automated && !m_paused) //if a manual Slideshow's music was paused to pull up the file menu, resume playback
+            {
                 m_Jukebox.resumePlayback();
+            }
         }
     }
 
