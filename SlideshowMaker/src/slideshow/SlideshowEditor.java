@@ -1,19 +1,11 @@
 package slideshow;
 
-import transitions.Transition;
-
-import transitions.TransitionLibrary;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
 
 
 /**
@@ -52,6 +44,10 @@ public class SlideshowEditor extends JFrame {
         SlideshowEditor.getInstance();
     }
 
+    /**
+     * Constructor function used to initialize the SlideshowEditor JFrame
+     * Creates all necessary GUI components and enables them for use
+     */
     public SlideshowEditor()
     {
         // INITIALIZING THE WINDOW
@@ -109,10 +105,14 @@ public class SlideshowEditor extends JFrame {
 
         JMenuItem newDirectory = new JMenuItem("Set Directory"); //allow user to set directory for Slideshow creation
         newDirectory.addActionListener(event -> changeDirectory());
+        newDirectory.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK)); //add keyboard shortcut Ctrl + O
         fileMenu.add(newDirectory);
 
         JMenuItem exportSlideshow = new JMenuItem("Export Slideshow");
         exportSlideshow.addActionListener(event -> timeline.exportSlideshow(automated));
+        exportSlideshow.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK)); //add keyboard shortcut Ctrl + S
         fileMenu.add(exportSlideshow);
 
         JMenuItem closeProgram = new JMenuItem("Exit"); //add Exit Program button to File menu
