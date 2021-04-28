@@ -69,51 +69,6 @@ public class SlideshowTests {
 		testSlideshow.setAutomated(true);
 		assertEquals(true, testSlideshow.getAutomated());
 	}
-	
-	// Test set and get length functions
-	@Test
-	void testSetandGetLength() {
-		// Set slide length to test string
-		testSlideshow.setSlideLength("testLength");
-		
-		// Test if string is testLength
-		assertEquals("testLength", testSlideshow.getLength());	
-	}
-	
-	// Test calculate length function
-	@Test
-	void testCalculateLength() {
-		// Initialize arraylist of slides/ set time to 1 for both slides
-		ArrayList<Slide> testSlideList = new ArrayList<Slide>();
-		testSlideList.add(new Slide("test_images/audioicon.png"));
-		testSlideList.add(new Slide("test_images/nexticon.png"));
-		testSlideList.get(0).setTime((long) 1); 
-		testSlideList.get(0).setTime((long) 2); 
-		
-		// Set slidelist in slideshow and calculate length
-		testSlideshow.setSlideList(testSlideList);
-		testSlideshow.calculateLength();
-		
-		// Test if time is null (calculate length doesn't update length atm)
-		assertEquals(null, testSlideshow.getLength());	
-	}
-	
-	// Test add slide and get slide functions (Will throw error, but that doesn't matter as faulty names are passed)
-	@Test
-	void testAddandGetSlide() {
-		// Initialize arraylist of slides
-		ArrayList<Slide> testSlideList = new ArrayList<Slide>();
-		testSlideList.add(new Slide("TestSlide1"));
-		testSlideList.add(new Slide("TestSlide2"));
-		
-		// Set slidelist in slideshow and add slides to it
-		testSlideshow.setSlideList(testSlideList);
-		testSlideshow.addSlide(new Slide("TestSlide3"));
-		testSlideshow.addSlide(new Slide("TestSlide4"), 0);
-		
-		assertEquals("TestSlide4", testSlideshow.getSlideList().get(0).getName());
-		assertEquals("TestSlide3", testSlideshow.getSlideList().get(3).getName());	
-	}
 
 	// Test set and get soundlist functions
 	@Test
@@ -128,21 +83,6 @@ public class SlideshowTests {
 		
 		assertEquals("TestSound1", testSlideshow.getSoundList().get(0));
 		assertEquals("TestSound2", testSlideshow.getSoundList().get(1));	
-	}
-	
-	// Test add sound function
-	@Test
-	void testAddSound() {
-		// Initialize arraylist of strings
-		ArrayList<String> testSlideList = new ArrayList<String>();
-		testSlideList.add("TestSound1");
-		testSlideList.add("TestSound2");
-		
-		// Set soundlist in slideshow and add sound
-		testSlideshow.setSoundList(testSlideList);
-		testSlideshow.addSound("TestSound3");
-		
-		assertEquals("TestSound3", testSlideshow.getSoundList().get(2));	
 	}
 	
 	// Test set and get progenitor function

@@ -73,14 +73,4 @@ public class SlideTests {
 		
 		assertEquals(true, testSlide.hasTransitions());
 	}
-	
-	// Test set and get forward and backwards functions
-	@Test
-	void testSetandGetForwardandBackwards() {
-		// Sets the forwards and backwards// Sets the value of m_transitions to true
-		testSlide.setTransitions("RLWipe");
-		
-		assertEquals("RLWipe", testSlide.getForward());
-		assertEquals("LRWipe", testSlide.getBackwards());
-	}
 }
