@@ -197,6 +197,7 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                //double oldSlideTime = Double.parseDouble(durationLabel.getText());
                 try {
                     totalSlideTime -= Double.parseDouble(durationLabel.getText());
                 } catch (Exception ex) {
@@ -205,7 +206,7 @@ public class Timeline extends JPanel {
 
                 totalSlideTime += defaultSlideDuration;
                 durationLabel.setText(String.valueOf(defaultSlideDuration));
-                changeSlideTiming(slideList.indexOf(thisSlide), defaultSlideDuration);
+                changeSlideTiming(slideList.indexOf(thisSlide), defaultSlideDuration, defaultSlideDuration);
 
                 if (defaultDuration.isSelected()) {
                     durationAdjust.setVisible(false);
@@ -220,6 +221,8 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                Double oldSlideTime = Double.parseDouble(durationLabel.getText());
+
                 String newValue = JOptionPane.showInputDialog(null, "Enter New Slide Interval");
 
                 try
@@ -229,7 +232,7 @@ public class Timeline extends JPanel {
                         totalSlideTime -= Double.parseDouble(durationLabel.getText());
                         totalSlideTime += Double.parseDouble(newValue);
                         durationLabel.setText(newValue);
-                        changeSlideTiming(slideList.indexOf(thisSlide), Double.parseDouble(newValue));
+                        changeSlideTiming(slideList.indexOf(thisSlide), oldSlideTime, Double.parseDouble(newValue));
                         updateRuntimeLabel();
                     }
                 }
@@ -515,6 +518,12 @@ public class Timeline extends JPanel {
         }
     }
 
+    /**
+     * Adds a new slide timing block to the timing area.
+     *
+     * @param slideNum The number to be displayed for the new timing block.
+     * @param slideLength The length of the slide being represented by the block.
+     */
     public void addSlideTiming(int slideNum, double slideLength)
     {
         JPanel slideTiming = new JPanel();
@@ -534,6 +543,11 @@ public class Timeline extends JPanel {
         slideTimes.add(slideTiming);
     }
 
+    /**
+     * Removes an existing slide timing block.
+     *
+     * @param slideNum The number of the slide timing block to be removed.
+     */
     public void removeSlideTiming(int slideNum)
     {
         lblSlideTimings.remove(slideNum);
@@ -544,16 +558,33 @@ public class Timeline extends JPanel {
             lblSlideTimings.get(i).setText(String.valueOf(i+1));
     }
 
-    public void changeSlideTiming(int slideNum, double slideLength)
+    /**
+     * Changes the length of a slide timing block.
+     *
+     * @param slideNum The number of the slide timing block whose length is to be changed.
+     * @param oldSlideLength The old length of the given slide.
+     * @param newSlideLength The new length of the given slide.
+     */
+    public void changeSlideTiming(int slideNum, double oldSlideLength, double newSlideLength)
     {
-        int timingHeight = (int)(slideLength * 10);
-        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, timingHeight));
-        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, timingHeight));
-        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, timingHeight));
+        int prevHeight = slideTimings.get(slideNum).getHeight();
+        int oldSlideHeight = (int)(oldSlideLength * 10);;
+        int newHeight =  prevHeight - oldSlideHeight;
+        int newSlideHeight = (int)(newSlideLength * 10);
+        newHeight = newHeight + newSlideHeight;
+
+        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
+        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
         slideTimings.get(slideNum).repaint();
         slideTimings.get(slideNum).revalidate();
     }
 
+    /**
+     * Updates the necessary slide timing blocks when the default slide length is changed.
+     *
+     * @param slideLength The new default slide length.
+     */
     public void updateSlideTimingsToDefault(double slideLength)
     {
         int timingHeight = (int)(slideLength * 10);
@@ -571,6 +602,12 @@ public class Timeline extends JPanel {
         }
     }
 
+    /**
+     * Adds transition timing to a slide timing block.
+     *
+     * @param slideNum The number of the slide to have a transition added to.
+     * @param transLength The length of the transition being added.
+     */
     public void addTransToSlideTiming(int slideNum, double transLength)
     {
         int prevHeight = slideTimings.get(slideNum).getHeight();
@@ -584,6 +621,12 @@ public class Timeline extends JPanel {
         slideTimings.get(slideNum).revalidate();
     }
 
+    /**
+     * Subtracts transition timing from a slide timing block.
+     *
+     * @param slideNum The number of the slide to have a transition subtracted from.
+     * @param transLength The length of the transition being subtracted.
+     */
     public void subTransFromSlidingTiming(int slideNum, double transLength)
     {
         int prevHeight = slideTimings.get(slideNum).getHeight();
@@ -597,6 +640,13 @@ public class Timeline extends JPanel {
         slideTimings.get(slideNum).revalidate();
     }
 
+    /**
+     * Changes the length of the transition in a slide timing block.
+     *
+     * @param slideNum The number of the slide to have its transition length changed.
+     * @param oldTransLength The length of the previous transition.
+     * @param newTransLength The length of the new transition.
+     */
     public void changeTransTiming(int slideNum, double oldTransLength, double newTransLength)
     {
         int prevHeight = slideTimings.get(slideNum).getHeight();
@@ -612,6 +662,11 @@ public class Timeline extends JPanel {
         slideTimings.get(slideNum).revalidate();
     }
 
+    /**
+     * Moves a slide timing block up the timing area by one step.
+     *
+     * @param slideNum The number of the slide to be moved up.
+     */
     public void moveSlideTimingUp(int slideNum)
     {
         for (int i = 0; i < slideTimings.size(); i++)
@@ -632,6 +687,11 @@ public class Timeline extends JPanel {
             lblSlideTimings.get(i).setText(String.valueOf(i+1));
     }
 
+    /**
+     * Moves a slide timing block down the timing area by one step.
+     *
+     * @param slideNum The number of the slide to be moved down.
+     */
     public void moveSlideTimingDown(int slideNum)
     {
         for (int i = 0; i < slideTimings.size(); i++)
@@ -809,6 +869,12 @@ public class Timeline extends JPanel {
         revalidate();
     }
 
+    /**
+     * Adds an audio timing block to the timing area.
+     *
+     * @param audioNum The number of the audio block to be added.
+     * @param audioLength The length of the audio to be added.
+     */
     public void addAudioTiming(int audioNum, double audioLength)
     {
         JPanel audioTiming = new JPanel();
@@ -828,6 +894,11 @@ public class Timeline extends JPanel {
         audioTimes.add(audioTiming);
     }
 
+    /**
+     * Removes an audio timing block from the timing area.
+     *
+     * @param audioNum The number of the audio block to be removed.
+     */
     public void removeAudioTiming(int audioNum)
     {
         lblAudioTimings.remove(audioNum);
@@ -838,6 +909,11 @@ public class Timeline extends JPanel {
             lblAudioTimings.get(i).setText(String.valueOf(i+1));
     }
 
+    /**
+     * Moves an audio block up the timing area by one step.
+     *
+     * @param audioNum The number of the audio block to be moved up.
+     */
     public void moveAudioTimingUp(int audioNum)
     {
         for (int i = 0; i < audioTimings.size(); i++)
@@ -859,6 +935,11 @@ public class Timeline extends JPanel {
             lblAudioTimings.get(i).setText(String.valueOf(i+1));
     }
 
+    /**
+     * Moves an audio block down the timing area by one step.
+     *
+     * @param audioNum The number of the audio block to be moved down.
+     */
     public void moveAudioTimingDown(int audioNum)
     {
         for (int i = 0; i < audioTimings.size(); i++)
