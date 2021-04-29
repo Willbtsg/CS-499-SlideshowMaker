@@ -51,13 +51,8 @@ public class Jukebox {
     public void addSong(String clipName) { m_soundList.add(clipName); }
 
     /**
-     * Used to retrieve m_soundList for display or for writing to layout file
-     * @return m_soundList- list of filepaths for sounds the Jukebox can play
-     */
-    public int getSoundListSize() { return m_soundList.size(); }
-    
-    /**
-     * Gets m_soundList variable
+     * Returns lists of audio files listed in Jukebox.
+     * Not used in application, but used for testing
      */
     public ArrayList<String> getSoundList(){ return m_soundList; }
  
