@@ -82,7 +82,7 @@ public class SlideshowEditor extends JFrame {
         spAudio.getVerticalScrollBar().setUnitIncrement(20);
         libraries.add("Audio", spAudio);
 
-        libraries.setPreferredSize(new Dimension(1000,800));
+        libraries.setPreferredSize(new Dimension(1000,750));
         add(libraries, BorderLayout.WEST);
 
         libraries.setBorder(BorderFactory.createTitledBorder("Media"));
@@ -173,7 +173,7 @@ public class SlideshowEditor extends JFrame {
         //ImageIcon windowIcon = new ImageIcon(getClass().getClassLoader().getResource("SlideshowIcon.png"));
         Image icon = windowIcon.getImage();
         setIconImage(icon);
-        setSize(new Dimension(1500, 800));
+        setSize(new Dimension(1500, 750));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();

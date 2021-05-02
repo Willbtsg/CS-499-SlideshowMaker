@@ -81,7 +81,7 @@ public class Timeline extends JPanel {
     {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("Timeline"));
-        setSize(420, 750);
+        setSize(420, 700);
 
         JPanel items = new JPanel();
         items.setLayout(new BorderLayout());
@@ -113,13 +113,13 @@ public class Timeline extends JPanel {
         slideScroll = new JScrollPane(slidePanel); //create scroll panel for slidePanel
         slideScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         slideScroll.getVerticalScrollBar().setUnitIncrement(20);
-        slideScroll.setPreferredSize(new Dimension(320, 720));
+        slideScroll.setPreferredSize(new Dimension(320, 670));
         timelinePanes.add("Slides", slideScroll);
 
         audioScroll = new JScrollPane(audioPanel); //create scroll panel for audioPanel
         audioScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         audioScroll.getVerticalScrollBar().setUnitIncrement(20);
-        audioScroll.setPreferredSize(new Dimension(320, 720));
+        audioScroll.setPreferredSize(new Dimension(320, 670));
         timelinePanes.add("Audio", audioScroll);
 
         items.add(timelinePanes, BorderLayout.NORTH);
@@ -147,7 +147,7 @@ public class Timeline extends JPanel {
         runtimeScroll = new JScrollPane(runtimeGraph);
         runtimeScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         runtimeScroll.getVerticalScrollBar().setUnitIncrement(20);
-        runtimeScroll.setPreferredSize(new Dimension(100, 720));
+        runtimeScroll.setPreferredSize(new Dimension(100, 670));
 
         runtime = new JTabbedPane();
         runtime.add("Timing", runtimeScroll);
