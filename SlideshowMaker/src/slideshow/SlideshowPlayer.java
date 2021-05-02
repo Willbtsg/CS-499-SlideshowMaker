@@ -76,6 +76,8 @@ public class SlideshowPlayer extends JFrame  {
         }
 
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
+        // TODO: Uncomment below for JAR
+        //ImageIcon windowIcon = new ImageIcon(getClass().getClassLoader().getResource("SlideshowIcon.png"));
         Image icon = windowIcon.getImage();
         setIconImage(icon);
 
@@ -105,6 +107,24 @@ public class SlideshowPlayer extends JFrame  {
             }
         });
         fileMenu.add(closeProgram);
+
+        JMenu helpMenu = new JMenu("Help");
+        topMenu.add(helpMenu);
+
+        JMenuItem tutorial = new JMenuItem("Tutorial");
+        String tutorialMsg = "<html>Playing a slideshow is easy!<br><ol><li>Select File -> Open Slideshow.</li>" +
+                "<li>Navigate to the folder containing your slideshow and click \"Open\".</li>" +
+                "<li>Select the slideshow you'd like to play from the dropdown list of options.</li>" +
+                "<li>If you've opened a manual slideshow, click the forward and backward buttons to go through the show.<br>If the manual slideshow contains music, click the play/pause button to play/pause the music.</li>" +
+                "<li>If you've opened an automatic slideshow, click the play/pause button to play/pause the show.<br>You can also skip through the show using the forward skip and backward skip buttons.</li></ol></html>";
+        tutorial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, tutorialMsg, "Tutorial", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        helpMenu.add(tutorial);
 
         m_imageLabel = new JLabel();
         m_imageLabel.setBounds(0, 0, scrnWidth, (int) (scrnHeight * 0.85));

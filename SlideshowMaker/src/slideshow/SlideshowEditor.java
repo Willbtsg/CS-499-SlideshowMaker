@@ -143,6 +143,31 @@ public class SlideshowEditor extends JFrame {
 
         settingsMenu.add(changeSettings);
 
+        JMenu helpMenu = new JMenu("Help");
+        topMenu.add(helpMenu);
+
+        JMenuItem tutorial = new JMenuItem("Tutorial");
+        String tutorialMsg = "<html>Creating a slideshow is easy!<br><ol><li>Open the folder containing the image and audio files you'd like to use. (File -> Set Directory)</li>" +
+                "<li>To add image and audio files to your slideshow, just click \"Add\" under the given image/audio file.</li>" +
+                "<li>To set your slideshow to play back automatically, open the settings window (Settings -> Change Playback Settings) and click the \"Automatic Slideshow\" checkbox. <br>From there, click the \"Submit Changes\" button to save your settings. (To set it back to manual, just do the reverse!)</li>" +
+                "<li>To change the default slide duration of an automatic slideshow, open the settings window and change the value in the \"Default Slide Duration\" textbox. <br>From there, click the \"Submit Changes\" button to save your settings.</li>" +
+                "<li>To change the duration of an individual slide in an automatic slideshow, uncheck the \"Use Default Slide Duration\" at the bottom of the slide item in the Timeline.<br>From there, click the \"Change Duration\" button to the right of the slide duration value and enter a new value.<br>(To set it back to the default slide duration, just recheck the \"Use Default Slide Duration\" checkbox!)</li>" +
+                "<li>To set a transition to play at the beginning of a slide, select a transition type from the \"Transition Type\" dropdown at the top of a slide item.</li>" +
+                "<li>The change the duration of a slide's transition, select a transition duration from the \"Transition Duration\" dropdown at the top of a slide item.<br>(This dropdown will only be enabled if a transition has been set.)</li>" +
+                "<li>To move a slide up/down the timeline, click the \"Move Up/Down\" button at the bottom of a slide item.</li>" +
+                "<li>To remove a slide from your slideshow, click the \"Remove\" button at the bottom on a slide item.</li>" +
+                "<li>Audio items in the Timeline work the same as slide items, except they don't involve transitions.</li>" +
+                "<li>To export your slideshow, navigate to File -> Export Slideshow. From there, give your slideshow a name and click save!<br>Your slideshow is now stored in the same folder as your image and audio files.</li></ol>" +
+                "NOTE: The left column of blocks in the \"Timing\" area of the screen, present when creating an automatic slideshow, represents slides. The right column represents audio clips.<br></html>";
+        tutorial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, tutorialMsg, "Tutorial", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        helpMenu.add(tutorial);
+
         ImageIcon windowIcon = new ImageIcon("images\\SlideshowIcon.png");
         // TODO: Uncomment below for JAR
         //ImageIcon windowIcon = new ImageIcon(getClass().getClassLoader().getResource("SlideshowIcon.png"));
