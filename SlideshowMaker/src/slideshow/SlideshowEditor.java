@@ -153,10 +153,10 @@ public class SlideshowEditor extends JFrame {
                 "<li>To change the default slide duration of an automatic slideshow, open the settings window and change the value in the \"Default Slide Duration\" textbox. <br>From there, click the \"Submit Changes\" button to save your settings.</li>" +
                 "<li>To change the duration of an individual slide in an automatic slideshow, uncheck the \"Use Default Slide Duration\" at the bottom of the slide item in the Timeline.<br>From there, click the \"Change Duration\" button to the right of the slide duration value and enter a new value.<br>(To set it back to the default slide duration, just recheck the \"Use Default Slide Duration\" checkbox!)</li>" +
                 "<li>To set a transition to play at the beginning of a slide, select a transition type from the \"Transition Type\" dropdown at the top of a slide item.</li>" +
-                "<li>The change the duration of a slide's transition, select a transition duration from the \"Transition Duration\" dropdown at the top of a slide item.<br>(This dropdown will only be enabled if a transition has been set.)</li>" +
+                "<li>To change the duration of a slide's transition, select a transition duration from the \"Transition Duration\" dropdown at the top of a slide item.<br>(This dropdown will only be enabled if a transition has been set.)</li>" +
                 "<li>To move a slide up/down the timeline, click the \"Move Up/Down\" button at the bottom of a slide item.</li>" +
                 "<li>To remove a slide from your slideshow, click the \"Remove\" button at the bottom on a slide item.</li>" +
-                "<li>Audio items in the Timeline work the same as slide items, except they don't involve transitions.</li>" +
+                "<li>Audio items in the Timeline work the same as slide items, except they can't use transitions.</li>" +
                 "<li>To export your slideshow, navigate to File -> Export Slideshow. From there, give your slideshow a name and click save!<br>Your slideshow is now stored in the same folder as your image and audio files.</li></ol>" +
                 "NOTE: The left column of blocks in the \"Timing\" area of the screen, present when creating an automatic slideshow, represents slides. The right column represents audio clips.<br></html>";
         tutorial.addActionListener(new ActionListener() {
