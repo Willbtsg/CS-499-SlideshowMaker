@@ -120,7 +120,6 @@ public class SlideshowPlayer extends JFrame  {
 
         //Change appearance of JFrame
         setSize(scrnWidth, scrnHeight);
-        removeFocusFromAllObjects(this);
         setLocationRelativeTo(null);
         setResizable(false); //disable maximize button
         setVisible(true); //making the frame visible
@@ -251,55 +250,46 @@ public class SlideshowPlayer extends JFrame  {
     }
 
     /**
-     * Removes focusable dotted line from all components
-     * @param container - object with components to set focus for
-     */
-    public void removeFocusFromAllObjects(Container container) {
-        container.setFocusable(false);
-        for (Component child : container.getComponents()) {
-            if (child instanceof Container) {
-                removeFocusFromAllObjects((Container) child);
-            } else{
-                child.setFocusable(false);
-            }
-        }
-    }
-
-    /**
      * Calls current Slide's Transition to update the display.
      * @param indexShift- indicates whether to get next or previous slide
      * @param skip- indicates whether or not checking for a Transition is required
      * @throws IndexOutOfBoundsException- trows exception when performing next/previous slide at end/beginning of Slideshow
      */
-    public void doImageTransition(int indexShift, boolean skip) throws IndexOutOfBoundsException
+    public boolean doImageTransition(int indexShift, boolean skip) throws IndexOutOfBoundsException
     {
         int tempIndex = m_currentSlideIndex + indexShift; //use tempIndex in case requested index is invalid
         boolean usedTransition = false; //flag to signal if a Transition was used
 
-        if (!skip) {
-            if (indexShift > 0) { //if next Slide is desired...
+        try {
+            if (!skip) {
+                if (indexShift > 0) { //if next Slide is desired...
 
-                if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
-                    m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel); //...perform the Transition...
+                    if (m_Slideshow.getSlide(tempIndex).hasTransitions()) { //...see if a Transition will be used...
+                        m_Slideshow.getSlide(tempIndex).nextSlide(m_imageLabel); //...perform the Transition...
 
-                    usedTransition = true; //...and mark that a Transition was used
-                }
-            } else { //if the previous slide is desired...
+                        usedTransition = true; //...and mark that a Transition was used
+                    }
+                } else { //if the previous slide is desired...
 
-                if (m_Slideshow.getSlide(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
-                    Image nextImage = m_Slideshow.getSlide(tempIndex).getImage(); //...get the image from the previous Slide Slide...
-                    m_Slideshow.getSlide(m_currentSlideIndex).returnToSlide(m_imageLabel, nextImage); //...perform the Transition...
+                    if (m_Slideshow.getSlide(m_currentSlideIndex).hasTransitions()) { //...see if a Transition will be used...
+                        Image nextImage = m_Slideshow.getSlide(tempIndex).getImage(); //...get the image from the previous Slide Slide...
+                        m_Slideshow.getSlide(m_currentSlideIndex).returnToSlide(m_imageLabel, nextImage); //...perform the Transition...
 
-                    usedTransition = true; //...and mark that a Transition was used
+                        usedTransition = true; //...and mark that a Transition was used
+                    }
                 }
             }
-        }
-        if (!usedTransition) //if no Transition is needed, just load the desired image
-        {
-            m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(tempIndex).getImage()));
+            if (!usedTransition) //if no Transition is needed, just load the desired image
+            {
+                m_imageLabel.setIcon(new ImageIcon(m_Slideshow.getSlide(tempIndex).getImage()));
+            }
+
+            m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
+        } catch (IndexOutOfBoundsException ex) {
+            return false;
         }
 
-        m_currentSlideIndex = tempIndex; //if Slide was changed, update the index
+        return true;
     }
 
     /**
@@ -328,13 +318,7 @@ public class SlideshowPlayer extends JFrame  {
 
                         boolean changed; //flag used to indicate if image was actually changed
 
-                        try {
-                            doImageTransition(indexShift, skip); //perform the Transition set between the two Slides
-                            changed = true;
-
-                        } catch (IndexOutOfBoundsException e) { //if tempIndex is invalid, the Slide is not changed
-                            changed = false;
-                        }
+                        changed = doImageTransition(indexShift, skip); //perform the Transition set between the two Slides
 
                         if (changed) //if this new Slide is not the last one...
                         {
@@ -381,11 +365,7 @@ public class SlideshowPlayer extends JFrame  {
                         }
 
                     } else { //if the Slideshow is manual, use this logic
-                        try {
-                            doImageTransition(indexShift, skip);
-                        } catch (IndexOutOfBoundsException e) { //if tempIndex is invalid, the Slide is not changed
-                            return;
-                        }
+                        doImageTransition(indexShift, skip);
                     }
 
                     m_transitionRunning = false;
