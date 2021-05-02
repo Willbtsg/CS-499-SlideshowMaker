@@ -1117,6 +1117,9 @@ public class Timeline extends JPanel {
         slideDurations.clear();
         slideList.clear();
 
+        defaultDurationChecks.clear();
+        transitionDurations.clear();
+
         audioPanel.removeAll(); //clear the GUI component of the Audio timeline
         audioPanel.setLayout(new GridLayout(2, 1)); //reset the layout to preserve sizing
         timelineAudio.clear(); //remove all Audio timeline data stored in the backend
