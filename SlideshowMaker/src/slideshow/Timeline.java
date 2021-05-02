@@ -1122,6 +1122,13 @@ public class Timeline extends JPanel {
         timelineAudio.clear(); //remove all Audio timeline data stored in the backend
         soundList.clear();
 
+        lblSlideTimings.clear();
+        slideTimings.clear();
+        slideTimes.removeAll();
+        lblAudioTimings.clear();
+        audioTimings.clear();
+        audioTimes.removeAll();
+
         totalSlideTime = 0.0; //reset the Slideshow and Audio runtimes
         totalAudioTime = 0;
 
