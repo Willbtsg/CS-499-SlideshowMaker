@@ -225,7 +225,6 @@ public class SlideshowEditor extends JFrame {
 	                    timeline.setDefaultSlideDuration(slideInterval);
 	                    timeline.setSlideDurationVisible(automated);
 	                    timeline.setTimingVisible(automated);
-                        timeline.updateAllSlideTimings();
 	                    pack();
 	                    setLocationRelativeTo(null);
 	                    settingsPresent = false;
