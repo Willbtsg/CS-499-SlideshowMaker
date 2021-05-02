@@ -106,6 +106,7 @@ public class AudioLibrary extends JPanel {
                 for (File file : dir.listFiles(audioFilter)) //for every wav, aif, or aiff file in the directory...
                 {
                     int tempLength = getAudioLength(file);
+
                     if (audioError)
                     {
                         audioError = false;
