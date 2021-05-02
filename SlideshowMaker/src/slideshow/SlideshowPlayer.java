@@ -417,6 +417,9 @@ public class SlideshowPlayer extends JFrame  {
 
         ImageIcon tempNextIcon = new ImageIcon("images\\skipforwardicon.png");
         ImageIcon tempPrevIcon = new ImageIcon("images\\skipbackicon.png");
+        // TODO: Uncomment below for JAR
+        //ImageIcon tempNextIcon = new ImageIcon(getClass().getClassLoader().getResource("skipforwardicon.png"));
+        //ImageIcon tempPrevIcon = new ImageIcon(getClass().getClassLoader().getResource("skipbackicon.png"));
 
         // Transform temp pause and play icons and store them in new variables
         Image image = tempNextIcon.getImage(); // transform it
@@ -465,6 +468,9 @@ public class SlideshowPlayer extends JFrame  {
 
         ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
         ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
+        // TODO: Uncomment below for JAR
+        //ImageIcon tempPlayIcon = new ImageIcon(getClass().getClassLoader().getResource("playbuttonicon.png"));
+        //ImageIcon tempPauseIcon = new ImageIcon(getClass().getClassLoader().getResource("pausebuttonicon.png"));
 
         // Transform temp pause and play icons and store them in new variables
         image = tempPlayIcon.getImage(); // transform it
@@ -566,6 +572,9 @@ public class SlideshowPlayer extends JFrame  {
 
             ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
             ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+            // TODO: Uncomment below for JAR
+            //ImageIcon tempNextIcon = new ImageIcon(getClass().getClassLoader().getResource("nexticon.png"));
+            //ImageIcon tempPrevIcon = new ImageIcon(getClass().getClassLoader().getResource("previousicon.png"));
 
             // Transform temp pause and play icons and store them in new variables
             Image image = tempNextIcon.getImage(); // transform it
@@ -592,6 +601,9 @@ public class SlideshowPlayer extends JFrame  {
 
             ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
             ImageIcon tempPauseIcon = new ImageIcon("images\\pausebuttonicon.png");
+            // TODO: Uncomment below for JAR
+            //ImageIcon tempPlayIcon = new ImageIcon(getClass().getClassLoader().getResource("playbuttonicon.png"));
+            //ImageIcon tempPauseIcon = new ImageIcon(getClass().getClassLoader().getResource("pausebuttonicon.png"));
 
             image = tempPlayIcon.getImage(); // transform it
             newimg = image.getScaledInstance(20, 20,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
@@ -656,6 +668,9 @@ public class SlideshowPlayer extends JFrame  {
 
             ImageIcon tempNextIcon = new ImageIcon("images\\nexticon.png");
             ImageIcon tempPrevIcon = new ImageIcon("images\\previousicon.png");
+            // TODO: Uncomment below for JAR
+            //ImageIcon tempNextIcon = new ImageIcon(getClass().getClassLoader().getResource("nexticon.png"));
+            //ImageIcon tempPrevIcon = new ImageIcon(getClass().getClassLoader().getResource("previousicon.png"));
 
             // Transform temp pause and play icons and store them in new variables
             Image image = tempNextIcon.getImage(); // transform it

@@ -87,11 +87,10 @@ public class AudioLibrary extends JPanel {
             ImageIcon audioIcon = new ImageIcon("images\\audioicon.png");
             ImageIcon tempPlayIcon = new ImageIcon("images\\playbuttonicon.png");
             ImageIcon tempStopIcon = new ImageIcon("images\\stopbuttonicon.png");
-
             // TODO: Uncomment below for JAR
-            // ImageIcon audioIcon = new ImageIcon(getClass().getClassLoader().getResource("audioicon.png"));
-            // ImageIcon tempPlayIcon = new ImageIcon(getClass().getClassLoader().getResource("playbuttonicon.png"));
-            // ImageIcon tempStopIcon = new ImageIcon(getClass().getClassLoader().getResource("stopbuttonicon.png"));
+            //ImageIcon audioIcon = new ImageIcon(getClass().getClassLoader().getResource("audioicon.png"));
+            //ImageIcon tempPlayIcon = new ImageIcon(getClass().getClassLoader().getResource("playbuttonicon.png"));
+            //ImageIcon tempStopIcon = new ImageIcon(getClass().getClassLoader().getResource("stopbuttonicon.png"));
             
             // Transform temp stop and play icons and store them in new variables
             Image image = tempPlayIcon.getImage(); // transform it 
@@ -107,6 +106,7 @@ public class AudioLibrary extends JPanel {
                 for (File file : dir.listFiles(audioFilter)) //for every wav, aif, or aiff file in the directory...
                 {
                     int tempLength = getAudioLength(file);
+
                     if (audioError)
                     {
                         audioError = false;
