@@ -197,7 +197,6 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                //double oldSlideTime = Double.parseDouble(durationLabel.getText());
                 try {
                     totalSlideTime -= Double.parseDouble(durationLabel.getText());
                 } catch (Exception ex) {
@@ -206,7 +205,8 @@ public class Timeline extends JPanel {
 
                 totalSlideTime += defaultSlideDuration;
                 durationLabel.setText(String.valueOf(defaultSlideDuration));
-                changeSlideTiming(slideList.indexOf(thisSlide), defaultSlideDuration, defaultSlideDuration);
+                updateSlideTiming(slideList.indexOf(thisSlide));
+                updateRuntimeLabel();
 
                 if (defaultDuration.isSelected()) {
                     durationAdjust.setVisible(false);
@@ -221,8 +221,6 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                Double oldSlideTime = Double.parseDouble(durationLabel.getText());
-
                 String newValue = JOptionPane.showInputDialog(null, "Enter New Slide Interval");
 
                 try
@@ -232,7 +230,7 @@ public class Timeline extends JPanel {
                         totalSlideTime -= Double.parseDouble(durationLabel.getText());
                         totalSlideTime += Double.parseDouble(newValue);
                         durationLabel.setText(newValue);
-                        changeSlideTiming(slideList.indexOf(thisSlide), oldSlideTime, Double.parseDouble(newValue));
+                        updateSlideTiming(slideList.indexOf(thisSlide));
                         updateRuntimeLabel();
                     }
                 }
@@ -339,15 +337,14 @@ public class Timeline extends JPanel {
                 if (transSelect.getSelectedItem() != "None") //only have timing dropdown enabled if a transition is in use
                 {
                     transLength.setEnabled(true);
-                    Double transitionLength = (Double) transLength.getSelectedItem();
-                    addTransToSlideTiming(slideList.indexOf(thisSlide), transitionLength);
                 }
                 else
                 {
                     transLength.setEnabled(false);
-                    Double transitionLength = (Double) transLength.getSelectedItem();
-                    subTransFromSlidingTiming(slideList.indexOf(thisSlide), transitionLength);
                 }
+
+
+                updateSlideTiming(slideList.indexOf(thisSlide));
 
                 Double transitionLength = (Double) transLength.getSelectedItem(); //make sure Transition timing is saved when switching
                 transitionLength *= 1000;
@@ -362,7 +359,7 @@ public class Timeline extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Double transitionLength = (Double) transLength.getSelectedItem();
-                changeTransTiming(slideList.indexOf(thisSlide), thisSlide.getTransTime()/1000, transitionLength);
+                updateSlideTiming(slideList.indexOf(thisSlide));
                 transitionLength *= 1000;
                 long transitionLengthMs = transitionLength.longValue();
                 thisSlide.setTransitionLength(transitionLengthMs); //set Transition length in milliseconds in Slide object
@@ -559,107 +556,43 @@ public class Timeline extends JPanel {
     }
 
     /**
-     * Changes the length of a slide timing block.
+     * Updates the specified Slide timing block. Called whenever that Slide's information may have been updated
      *
-     * @param slideNum The number of the slide timing block whose length is to be changed.
-     * @param oldSlideLength The old length of the given slide.
-     * @param newSlideLength The new length of the given slide.
+     * @param slideIndex The new default slide length.
      */
-    public void changeSlideTiming(int slideNum, double oldSlideLength, double newSlideLength)
+    public void updateSlideTiming(int slideIndex)
     {
-        int prevHeight = slideTimings.get(slideNum).getHeight();
-        int oldSlideHeight = (int)(oldSlideLength * 10);;
-        int newHeight =  prevHeight - oldSlideHeight;
-        int newSlideHeight = (int)(newSlideLength * 10);
-        newHeight = newHeight + newSlideHeight;
+        double slideTime; //create variable for total Slide time
 
-        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).repaint();
-        slideTimings.get(slideNum).revalidate();
-    }
-
-    /**
-     * Updates the necessary slide timing blocks when the default slide length is changed.
-     *
-     * @param slideLength The new default slide length.
-     */
-    public void updateSlideTimingsToDefault(double slideLength)
-    {
-        int timingHeight = (int)(slideLength * 10);
-        for (int i = 0 ; i < slideTimings.size(); i++)
-        {
-            //if (slideTimings.get(i).getHeight() == (int)(defaultSlideDuration * 10))
-            if (defaultDurationChecks.get(i).isSelected())
-            {
-                slideTimings.get(i).setMinimumSize(new Dimension(40, timingHeight));
-                slideTimings.get(i).setPreferredSize(new Dimension(40, timingHeight));
-                slideTimings.get(i).setMaximumSize(new Dimension(40, timingHeight));
-                slideTimings.get(i).repaint();
-                slideTimings.get(i).revalidate();
-            }
+        try {
+            slideTime = Double.parseDouble(slideDurations.get(slideIndex).getText()); //use custom Slide duration...
+        } catch (Exception e) {
+            slideTime = defaultSlideDuration; //...or just use the default
         }
+
+        if (transitionDurations.get(slideIndex).isEnabled()) {
+            slideTime += (Double) transitionDurations.get(slideIndex).getSelectedItem(); //add Transition time if applicable
+        }
+
+        slideTime *= 10; //multiply the result by 10 to get height for the timing block
+
+        slideTimings.get(slideIndex).setMinimumSize(new Dimension(40, (int) (slideTime))); //update timing block size
+        slideTimings.get(slideIndex).setPreferredSize(new Dimension(40, (int) slideTime));
+        slideTimings.get(slideIndex).setMaximumSize(new Dimension(40, (int) slideTime));
+        slideTimings.get(slideIndex).repaint();
+        slideTimings.get(slideIndex).revalidate(); //make sure changes appear on GUI
+
     }
 
     /**
-     * Adds transition timing to a slide timing block.
-     *
-     * @param slideNum The number of the slide to have a transition added to.
-     * @param transLength The length of the transition being added.
+     * Updates timing block for all Slides. Called when the default Slide duration is changed
      */
-    public void addTransToSlideTiming(int slideNum, double transLength)
+    public void updateAllSlideTimings()
     {
-        int prevHeight = slideTimings.get(slideNum).getHeight();
-        int transHeight = (int)(transLength * 10);
-        int newHeight = prevHeight + transHeight;
-
-        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).repaint();
-        slideTimings.get(slideNum).revalidate();
-    }
-
-    /**
-     * Subtracts transition timing from a slide timing block.
-     *
-     * @param slideNum The number of the slide to have a transition subtracted from.
-     * @param transLength The length of the transition being subtracted.
-     */
-    public void subTransFromSlidingTiming(int slideNum, double transLength)
-    {
-        int prevHeight = slideTimings.get(slideNum).getHeight();
-        int transHeight = (int)(transLength * 10);
-        int newHeight = prevHeight - transHeight;
-
-        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).repaint();
-        slideTimings.get(slideNum).revalidate();
-    }
-
-    /**
-     * Changes the length of the transition in a slide timing block.
-     *
-     * @param slideNum The number of the slide to have its transition length changed.
-     * @param oldTransLength The length of the previous transition.
-     * @param newTransLength The length of the new transition.
-     */
-    public void changeTransTiming(int slideNum, double oldTransLength, double newTransLength)
-    {
-        int prevHeight = slideTimings.get(slideNum).getHeight();
-        int oldTransHeight = (int)(oldTransLength * 10);;
-        int newHeight =  prevHeight - oldTransHeight;
-        int newTransHeight = (int)(newTransLength * 10);
-        newHeight = newHeight + newTransHeight;
-
-        slideTimings.get(slideNum).setMinimumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setPreferredSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).setMaximumSize(new Dimension(40, newHeight));
-        slideTimings.get(slideNum).repaint();
-        slideTimings.get(slideNum).revalidate();
+        for (int i=0; i<slideTimings.size(); i++)
+        {
+            updateSlideTiming(i);
+        }
     }
 
     /**
@@ -1121,23 +1054,30 @@ public class Timeline extends JPanel {
 
         for (JPanel slideDuration : slideDurationPanels)
         {
-            slideDuration.setVisible(visible);
+            slideDuration.setVisible(visible); //set all duration panels to visible
         }
 
         totalSlideTime = 0.0;
 
         if (automated)
         {
-            for (JLabel interval : slideDurations) {
-                try {
-                    totalSlideTime += Double.parseDouble(interval.getText());
-                } catch (Exception ex) {
-                    totalSlideTime += defaultSlideDuration;
+            JLabel interval;
+
+            for (int i = 0; i<slideDurations.size(); i++) //for every Slide...
+            {
+                interval = slideDurations.get(i); //get the duration label
+
+                if (defaultDurationChecks.get(i).isSelected()) //if the duration label should be set to the new default, do so
+                {
+                    interval.setText(String.valueOf(defaultSlideDuration));
                 }
+
+                totalSlideTime += Double.parseDouble(interval.getText()); //add the value of the duration label to the total runtime
             }
         }
 
-        updateRuntimeLabel();
+        updateAllSlideTimings(); //update all timing blocks
+        updateRuntimeLabel(); //update the runtime label
     }
 
     /**

@@ -222,10 +222,10 @@ public class SlideshowEditor extends JFrame {
                         JOptionPane.showMessageDialog(null, "Invalid Slide Interval entered!");
                     }
                     else if(slideInterval > 0) {
-                        timeline.updateSlideTimingsToDefault(slideInterval);
 	                    timeline.setDefaultSlideDuration(slideInterval);
 	                    timeline.setSlideDurationVisible(automated);
 	                    timeline.setTimingVisible(automated);
+                        timeline.updateAllSlideTimings();
 	                    pack();
 	                    setLocationRelativeTo(null);
 	                    settingsPresent = false;
